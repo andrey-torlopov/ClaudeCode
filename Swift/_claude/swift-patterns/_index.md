@@ -56,6 +56,10 @@
 | `performance/string-ops-in-hot-path.md` | `[UInt8]`/`Data` вместо String в горячем пути |
 | `performance/string-search-in-collection.md` | `Set`/`Dictionary` вместо поиска подстроки в большой строке |
 | `performance/nsstring-swift-bridging.md` | Не чередовать NSString/String в tight loop |
+| `performance/protocol-cast-over-class-cast.md` | Каст к классу вместо каста к протоколу в горячем пути |
+| `performance/string-describing-reflection.md` | `_typeName`/`ObjectIdentifier` вместо `String(describing:)` |
+| `performance/expensive-generic-constants.md` | Замыкания вместо дженерик-констант в массовых регистрациях |
+| `performance/multiple-protocol-conformance.md` | Один протокол вместо множества мелких для UI-компонентов |
 
 ### security/ - Данные и безопасность
 
