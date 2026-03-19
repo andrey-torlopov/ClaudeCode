@@ -28,8 +28,8 @@
 - Читать можно свободно без подтверждения.
 
 ## AI-сетап Codex
-- Базовый промт и оркестратор: `.claude/dev_agent.md`.
-- Роли агентов: `.claude/agents/`.
-- Скиллы и команды: `.claude/skills/`, `.claude/commands/`; пост-хуки: `.claude/hooks/`.
-- Паттерны и протоколы: `.claude/swift-patterns/`, `.claude/protocols/`.
-- Для общих конвенций проекта используем `AGENTS.md`, но исполняем их через Codex-сетап в `.claude/`.
+- Базовый промт и оркестратор: `.ai/dev_agent.md`.
+- Роли агентов: `.ai/agents/`.
+- Скиллы и команды: `.ai/skills/`, `.ai/commands/`; пост-хуки: `.ai/hooks/`.
+- Паттерны и протоколы: `.ai/swift-patterns/`, `.ai/protocols/`.
+- Для общих конвенций проекта используем `AGENTS.md`, но исполняем их через Codex-сетап в `.ai/`.

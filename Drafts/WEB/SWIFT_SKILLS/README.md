@@ -46,17 +46,17 @@
 - **Оркестратор** (`dev_agent.md`): маршрутизация задач между агентами
 - **Хук** (`hooks/skill-lint.sh`): пост-валидация SKILL.md при редактировании
 - **Markdownlint** (`.markdownlint.yaml`): правила линтинга документации
-- **Claudeignore** (`.claudeignore`): фильтр шума (build, IDE, CI/CD)
+- **Claudeignore** (`.aiignore`): фильтр шума (build, IDE, CI/CD)
 
 ## Установка
 
 1. Скопируй содержимое в корень iOS/Swift проекта:
 
 ```
-cp -r .claude/ <путь-к-проекту>/.claude/
+cp -r .ai/ <путь-к-проекту>/.ai/
 cp CLAUDE.md <путь-к-проекту>/CLAUDE.md
 cp AGENTS.md <путь-к-проекту>/AGENTS.md
-cp .claudeignore <путь-к-проекту>/.claudeignore
+cp .aiignore <путь-к-проекту>/.aiignore
 cp .markdownlint.yaml <путь-к-проекту>/.markdownlint.yaml
 ```
 
@@ -74,9 +74,9 @@ cp .markdownlint.yaml <путь-к-проекту>/.markdownlint.yaml
 .
 ├── CLAUDE.md                  # Swift-конвенции и настройки проекта
 ├── AGENTS.md                  # Краткие правила для Codex
-├── .claudeignore              # Игнорируемые файлы
+├── .aiignore              # Игнорируемые файлы
 ├── .markdownlint.yaml         # Правила линтинга MD
-└── .claude/
+└── .ai/
     ├── dev_agent.md           # Оркестратор
     ├── agents/
     │   ├── auditor.md         # Auditor Agent

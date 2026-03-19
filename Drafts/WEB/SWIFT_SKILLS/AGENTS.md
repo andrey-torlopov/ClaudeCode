@@ -25,7 +25,7 @@
 - При расчётах показываем полную формулу с числителем и знаменателем перед результатом.
 
 ## AI-сетап
-- Оркестратор: `.claude/dev_agent.md`.
-- Роли агентов: `.claude/agents/`.
-- Скиллы и команды: `.claude/skills/`, `.claude/commands/`; пост-хуки: `.claude/hooks/`.
-- Антипаттерны: `.claude/swift-antipatterns/`.
+- Оркестратор: `.ai/dev_agent.md`.
+- Роли агентов: `.ai/agents/`.
+- Скиллы и команды: `.ai/skills/`, `.ai/commands/`; пост-хуки: `.ai/hooks/`.
+- Антипаттерны: `.ai/swift-antipatterns/`.

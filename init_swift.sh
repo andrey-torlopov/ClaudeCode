@@ -5,6 +5,6 @@ set -euo pipefail
 cp -a ~/Dev/Templates/Swift/. .
 
 # 2) Переименовываем каталог и файлы на верхнем уровне
-mv _claude .claude
-mv _claudeignore .claudeignore
+mv _ai .ai
+mv _aiignore .aiignore
 mv _markdownlint.yaml .markdownlint.yaml

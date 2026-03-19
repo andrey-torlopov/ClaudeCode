@@ -72,6 +72,6 @@
 
 ## Dev Lead
 
-**Перед выполнением любого skill читай:** `.claude/dev_agent.md`
+**Перед выполнением любого skill читай:** `.ai/dev_agent.md`
 
-**Структура:** `.claude/` → `dev_agent.md`, `agents/`, `skills/`, `swift-patterns/`
+**Структура:** `.ai/` → `dev_agent.md`, `agents/`, `skills/`, `swift-patterns/`

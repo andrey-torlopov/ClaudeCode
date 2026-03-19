@@ -27,8 +27,8 @@
 - Читать можно свободно без подтверждения.
 
 ## AI-сетап Gemini
-- Базовый промт и оркестратор: `.claude/dev_agent.md`.
-- Роли агентов: `.claude/agents/`.
-- Скиллы и команды: `.claude/skills/`, `.claude/commands/`; пост-хуки: `.claude/hooks/`.
-- Антипаттерны и протоколы: `.claude/rust-antipatterns/`, `.claude/protocols/`.
-- Для общих конвенций проекта используем `GEMINI.md`, но исполняем их через сетап в `.claude/`.
+- Базовый промт и оркестратор: `.ai/dev_agent.md`.
+- Роли агентов: `.ai/agents/`.
+- Скиллы и команды: `.ai/skills/`, `.ai/commands/`; пост-хуки: `.ai/hooks/`.
+- Антипаттерны и протоколы: `.ai/rust-antipatterns/`, `.ai/protocols/`.
+- Для общих конвенций проекта используем `GEMINI.md`, но исполняем их через сетап в `.ai/`.
