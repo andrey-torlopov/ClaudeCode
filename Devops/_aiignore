@@ -1,0 +1,50 @@
+# Build artifacts and caches
+build/
+dist/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# IDE configuration
+.idea/
+.cursor/
+.vscode/
+
+# CI/CD (not relevant for review work)
+.github/
+.git/
+.gitlab/
+
+.DS_Store
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+
+# Ansible
+*.retry
+
+# Kubernetes
+kubeconfig
+*.kubeconfig
+
+# Docker
+docker-compose.override.yml
+
+# Secrets (never index)
+.env
+.env.*
+*.pem
+*.key
+*.crt
+id_rsa*
+*.p12
+
+# Node (if any tooling)
+node_modules/
+
+# Custom
+.ignore
+.gitignore
