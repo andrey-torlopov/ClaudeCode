@@ -71,8 +71,9 @@
     ├── <Files>
 ```
 
-## Dev Lead
-
-**Перед выполнением любого skill читай:** `.ai/dev_agent.md`
-
-**Структура:** `.ai/` → `dev_agent.md`, `agents/`, `skills/`, `swift-patterns/`
+## AI-сетап
+- Базовый промт и оркестратор: `.ai/dev_agent.md`.
+- Роли агентов: `.ai/agents/`.
+- Скиллы и команды: `.ai/skills/`, `.ai/commands/`; пост-хуки: `.ai/hooks/`.
+- Паттерны и протоколы: `.ai/swift-patterns/`, `.ai/protocols/`.
+- Для общих конвенций проекта используем `CLAUDE.md`, но исполняем их через сетап в `.ai/`.
