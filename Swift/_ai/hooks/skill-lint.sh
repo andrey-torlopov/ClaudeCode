@@ -12,7 +12,7 @@ if [ -z "$FILE_PATH" ]; then
 fi
 
 # Filter: skill files, agent files, CLAUDE.md
-if [[ ! ("$FILE_PATH" == */.ai/skills/*/SKILL.md || "$FILE_PATH" == */.ai/agents/*.md || "$FILE_PATH" == */CLAUDE.md) ]]; then
+if [[ ! ("$FILE_PATH" == */_ai/skills/*/SKILL.md || "$FILE_PATH" == */_ai/agents/*.md || "$FILE_PATH" == */CLAUDE.md) ]]; then
   exit 0
 fi
 

@@ -133,7 +133,7 @@ Trigger-фразы: "[фраза 1]", "[фраза 2]"
 ### Шаг 2.2: Определи файловую структуру
 
 ```
-.ai/skills/{skill-name}/
+_ai/skills/{skill-name}/
 ├── SKILL.md              # Обязательно (case-sensitive!)
 ├── scripts/              # Executable — автоматизация и утилиты
 │   └── [name].py/.sh
@@ -240,7 +240,7 @@ description: [твой вариант]
 ```
 Готово к сохранению:
 
-.ai/skills/[skill-name]/
+_ai/skills/[skill-name]/
 ├── SKILL.md ✅
 ├── scripts/[name].* ✅ (если есть)
 ├── references/[name].* ✅ (если есть)
@@ -257,7 +257,7 @@ description: [твой вариант]
 
 **Совет:** Используй `scripts/init_skill.sh` для генерации шаблонной структуры:
 ```bash
-bash .ai/skills/init-skill/scripts/init_skill.sh [skill-name]
+bash _ai/skills/init-skill/scripts/init_skill.sh [skill-name]
 ```
 
 ### Шаг 7.2: Валидация и завершение
@@ -271,6 +271,6 @@ bash .ai/skills/init-skill/scripts/init_skill.sh [skill-name]
 
 ## Связанные файлы
 
-- Init-скрипт: `.ai/skills/init-skill/scripts/init_skill.sh`
+- Init-скрипт: `_ai/skills/init-skill/scripts/init_skill.sh`
 - Шаблон: `references/skill-template.md`
-- Примеры: `.ai/skills/*/SKILL.md`
+- Примеры: `_ai/skills/*/SKILL.md`

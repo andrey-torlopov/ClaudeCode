@@ -9,26 +9,22 @@
 
 ## Core Mindset
 
-| Принцип | Суть |
-|---------|------|
-| **Production Ready** | Код компилируется без правок с первой попытки |
-| **Clean Data** | Никакого PII, только плейсхолдеры и RFC 2606 домены |
-| **Fail Fast** | Нет спецификации - выведи WARNING с рекомендацией в конце и продолжай по возможности |
-| **Process Isolation** | Ты работаешь в sub-shell (`context: fork`). Твой Output - единственный способ общения с Lead. Если Fail - пиши "FAILURE: [Reason]" явно в `SKILL COMPLETE` |
+- **Production Ready** - код компилируется без правок с первой попытки
+- **Clean Data** - никакого PII, только плейсхолдеры и RFC 2606 домены
+- **Fail Fast** - нет спецификации -> выведи WARNING с рекомендацией и продолжай по возможности
+- **Process Isolation** - ты работаешь в sub-shell (`context: fork`), Output - единственный способ общения с Lead
 
-## Anti-Patterns (BANNED)
+## Запрещено
 
-| Паттерн | Почему это плохо | Правильное действие |
-|:-------------|:-----------------|:------------------------|
-| **`Thread.sleep()` / `Task.sleep()`** | Flaky tests, зависимость от времени выполнения. | Использовать async/await, XCTestExpectation или custom polling. |
-| **Hardcoded data** | Ломается при смене окружения или данных. | Использовать генераторы или конфиги (ref: common/hardcoded-test-data.md). |
-| **`try { } catch { }`** | Скрывает баги, тест не падает при ошибке. | Позволить тесту упасть с `throws`, использовать `XCTAssertThrowsError`. |
-| **`[String: Any]`** | Untyped, хрупко, не Codable. | Typed модели с `Codable` (ref: networking/dictionary-instead-of-model.md). |
-| **XCTAssert без message** | Непонятный fail report, нет контекста. | `XCTAssertEqual(actual, expected, "Описание проверки")` (ref: common/assertion-without-message.md). |
-| **Force unwrap `!`** | Краш без диагностики. | `guard let`, `XCTUnwrap`, optional chaining. |
-| **`URLSession.shared` inline** | Нет конфигурации, дефолтные таймауты. | Abstraction layer с настроенным URLSession (ref: networking/inline-urlsession-calls.md). |
-| **`DispatchQueue.main`** | Legacy, не совместим с Swift Concurrency. | `@MainActor` (CLAUDE.md convention). |
-| **`Any` / `AnyObject`** | Потеря type safety. | Протоколы и дженерики (CLAUDE.md convention). |
+- `Thread.sleep()` / `Task.sleep()` - flaky tests. Использовать async/await, XCTestExpectation или custom polling
+- Hardcoded data - ломается при смене окружения. Использовать генераторы или конфиги (ref: common/hardcoded-test-data.md)
+- `try { } catch { }` пустой - скрывает баги. Позволить тесту упасть с `throws`, использовать `XCTAssertThrowsError`
+- `[String: Any]` - untyped, хрупко. Typed модели с `Codable` (ref: networking/dictionary-instead-of-model.md)
+- XCTAssert без message - непонятный fail report (ref: common/assertion-without-message.md)
+- Force unwrap `!` - краш без диагностики. `guard let`, `XCTUnwrap`, optional chaining
+- `URLSession.shared` inline - нет конфигурации. Abstraction layer (ref: networking/inline-urlsession-calls.md)
+- `DispatchQueue.main` - legacy. `@MainActor`
+- `Any` / `AnyObject` - потеря type safety. Протоколы и дженерики
 
 ## Escalation Protocol (Feedback Loop)
 
@@ -86,19 +82,11 @@
 
 **Silence is Gold:** Minimize explanatory text. Output only tool calls and task completion blocks.
 
-**Communication modes:**
+- **DONE** - task complete: `SKILL COMPLETE: ...` блок
+- **BLOCKER** - cannot proceed: `BLOCKER: [Problem]` + questions
+- **STATUS** - phase transition: только при смене агента/фазы
 
-| Mode | When | Format |
-|------|------|--------|
-| **DONE** | Task complete | `SKILL COMPLETE: ...` блок |
-| **BLOCKER** | Cannot proceed | `BLOCKER: [Problem]` + questions |
-| **STATUS** | Phase transition | `Orchestrator Status` (только при смене агента/фазы) |
-
-**No Chat:**
-- No "Let me read the file" - just Read tool
-- No "I will now execute" - just Bash tool
-- No "The file contains..." - output goes into completion block
-- No "Successfully created..." - completion block shows artifacts
+**No Chat:** молча вызывай Read/Bash, результат в completion block.
 
 **Exception:** При BLOCKER или Gardener Suggestion - объяснение обязательно.
 
@@ -107,38 +95,22 @@
 ## Pattern Protocol (Lazy Load)
 
 При обнаружении нарушения паттерна в коде:
-1. Прочитай `.ai/swift-patterns/_index.md` - найди `{category}/{name}` по описанию проблемы
-2. Прочитай `.ai/swift-patterns/{category}/{name}.md` - примени Good Example - процитируй `(ref: {category}/{name}.md)`
+1. Прочитай `_ai/patterns/_index.md` - найди `{category}/{name}` по описанию проблемы
+2. Прочитай `_ai/patterns/{category}/{name}.md` - примени Good Example - процитируй `(ref: {category}/{name}.md)`
 3. Если reference не найден - BLOCKER, не угадывай fix
 
 **Категории:** `common/` (базовая гигиена) - `networking/` (HTTP/URLSession) - `platform/` (Swift Concurrency/XCTest) - `security/` (PII/логи) - `performance/` (производительность)
 
-**Index:** `.ai/swift-patterns/_index.md` содержит полный перечень паттернов по категориям.
-
 ## Protocol Injection
 
-При активации ЛЮБОГО скилла из `.ai/skills/`:
+При активации ЛЮБОГО скилла из `_ai/skills/`:
 1. Прочитай `SYSTEM REQUIREMENTS` секцию скилла
-2. Загрузи `.ai/protocols/gardener.md`
+2. Загрузи `_ai/protocols/gardener.md`
 3. При срабатывании триггера - соблюдай формат `GARDENER SUGGESTION` из протокола
 
-## Swift Compilation Rules
+## Swift конвенции
 
-1. **Codable модели:** `Codable` + `CodingKeys` для snake_case маппинга, не `[String: Any]`
-2. **Async tests:** `func testXxx() async throws { }` - нативная поддержка в XCTest
-3. **Polling:** Custom polling helper или XCTestExpectation, не `Thread.sleep()`
-4. **Structured concurrency:** `async let`, `TaskGroup` вместо неструктурированных `Task {}`
-5. **Compilation gate:** `swift build`
-6. **Test gate:** `swift test`
-7. **Zero-comment policy:** Не добавляй комментарии к очевидному коду
-8. **Value types:** Предпочитай `struct` / `enum` над `class`, если нет явной необходимости
-9. **let over var:** Используй `let` где возможно
-10. **guard:** Используй `guard` для раннего выхода, не вложенные if let
-11. **Error handling:** `throws` / `Result`, не optional для ошибочных состояний
-12. **Sendable:** Помечай типы как `Sendable` где возможно
-13. **@MainActor:** Для UI-кода, не `DispatchQueue.main`
-14. **Weak self:** `[weak self]` в escaping closures, усиление self только перед первым использованием
-15. **Explicit types:** Явное указание типа, не `.init`
+SSOT: `_ai/patterns/common/swift-conventions.md`
 
 ## Quality Gates
 
@@ -154,27 +126,18 @@
 - [ ] Файлы в правильных директориях (`Sources/`, `Tests/`)
 - [ ] Выведен блок `SKILL COMPLETE`
 
-| Скилл | Gate | Команда |
-|-------|------|---------|
-| Код | ОБЯЗАТЕЛЬНО | `swift build` |
-| Тесты | ОБЯЗАТЕЛЬНО | `swift test` |
-
 Порядок: Генерация - Compilation - Post-Check - SKILL COMPLETE. Max 3 попытки. После 3 FAIL - STOP.
 
 ## Output Contract
 
-| Скилл | Артефакт | Архитектура |
-|-------|----------|-------------|
-| Код | `Sources/**/*.swift` | По существующей структуре проекта |
-| Тесты | `Tests/**/*.swift` | XCTest, async/await |
-| `/init-skill` | `.ai/skills/{name}/SKILL.md` | - |
+- Код: `Sources/**/*.swift` - по существующей структуре проекта
+- Тесты: `Tests/**/*.swift` - XCTest, async/await
+- `/init-skill`: `_ai/skills/{name}/SKILL.md`
 
 ## Cross-Skill: входные зависимости
 
-| Скилл | Требует |
-|-------|---------|
-| Код | Спецификация или план рефакторинга |
-| Тесты | Спецификация; существующий код в `Sources/` |
+- Код: спецификация или план рефакторинга
+- Тесты: спецификация + существующий код в `Sources/`
 
 ## Запреты
 

@@ -96,18 +96,18 @@
 
 При обнаружении проблемы или написании нового кода:
 1. Определи категорию: common / networking / platform / performance / security / best-practices
-2. Прочитай `swift-patterns/{category}/{name}.md` - примени Good Example - процитируй `(ref: {category}/{name}.md)`
+2. Прочитай `_ai/patterns/{category}/{name}.md` - примени Good Example - процитируй `(ref: {category}/{name}.md)`
 3. Если reference не найден - BLOCKER, не угадывай fix
 
 ## Usage (для code review)
 
 ```bash
 # Сканируй по категории
-ls swift-patterns/performance/
+ls _ai/patterns/performance/
 
 # Grep в проекте
 grep -rn "URLSession.shared\|[String: Any]\|Thread.sleep\|attributesOfItem" --include="*.swift" Sources/ Tests/
 
 # Прочитай файл при match
-cat swift-patterns/performance/naive-disk-space-check.md
+cat _ai/patterns/performance/naive-disk-space-check.md
 ```

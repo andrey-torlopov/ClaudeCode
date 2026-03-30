@@ -120,9 +120,9 @@
 | Файл | Инструмент |
 |------|-----------|
 | `CLAUDE.md` | Claude Code |
-| `.ai/skills/*/SKILL.md` | Claude Code Skills |
-| `.ai/commands/*.md` | Claude Code Commands |
-| `.ai/agents/*.md` | Claude Code Agents |
+| `_ai/skills/*/SKILL.md` | Claude Code Skills |
+| `_ai/commands/*.md` | Claude Code Commands |
+| `_ai/agents/*.md` | Claude Code Agents |
 | `AGENTS.md` | Zed/Cline/Continue.dev |
 | `.cursor/rules/*.mdc` | Cursor IDE |
 | `.github/copilot-instructions.md` | GitHub/VS Code Copilot |

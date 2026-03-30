@@ -12,8 +12,8 @@ context: fork
 ## Перед началом
 
 Прочитай:
-1. `.ai/skills/init-skill/references/validation-checklist.md` - пороги строк и обязательные секции
-2. `.ai/skills/init-skill/references/yaml-reference.md` - правила YAML frontmatter
+1. `_ai/skills/init-skill/references/validation-checklist.md` - пороги строк и обязательные секции
+2. `_ai/skills/init-skill/references/yaml-reference.md` - правила YAML frontmatter
 
 ---
 

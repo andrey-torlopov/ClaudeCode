@@ -184,7 +184,7 @@ context: fork
 3. **AI Setup:**
    ```
    Glob: CLAUDE.md -> Claude Code
-   Glob: .ai/** -> Claude config
+   Glob: _ai/** -> Claude config
    Glob: .cursor/rules/*.mdc -> Cursor IDE
    Glob: .github/copilot-instructions.md -> Copilot
    Glob: AGENTS.md -> Agents
