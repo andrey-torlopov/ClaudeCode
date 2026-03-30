@@ -36,4 +36,4 @@ alias initrust='~/Templates/init_rust.sh'
 alias initswift='~/Templates/init_swift.sh'
 ```
 
-После этого в любой папке с проектом достаточно написать `initrust` или `initswift` — все файлы конфигурации Claude Code будут скопированы автоматически.
+После этого в любой папке с проектом достаточно написать `initrust` или `initswift` — все файлы конфигурации Claude Code/Gemini/Codex будут скопированы автоматически.
