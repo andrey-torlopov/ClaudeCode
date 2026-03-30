@@ -12,8 +12,8 @@ context: fork
 ## Перед началом
 
 Прочитай:
-1. `.ai/skills/init-skill/references/validation-checklist.md` - пороги строк и обязательные секции
-2. `.ai/skills/init-skill/references/yaml-reference.md` - правила YAML frontmatter
+1. `_ai/skills/init-skill/references/validation-checklist.md` - пороги строк и обязательные секции
+2. `_ai/skills/init-skill/references/yaml-reference.md` - правила YAML frontmatter
 
 ---
 
@@ -145,7 +145,7 @@ Grep: `НЕ ИСПРАВЛЯТЬ`, `не исправляй`, `только ан
 Найти секции BANNED/Anti-Patterns. Подсчитать строки и парные Bad/Good блоки с кодом.
 
 - Severity: **WARNING** (если пар >3 и строк >30)
-- Рекомендация: заменить на однострочники, подробности -> `rust-antipatterns/*.md` или skill-specific references/
+- Рекомендация: заменить на однострочники, подробности -> `_ai/patterns/*.md` или skill-specific references/
 
 ### Check 8: Cross-Reference Staleness
 

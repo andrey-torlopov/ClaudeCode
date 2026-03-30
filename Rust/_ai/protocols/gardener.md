@@ -8,7 +8,7 @@ SSOT. Подключается через `SYSTEM REQUIREMENTS` в SKILL.md и `
   <activate_on>
     1. Пользователь нашел ошибку в output скилла
     2. Auditor нашел ошибку, требующую >1 итерации
-    3. Обнаружен анти-паттерн, отсутствующий в `rust-antipatterns/`
+    3. Обнаружен анти-паттерн, отсутствующий в `_ai/patterns/`
   </activate_on>
 
   <do_not_activate_on>
@@ -28,7 +28,7 @@ SSOT. Подключается через `SYSTEM REQUIREMENTS` в SKILL.md и `
 <routing>
   | Класс ошибки                          | Target                          |
   |---------------------------------------|---------------------------------|
-  | Повторяющийся паттерн в коде          | `rust-antipatterns/{name}.md`   |
+  | Повторяющийся паттерн в коде          | `_ai/patterns/{name}.md`   |
   | Неверный формат/структура output      | `skills/{skill}/SKILL.md`       |
   | Неверное решение агента               | `agents/{agent}.md`             |
   | Глобальное соглашение                 | `CLAUDE.md` или `dev_agent.md`  |
