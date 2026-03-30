@@ -68,3 +68,17 @@
 | `scripts/no-idempotency.md` | Скрипты ломаются при повторном запуске |
 | `scripts/no-logging.md` | Скрипты без логирования |
 | `scripts/hardcoded-paths.md` | Захардкоженные абсолютные пути и привязка к окружению |
+
+## conventions/
+
+| Файл | Описание |
+|------|----------|
+| `conventions/bash.md` | Правила написания Bash-скриптов (strict mode, кавычки, local, trap) |
+| `conventions/yaml.md` | Правила оформления YAML (отступы, булевы, якоря) |
+| `conventions/terraform.md` | Правила Terraform (переменные, теги, модули, state locking) |
+| `conventions/docker.md` | Правила Docker (multi-stage, nonroot, healthcheck, pinned versions) |
+| `conventions/kubernetes.md` | Правила K8s (limits, probes, RBAC, labels, ConfigMap/Secret) |
+| `conventions/naming.md` | Конвенции именования (kebab-case, snake_case, UPPER_SNAKE) |
+| `conventions/security.md` | Базовые правила безопасности (секреты, TLS, привилегии, SSH) |
+| `conventions/code-style.md` | Стиль кода и комментариев |
+| `conventions/architecture.md` | Не предлагай архитектуру без запроса, сохраняй существующую |

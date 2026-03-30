@@ -11,6 +11,7 @@
 ### common/ - Базовая гигиена кода
 | Файл | Описание |
 |------|----------|
+| architecture.md | Не предлагай архитектуру без запроса, сохраняй существующую |
 | assertion-without-message.md | assert! без message |
 | hardcoded-test-data.md | Hardcoded данные в тестах |
 | static-test-data.md | Статичные тестовые данные без рандомизации |

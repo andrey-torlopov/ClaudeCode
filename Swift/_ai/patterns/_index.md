@@ -16,6 +16,7 @@
 
 | Файл | Паттерн |
 |------|---------|
+| `common/architecture.md` | Не предлагай архитектуру без запроса, сохраняй существующую |
 | `common/assertion-without-message.md` | XCTAssert без message |
 | `common/hardcoded-test-data.md` | Hardcoded данные в тестах |
 | `common/no-abstraction-layer.md` | Прямые URLSession-вызовы в тестах |
