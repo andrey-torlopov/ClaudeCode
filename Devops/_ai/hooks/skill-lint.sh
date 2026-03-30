@@ -35,8 +35,8 @@ if grep -q 'Формат отчёта Self-Review\|Алгоритм Self-Review\
 fi
 
 # Check 3: Ссылки на несуществующие артефакты
-if grep -q 'swift-patterns/\|swift-review\|sdet\.md' "$FILE_PATH" 2>/dev/null; then
-  FINDINGS="${FINDINGS}\n  WARNING: Найдены ссылки на устаревшие Swift-артефакты"
+if grep -q 'devops-patterns/\|\.ai/' "$FILE_PATH" 2>/dev/null; then
+  FINDINGS="${FINDINGS}\n  WARNING: Найдены ссылки на устаревшие пути (devops-patterns/ или .ai/)"
 fi
 
 # Check 4: YAML frontmatter в SKILL.md

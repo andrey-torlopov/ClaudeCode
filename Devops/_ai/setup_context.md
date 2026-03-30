@@ -4,10 +4,10 @@
 - Комментарии и рассуждения пишем на русском языке
 
 ## AI-сетап
-- Базовый промт и оркестратор: `.ai/dev_agent.md`.
-- Роли агентов: `.ai/agents/`.
-- Скиллы и команды: `.ai/skills/`, `.ai/commands/`; пост-хуки: `.ai/hooks/`.
-- Паттерны и протоколы: `.ai/patterns/`, `.ai/protocols/`.
+- Базовый промт и оркестратор: `_ai/dev_agent.md`.
+- Роли агентов: `_ai/agents/`.
+- Скиллы и команды: `_ai/skills/`, `_ai/commands/`; пост-хуки: `_ai/hooks/`.
+- Паттерны и протоколы: `_ai/patterns/`, `_ai/protocols/`.
 
 # Validation & Linting
 - Bash: `shellcheck script.sh`

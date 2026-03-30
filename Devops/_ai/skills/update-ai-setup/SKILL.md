@@ -70,7 +70,7 @@ WARNING: docs/ai-setup.md не найден - создаю новый файл.
   - _ai/agents/*.md
   - _ai/skills/*/SKILL.md
   - _ai/skills/*/references/*
-  - _ai/devops-patterns/*.md
+  - _ai/patterns/*.md
   - docs/ai-setup.md
 ```
 

@@ -8,7 +8,7 @@ SSOT. Подключается через `SYSTEM REQUIREMENTS` в SKILL.md и `
   <activate_on>
     1. Пользователь нашёл ошибку в output скилла
     2. Auditor нашёл ошибку, требующую >1 итерации
-    3. Обнаружен паттерн, отсутствующий в `devops-patterns/`
+    3. Обнаружен паттерн, отсутствующий в `_ai/patterns/`
   </activate_on>
 
   <do_not_activate_on>
@@ -28,7 +28,7 @@ SSOT. Подключается через `SYSTEM REQUIREMENTS` в SKILL.md и `
 <routing>
   | Класс ошибки                          | Target                            |
   |---------------------------------------|-----------------------------------|
-  | Повторяющийся паттерн в конфигах      | `devops-patterns/{name}.md`       |
+  | Повторяющийся паттерн в конфигах      | `_ai/patterns/{name}.md`          |
   | Неверный формат/структура output      | `skills/{skill}/SKILL.md`         |
   | Неверное решение агента               | `agents/{agent}.md`               |
   | Глобальное соглашение                 | `CLAUDE.md` или `dev_agent.md`    |
