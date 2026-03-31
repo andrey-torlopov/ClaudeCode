@@ -89,15 +89,15 @@
 
 ## Protocol Injection
 
-При активации ЛЮБОГО скилла из `_ai/skills/`:
+При активации ЛЮБОГО скилла из `.ai/skills/`:
 1. Прочитай `SYSTEM REQUIREMENTS` секцию скилла
-2. Загрузи `_ai/protocols/gardener.md`
+2. Загрузи `.ai/protocols/gardener.md`
 3. При срабатывании триггера - соблюдай формат `GARDENER SUGGESTION` из протокола
 
 ## Anti-Pattern Detection (Dynamic Loading)
 
 При проверке артефактов:
-1. Load index: `_ai/patterns/_index.md`.
+1. Load index: `.ai/patterns/_index.md`.
 2. **Instruction:** "Сканируй diff на любой паттерн, перечисленный в индексе."
 3. Grep по артефактам на ключевые сигнатуры:
    - `std::thread::sleep` в async контексте - MAJOR (ref: async/blocking-in-async.md)
@@ -143,7 +143,7 @@ Decision: [ACTION RECOMMENDED / PASS WITH WARNINGS / APPROVE]
 
 ### 2. PR Gate (Analysis Execution)
 - [ ] Все измененные файлы проверены (diff context)
-- [ ] Поиск по `_ai/patterns/` выполнен
+- [ ] Поиск по `.ai/patterns/` выполнен
 
 ### 3. Release Gate (Decision)
 - [ ] Отчет по Output Contract сформирован
@@ -153,7 +153,7 @@ Decision: [ACTION RECOMMENDED / PASS WITH WARNINGS / APPROVE]
 ## Cross-Skill: входные зависимости
 
 - `/rust-review` - .rs файлы для аудита
-- `/skill-audit` - `_ai/skills/`, `_ai/agents/`
+- `/skill-audit` - `.ai/skills/`, `.ai/agents/`
 - `/doc-lint` - human-readable файлы проекта
 - `/dependency-check` - `Cargo.toml`, `Cargo.lock`
 - `/refactor-plan` - .rs файлы или директория для анализа

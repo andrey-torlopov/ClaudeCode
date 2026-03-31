@@ -57,6 +57,6 @@
 ## Usage
 При обнаружении проблемы:
 1. Определи категорию
-2. Прочитай _ai/patterns/{category}/{name}.md
+2. Прочитай .ai/patterns/{category}/{name}.md
 3. Примени Good Example, процитируй (ref: {category}/{name}.md)
 4. Если reference не найден - BLOCKER

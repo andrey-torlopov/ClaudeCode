@@ -49,17 +49,17 @@
 
 ## Orchestration
 
-Полная оркестрация (Skills Matrix, Ad-Hoc Routing, Pipeline, Completion Protocol): `_ai/references/orchestration.md`
+Полная оркестрация (Skills Matrix, Ad-Hoc Routing, Pipeline, Completion Protocol): `.ai/references/orchestration.md`
 
 ### Gardener Protocol (мета-обучение)
 
-> SSOT: `_ai/protocols/gardener.md`
+> SSOT: `.ai/protocols/gardener.md`
 
 ---
 
 ## DevOps конвенции
 
-Индекс всех паттернов (security, containers, iac, cicd, monitoring, scripts, conventions): `_ai/patterns/_index.md`
+Индекс всех паттернов (security, containers, iac, cicd, monitoring, scripts, conventions): `.ai/patterns/_index.md`
 
 ---
 

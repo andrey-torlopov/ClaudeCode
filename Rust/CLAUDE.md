@@ -27,24 +27,24 @@
 
 ## AI Setup
 
-Перед началом работы прочитай `_ai/setup_context.md`.
+Перед началом работы прочитай `.ai/setup_context.md`.
 
 | Ресурс | Путь | Назначение |
 |--------|------|------------|
-| Оркестратор | `_ai/dev_agent.md` | Базовый промт, роли, маршрутизация |
-| Агенты | `_ai/agents/` | Developer (`sdet.md`), Auditor (`auditor.md`) |
-| Скиллы | `_ai/skills/` | Специализированные навыки |
-| Команды | `_ai/commands/` | diff-review, short_review, doc_maker |
-| Паттерны | `_ai/patterns/_index.md` | Индекс паттернов (lazy load) |
-| Протоколы | `_ai/protocols/` | Gardener (мета-обучение) |
-| Хуки | `_ai/hooks/` | skill-lint.sh |
+| Оркестратор | `.ai/dev_agent.md` | Базовый промт, роли, маршрутизация |
+| Агенты | `.ai/agents/` | Developer (`sdet.md`), Auditor (`auditor.md`) |
+| Скиллы | `.ai/skills/` | Специализированные навыки |
+| Команды | `.ai/commands/` | diff-review, short_review, doc_maker |
+| Паттерны | `.ai/patterns/_index.md` | Индекс паттернов (lazy load) |
+| Протоколы | `.ai/protocols/` | Gardener (мета-обучение) |
+| Хуки | `.ai/hooks/` | skill-lint.sh |
 
 ## Project Structure
 
 ```
 .
 ├── CLAUDE.md
-├── _ai/
+├── .ai/
 │   ├── dev_agent.md
 │   ├── setup_context.md
 │   ├── agents/

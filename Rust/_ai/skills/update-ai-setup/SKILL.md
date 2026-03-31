@@ -15,7 +15,7 @@ context: fork
 
 - После добавления/удаления скилла
 - После изменения CLAUDE.md или agents/*.md
-- После изменения плагинов в `_ai/settings.json`
+- После изменения плагинов в `.ai/settings.json`
 - После изменения MCP серверов в `.mcp.json`
 - Периодическая проверка актуальности реестра
 
@@ -53,7 +53,7 @@ context: fork
 ⚠️ WARNING: docs/ai-setup.md не найден — создаю новый файл.
 ```
 
-Скилл создаёт пустой реестр на основе шаблона `_ai/skills/init-skill/references/skill-template.md` и продолжает сканирование.
+Скилл создаёт пустой реестр на основе шаблона `.ai/skills/init-skill/references/skill-template.md` и продолжает сканирование.
 
 Запомни текущие данные: список файлов, строки, количество паттернов, скиллов.
 
@@ -64,13 +64,13 @@ context: fork
 ```
 Обязательные:
   - CLAUDE.md
-  - _ai/settings.json
-  - _ai/settings.local.json
+  - .ai/settings.json
+  - .ai/settings.local.json
   - .mcp.json
-  - _ai/agents/*.md
-  - _ai/skills/*/SKILL.md
-  - _ai/skills/*/references/*
-  - _ai/commands/*.md
+  - .ai/agents/*.md
+  - .ai/skills/*/SKILL.md
+  - .ai/skills/*/references/*
+  - .ai/commands/*.md
   - docs/ai-setup.md
 ```
 
@@ -78,7 +78,7 @@ context: fork
 
 ### Шаг 2b: Сканирование плагинов и MCP серверов
 
-1. Прочитай `_ai/settings.json` → извлеки ключи из `enabledPlugins`
+1. Прочитай `.ai/settings.json` → извлеки ключи из `enabledPlugins`
 2. Прочитай `.mcp.json` → извлеки ключи из `mcpServers`
 3. Сравни с таблицами "Плагины" и "MCP серверы" в `docs/ai-setup.md`
 4. Дельта: добавить новые / удалить отсутствующие / обновить изменённые строки
@@ -148,11 +148,11 @@ context: fork
 - [ ] Счётчики строк совпадают с `wc -l`
 - [ ] Нет placeholder'ов `[xxx]` в финальном документе
 - [ ] Changelog содержит новую запись с текущей датой
-- [ ] Количество скиллов в реестре = количеству `_ai/skills/*/SKILL.md`
+- [ ] Количество скиллов в реестре = количеству `.ai/skills/*/SKILL.md`
 - [ ] Количество плагинов в таблице = количеству ключей в `settings.json / settings.local.json`
 - [ ] Количество MCP серверов в таблице = количеству ключей в `.mcp.json → mcpServers`
 
 ## Связанные файлы
 
 - Реестр: `docs/ai-setup.md`
-- Шаблон: `_ai/skills/init-skill/references/skill-template.md`
+- Шаблон: `.ai/skills/init-skill/references/skill-template.md`

@@ -121,8 +121,8 @@
 | Файл | Инструмент |
 |------|-----------|
 | `CLAUDE.md` | Claude Code |
-| `_ai/skills/*/SKILL.md` | Claude Code Skills |
-| `_ai/agents/*.md` | Claude Code Agents |
+| `.ai/skills/*/SKILL.md` | Claude Code Skills |
+| `.ai/agents/*.md` | Claude Code Agents |
 | `AGENTS.md` | Codex/Cline/Continue.dev |
 | `.cursor/rules/*.mdc` | Cursor IDE |
 | `.github/copilot-instructions.md` | GitHub/VS Code Copilot |

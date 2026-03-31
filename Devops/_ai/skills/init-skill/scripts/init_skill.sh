@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-SKILLS_DIR="_ai/skills"
+SKILLS_DIR=".ai/skills"
 
 # --- Validation ---
 

@@ -7,7 +7,7 @@
 | `/repo-scout` | **Self** | Разведка Rust-репозитория | `audit/repo-scout-report.md` |
 | `/init-project` | **Self** | Генерация CLAUDE.md для Rust-проекта | `CLAUDE.md` |
 | `/update-ai-setup` | **Self** | Обновление AI-реестра | `docs/ai-setup.md` |
-| `/init-skill` | Developer | Создание новых скиллов | `_ai/skills/{name}/SKILL.md` |
+| `/init-skill` | Developer | Создание новых скиллов | `.ai/skills/{name}/SKILL.md` |
 | `/rust-review` | Auditor | Глубокий Rust code review | `audit/rust-review-report.md` |
 | `/refactor-plan` | Auditor | Планирование рефакторинга | `audit/refactor-plan.md` |
 | `/dependency-check` | Auditor | Анализ Cargo-зависимостей | `audit/dependency-check-report.md` |

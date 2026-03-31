@@ -7,7 +7,7 @@
 | `/repo-scout` | **Self** | Разведка DevOps-репозитория | `audit/repo-scout-report.md` |
 | `/init-project` | **Self** | Генерация CLAUDE.md для DevOps-проекта | `CLAUDE.md` |
 | `/update-ai-setup` | **Self** | Обновление AI-реестра | `docs/ai-setup.md` |
-| `/init-skill` | Engineer | Создание новых скиллов | `_ai/skills/{name}/SKILL.md` |
+| `/init-skill` | Engineer | Создание новых скиллов | `.ai/skills/{name}/SKILL.md` |
 | `/infra-review` | Auditor | Глубокий review инфраструктуры | `audit/infra-review-report.md` |
 | `/refactor-plan` | Auditor | Планирование рефакторинга инфры | `audit/refactor-plan.md` |
 | `/dependency-check` | Auditor | Анализ зависимостей (образы, пакеты) | `audit/dependency-check-report.md` |

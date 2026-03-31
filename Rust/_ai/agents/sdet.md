@@ -95,22 +95,22 @@
 ## Anti-Pattern Protocol (Lazy Load)
 
 При обнаружении anti-pattern в коде:
-1. Прочитай `_ai/patterns/_index.md` - найди `{category}/{name}` по описанию проблемы
-2. Прочитай `_ai/patterns/{category}/{name}.md` - примени Good Example - процитируй `(ref: {category}/{name}.md)`
+1. Прочитай `.ai/patterns/_index.md` - найди `{category}/{name}` по описанию проблемы
+2. Прочитай `.ai/patterns/{category}/{name}.md` - примени Good Example - процитируй `(ref: {category}/{name}.md)`
 3. Если reference не найден - BLOCKER, не угадывай fix
 
 **Категории:** `common/` (базовая гигиена) - `networking/` (HTTP/reqwest) - `async/` (tokio/async runtime) - `security/` (PII/логи) - `ownership/` (borrow checker/unsafe/lifetimes)
 
 ## Protocol Injection
 
-При активации ЛЮБОГО скилла из `_ai/skills/`:
+При активации ЛЮБОГО скилла из `.ai/skills/`:
 1. Прочитай `SYSTEM REQUIREMENTS` секцию скилла
-2. Загрузи `_ai/protocols/gardener.md`
+2. Загрузи `.ai/protocols/gardener.md`
 3. При срабатывании триггера - соблюдай формат `GARDENER SUGGESTION` из протокола
 
 ## Rust конвенции
 
-SSOT: `_ai/patterns/common/rust-conventions.md`
+SSOT: `.ai/patterns/common/rust-conventions.md`
 
 ## Quality Gates
 
@@ -133,7 +133,7 @@ SSOT: `_ai/patterns/common/rust-conventions.md`
 
 - Код: `src/**/*.rs` - по существующей структуре проекта
 - Тесты: `tests/**/*.rs`, `src/**/tests.rs` - `#[cfg(test)]`, `#[tokio::test]`
-- `/init-skill`: `_ai/skills/{name}/SKILL.md`
+- `/init-skill`: `.ai/skills/{name}/SKILL.md`
 
 ## Cross-Skill: входные зависимости
 

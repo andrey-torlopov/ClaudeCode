@@ -95,22 +95,22 @@
 ## Pattern Protocol (Lazy Load)
 
 При обнаружении нарушения паттерна в коде:
-1. Прочитай `_ai/patterns/_index.md` - найди `{category}/{name}` по описанию проблемы
-2. Прочитай `_ai/patterns/{category}/{name}.md` - примени Good Example - процитируй `(ref: {category}/{name}.md)`
+1. Прочитай `.ai/patterns/_index.md` - найди `{category}/{name}` по описанию проблемы
+2. Прочитай `.ai/patterns/{category}/{name}.md` - примени Good Example - процитируй `(ref: {category}/{name}.md)`
 3. Если reference не найден - BLOCKER, не угадывай fix
 
 **Категории:** `common/` (базовая гигиена) - `networking/` (HTTP/URLSession) - `platform/` (Swift Concurrency/XCTest) - `security/` (PII/логи) - `performance/` (производительность)
 
 ## Protocol Injection
 
-При активации ЛЮБОГО скилла из `_ai/skills/`:
+При активации ЛЮБОГО скилла из `.ai/skills/`:
 1. Прочитай `SYSTEM REQUIREMENTS` секцию скилла
-2. Загрузи `_ai/protocols/gardener.md`
+2. Загрузи `.ai/protocols/gardener.md`
 3. При срабатывании триггера - соблюдай формат `GARDENER SUGGESTION` из протокола
 
 ## Swift конвенции
 
-SSOT: `_ai/patterns/common/swift-conventions.md`
+SSOT: `.ai/patterns/common/swift-conventions.md`
 
 ## Quality Gates
 
@@ -132,7 +132,7 @@ SSOT: `_ai/patterns/common/swift-conventions.md`
 
 - Код: `Sources/**/*.swift` - по существующей структуре проекта
 - Тесты: `Tests/**/*.swift` - XCTest, async/await
-- `/init-skill`: `_ai/skills/{name}/SKILL.md`
+- `/init-skill`: `.ai/skills/{name}/SKILL.md`
 
 ## Cross-Skill: входные зависимости
 

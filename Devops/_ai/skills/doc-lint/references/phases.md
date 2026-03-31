@@ -6,7 +6,7 @@
 
 1. **Glob Pattern:** `**/*.md`, `**/*.yaml`, `**/*.yml`, `**/*.txt`
 2. **Исключения (Blacklist):**
-   - Системные: `node_modules/`, `.git/`, `.terraform/`, `__pycache__/`, `build/`, `dist/`, `vendor/`, `_ai/`
+   - Системные: `node_modules/`, `.git/`, `.terraform/`, `__pycache__/`, `build/`, `dist/`, `vendor/`, `.ai/`
    - Бинарные/Lock: `*.lock`, `*.bin`, `*.tfstate`, `*.tfstate.backup`, `*.png`, `*.jpg`
    - **Генерируемые отчеты (ВАЖНО):** `audit/` (чтобы не линтить отчеты прошлых запусков)
    - **Архив/Спецификации:** `specifications/` (исторические данные), `legacy/`
@@ -201,15 +201,15 @@ fi
 
 1. Создать файл `audit/safe-fix.sh` с shebang `#!/usr/bin/env bash` и `set -euo pipefail`.
 2. **Логика для TOC (Оглавлений):**
-   - Проверить наличие утилиты `_ai/scripts/generate-toc.sh`.
+   - Проверить наличие утилиты `.ai/scripts/generate-toc.sh`.
    - Если утилита существует: добавить в скрипт команду вызова этой утилиты для всех файлов, где найден Warning "No TOC".
-     Пример: `_ai/scripts/generate-toc.sh "$file" || echo "Failed to generate TOC for $file"`
+     Пример: `.ai/scripts/generate-toc.sh "$file" || echo "Failed to generate TOC for $file"`
    - Если утилиты НЕТ: добавить команду вставки *только* плейсхолдера с помощью простого `sed`.
      Пример: вставить `## Table of Contents\n\n*TODO: Auto-generate TOC*\n` после заголовка H1.
 3. **Логика для битых ссылок:**
    - Если найдены битые ссылки (CRITICAL), добавить команды `mkdir -p $(dirname path/to/missing.md) && touch path/to/missing/file.md` и `echo "# TODO: Created by doc-lint" > ...`.
 4. Сделать скрипт исполняемым (`chmod +x`).
 
-**Важно:** Не пытайся генерировать сложный Bash-код для парсинга заголовков Markdown внутри этого скрипта. Используй внешнюю утилиту (`_ai/scripts/generate-toc.sh`) или оставляй эту задачу IDE (через плейсхолдер).
+**Важно:** Не пытайся генерировать сложный Bash-код для парсинга заголовков Markdown внутри этого скрипта. Используй внешнюю утилиту (`.ai/scripts/generate-toc.sh`) или оставляй эту задачу IDE (через плейсхолдер).
 
 **Checkpoint:** Скрипт создан, исполняемые права выставлены, использует статические утилиты где возможно.

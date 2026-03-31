@@ -49,19 +49,19 @@
 
 ## Orchestration
 
-Полная оркестрация (Skills Matrix, Ad-Hoc Routing, Pipeline, Completion Protocol): `_ai/references/orchestration.md`
+Полная оркестрация (Skills Matrix, Ad-Hoc Routing, Pipeline, Completion Protocol): `.ai/references/orchestration.md`
 
 ### Gardener Protocol (мета-обучение)
 
-> SSOT: `_ai/protocols/gardener.md`
+> SSOT: `.ai/protocols/gardener.md`
 
 ---
 
 ## Rust конвенции
 
-SSOT: `_ai/patterns/common/rust-conventions.md`
+SSOT: `.ai/patterns/common/rust-conventions.md`
 
-Индекс всех паттернов (ownership, async, networking, security): `_ai/patterns/_index.md`
+Индекс всех паттернов (ownership, async, networking, security): `.ai/patterns/_index.md`
 
 ---
 

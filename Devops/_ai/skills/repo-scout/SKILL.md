@@ -203,7 +203,7 @@ context: fork
 4. **AI Setup:**
    ```
    Glob: CLAUDE.md -> Claude Code
-   Glob: _ai/** -> Claude config
+   Glob: .ai/** -> Claude config
    Glob: .cursor/rules/*.mdc -> Cursor IDE
    Glob: AGENTS.md -> Agents
    ```

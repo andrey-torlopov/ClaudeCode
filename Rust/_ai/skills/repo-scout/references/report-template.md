@@ -85,8 +85,8 @@
 | Файл | Статус |
 |------|--------|
 | CLAUDE.md | {есть / нет} |
-| _ai/skills/ | {N скиллов / нет} |
-| _ai/commands/ | {N команд / нет} |
+| .ai/skills/ | {N скиллов / нет} |
+| .ai/commands/ | {N команд / нет} |
 | .cursor/rules/ | {есть / нет} |
 
 ## 8. Readiness Assessment

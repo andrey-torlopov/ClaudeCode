@@ -12,8 +12,8 @@ context: fork
 ## Перед началом
 
 Прочитай:
-1. `_ai/skills/init-skill/references/validation-checklist.md` - пороги строк и обязательные секции
-2. `_ai/skills/init-skill/references/yaml-reference.md` - правила YAML frontmatter
+1. `.ai/skills/init-skill/references/validation-checklist.md` - пороги строк и обязательные секции
+2. `.ai/skills/init-skill/references/yaml-reference.md` - правила YAML frontmatter
 
 ---
 
@@ -151,7 +151,7 @@ Grep: `НЕ ИСПРАВЛЯТЬ`, `не исправляй`, `только ан
 
 1. Собрать ссылки из CLAUDE.md на секции/паттерны скиллов
 2. Проверить что referenced секции существуют в текущих SKILL.md
-3. Проверить ссылки на `_ai/patterns/` и `_ai/agents/`
+3. Проверить ссылки на `.ai/patterns/` и `.ai/agents/`
 
 - Severity: **ERROR**
 - Рекомендация: обновить ссылки
