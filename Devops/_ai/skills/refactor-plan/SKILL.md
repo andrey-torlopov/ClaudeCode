@@ -48,7 +48,7 @@ context: fork
    - Количество файлов и строк
    - Типы конфигураций (Dockerfile, .tf, .yml, .sh, Makefile)
    - Зависимости между файлами (source, include, import)
-3. Прочитай CLAUDE.md для понимания стека и конвенций проекта
+3. Прочитай `COMMON.md` (если есть) для понимания стека и конвенций проекта
 
 ### Шаг 2: Config Smells Detection
 

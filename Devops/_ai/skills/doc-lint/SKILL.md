@@ -1,243 +1,61 @@
 ---
 name: doc-lint
-description: Аудит качества документации - размер, структура, дубликаты между файлами, нарушения SSOT. Используй для контроля качества human-readable файлов, поиска дублирования и проверки структуры. Не используй для ревью инфраструктуры или анализа конфигураций.
+description: Аудит качества документации — размер, структура, дубликаты между файлами, нарушения SSOT. Используй для контроля качества human-readable файлов, поиска дублирования и проверки структуры. Не используй для code review или анализа исходного кода.
 allowed-tools: "Read Write Edit Glob Grep Bash(wc*)"
 context: fork
 ---
 
-# /doc-lint - Аудит качества документации
+# /doc-lint — Аудит качества документации
 
-<purpose>
-Сканирует все human-readable файлы проекта, находит проблемы с размером, структурой, дубликатами между файлами и нарушения SSOT (Single Source of Truth). Генерирует отчёт с приоритизированными findings и планом рефакторинга.
-</purpose>
+Сканирует human-readable файлы проекта, ищет size issues, structural problems, duplicate blocks и нарушения SSOT.
 
 ## Когда использовать
 
-- После добавления нового документа или skill
-- При подозрении на дублирование контента между файлами
-- Для периодического аудита документации (раз в спринт)
-- Перед рефакторингом документации
+- После изменений в `COMMON.md`, anchor-файлах и документации
+- Перед разбиением больших `.md` файлов
+- При подозрении на stale links и дублирование между документами
 
-## Входные данные
+## Verbosity
 
-| Параметр | Обязательность | Описание |
-|----------|:--------------:|----------|
-| Scope | Опционально | Конкретные файлы/директории. По умолчанию - весь проект |
-| Focus | Опционально | Только определённые фазы (size, structure, duplicates) |
+- Таблицы и детальный анализ — только в артефакт.
+- В чат — короткая сводка и путь к отчёту.
 
----
+## Алгоритм
 
-## Алгоритм (6 фаз)
+1. Собери inventory по `references/phases.md`.
+2. Примени size и structure rules из `references/check-rules.md`.
+3. Проверь дублирование и назначь SSOT owner для каждого кластера.
+4. Отдельно проверь `COMMON.md` и anchor-файлы:
+   - core rules живут в `COMMON.md`,
+   - `CLAUDE.md`, `AGENTS.md`, `GEMINI.md` должны оставаться короткими.
+5. Найди broken links, stale dates, TODO/FIXME и wall-of-text.
+6. Сохрани отчёт в `audit/doc-lint-report.md`.
+7. Если есть безопасные исправления, создай `audit/safe-fix.sh`.
 
-## Verbosity Protocol (STRICT)
+## Severity
 
-**SILENT MODE ENFORCED:**
-1.  **NO CHAT TABLES:** Никогда не выводи таблицы (Inventory, Findings, Stats) в чат. Только в файл отчёта.
-2.  **NO LISTS:** Не перечисляй проверенные файлы в чате.
-3.  **ONLY STATUS:** В чат выводить **только** финальный блок `SKILL COMPLETE` и путь к отчёту.
-
-**Пример единственного допустимого вывода в чат:**
-> Audit Complete.
-> Report: `audit/doc-lint-report.md`
-> Health Score: 78/100
-> Action: Run `bash audit/safe-fix.sh` to apply safe fixes.
-
-### Фазы 1-7: Детальный алгоритм
-
-Полное описание всех фаз (Discovery, Size Analysis, Structure Analysis, Cross-File Duplicate Detection, Content Hygiene, Report Generation, Safe-Fix Script) - в `references/phases.md`.
-
----
-
-## Severity Model
-
-| Severity | Критерии |
-|----------|----------|
-| **CRITICAL** | Фактическое превышение лимитов (>700 generic, >500 SKILL); Битые ссылки (файл не найден) |
-| **WARNING** | Приближение к лимиту (90% от порога); Дубликаты >10 строк; Wall-of-text >30 строк |
-| **INFO** | TODO маркеры; Мелкие дубликаты (3-5 строк); Stale dates; Formatting issues |
-
----
-
-## Health Score Logic
-
-Start Score: 100.
-
-**Deductions (вычитание):**
-- CRITICAL: -15 баллов (за каждый finding)
-- WARNING: -5 баллов
-- INFO: -0.5 балла (снижаем вес мусора)
-
-**Formula:** `MAX(0, 100 - (Count_Crit * 15) - (Count_Warn * 5) - (Count_Info * 0.5))`
-
-*Бонусных баллов за "хорошее поведение" не начислять.*
-
-| Диапазон | Оценка | Интерпретация |
-|----------|--------|---------------|
-| 90-100 | Excellent | Документация в отличном состоянии |
-| 70-89 | Good | Есть незначительные проблемы |
-| 50-69 | Needs attention | Требуется рефакторинг |
-| <50 | Refactoring needed | Срочный рефакторинг документации |
-
-**Формула должна быть показана с подстановкой значений:**
-```
-Score = 100 - (2 x 15) - (5 x 5) - (8 x 0.5) = 100 - 30 - 25 - 4 = 41/100
-```
-
----
-
-## Формат вывода
-
-### Артефакт: `audit/doc-lint-report.md`
-
-```markdown
-# Doc-Lint Report
-
-> Дата: {YYYY-MM-DD}
-> Scope: {описание scope}
-> Health Score: {N}/100 ({оценка})
-
-## Summary
-
-| Метрика | Значение |
-|---------|----------|
-| Файлов просканировано | N |
-| CRITICAL | N |
-| WARNING | N |
-| INFO | N |
-| Health Score | N/100 |
-| Кластеров дубликатов | N |
-
-## File Inventory
-
-| # | Файл | Строк | Тип | Size Status |
-|---|------|------:|-----|-------------|
-| 1 | ... | ... | ... | OK/WARNING/CRITICAL |
-
-## CRITICAL Findings
-
-| # | Файл | Фаза | Описание | Рекомендация |
-|---|------|------|----------|--------------|
-
-## WARNING Findings
-
-| # | Файл | Фаза | Описание | Рекомендация |
-|---|------|------|----------|--------------|
-
-## INFO Findings
-
-| # | Файл | Фаза | Описание | Рекомендация |
-|---|------|------|----------|--------------|
-
-## Duplicate Map
-
-### Кластер D-1: {название паттерна}
-- **Тип:** Exact / Near-duplicate / Conceptual
-- **SSOT Owner:** {файл}
-- **Найдено в:** {список файлов с номерами строк}
-- **Рекомендация:** Оставить в {Owner}, в остальных заменить ссылкой
-
-### Кластер D-N: ...
-
-## SSOT Refactoring Plan
-
-| # | Действие | Файл | Что сделать |
-|---|----------|------|-------------|
-| 1 | REMOVE | file.md:10-25 | Удалить копию Tech Stack, добавить ссылку |
-
-## Statistics
-
-- Общий объём документации: {N} строк в {M} файлах
-- Средний размер файла: {N/M} строк
-- Файлов в пределах нормы: {X}/{M} = {%}
-- Health Score: {формула с подстановкой}
-```
-
-### Post-Check Scorecard
-
-Формат Post-Check:
-
-**Post-Check Scorecard:**
-
-```markdown
-## Scorecard
-
-| Критерий | Результат |
-|----------|-----------|
-| Все файлы просканированы | X/Y = NN% |
-| Line counts верифицированы | OK/FAIL |
-| Cross-file detection выполнен | OK/FAIL |
-| Каждый finding имеет severity + рекомендацию | X/Y = NN% |
-| Нет placeholder {xxx} | OK/FAIL |
-| SSOT owner назначен для каждого кластера | X/Y = NN% |
-| Формулы с числителем/знаменателем | OK/FAIL |
-
-### Итоговый Score: NN%
-```
-
----
+| Severity | Что означает |
+|----------|--------------|
+| `CRITICAL` | broken links, exact duplicates, сильное превышение лимитов |
+| `WARNING` | near-duplicates, wall-of-text, большие секции, anchor-файлы с копией SSOT |
+| `INFO` | TODO, stale dates, formatting noise |
 
 ## Quality Gates
 
-- [ ] Все файлы в scope отсканированы (Glob + count verification)
-- [ ] Line counts верифицированы через `wc -l`
-- [ ] Cross-file duplicate detection выполнен (Фаза 4)
-- [ ] Каждый finding имеет severity + рекомендацию
-- [ ] Нет placeholder `{xxx}` в отчёте
-- [ ] SSOT owner назначен для каждого кластера дубликатов
-- [ ] Формулы показаны с числителем и знаменателем (CLAUDE.md requirement)
-- [ ] Health Score рассчитан и показан с подстановкой
-
----
-
-## Anti-Patterns (BANNED)
-
-### False Positive на одинаковых заголовках
-
-```
-BAD: Flagging таблиц с одинаковыми заголовками но разными данными как "duplicate"
-GOOD: Сравнивать содержимое ячеек, не только headers
-```
-
-### Phantom Findings
-
-```
-BAD: Генерировать findings на основе предположений без чтения файла
-GOOD: Каждый finding подтверждён содержимым файла (строка, фрагмент)
-```
-
-### Missing Context
-
-```
-BAD: "File is too long"
-GOOD: "CLAUDE.md: 305 строк > порог CRITICAL (300). Рекомендация: вынести секцию X в отдельный файл"
-```
-
-### Over-flagging Intentional Repetition
-
-```
-BAD: Flagging ссылок на паттерны как дубликатов (ссылки - не дубликаты)
-GOOD: Отличать полное копирование от ссылок и краткого упоминания
-```
-
----
+- Все файлы в scope найдены и посчитаны через `wc -l`.
+- Каждый finding содержит severity, файл и конкретную рекомендацию.
+- Для каждого кластера дубликатов назначен SSOT owner.
+- Формулы показаны с числителем и знаменателем, если считаются метрики.
 
 ## Связанные файлы
 
-| Файл | Содержание |
-|------|------------|
-| `references/check-rules.md` | Пороги размеров, сигнатуры дубликатов, SSOT-матрица, Diataxis-маркеры |
-| `references/best-practices.md` | Корпоративные практики: Google, Amazon, Diataxis, Microsoft, GitLab, Stripe |
-
----
+- `references/check-rules.md`
+- `references/phases.md`
 
 ## Завершение
 
-После создания отчёта и скрипта - напечатай блок завершения:
-
-```
+```text
 SKILL COMPLETE: /doc-lint
 |- Артефакты: audit/doc-lint-report.md, audit/safe-fix.sh
 |- Compilation: N/A
-|- Upstream: нет
-|- Score: {Health Score}/100
 ```

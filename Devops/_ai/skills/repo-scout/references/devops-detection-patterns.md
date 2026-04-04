@@ -120,9 +120,11 @@
 
 | Файл | Инструмент |
 |------|-----------|
-| `CLAUDE.md` | Claude Code |
+| `COMMON.md` | Shared AI core context |
+| `CLAUDE.md` | Claude Code entry |
+| `AGENTS.md` | Agent runtime entry |
+| `GEMINI.md` | Gemini entry |
 | `.ai/skills/*/SKILL.md` | Claude Code Skills |
 | `.ai/agents/*.md` | Claude Code Agents |
-| `AGENTS.md` | Codex/Cline/Continue.dev |
 | `.cursor/rules/*.mdc` | Cursor IDE |
 | `.github/copilot-instructions.md` | GitHub/VS Code Copilot |

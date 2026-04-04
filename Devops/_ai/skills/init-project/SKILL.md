@@ -1,27 +1,23 @@
 ---
 name: init-project
-description: Генерирует CLAUDE.md для DevOps-проекта - сканирует репозиторий, анализирует tech stack, создает онбординг-документ. Используй для нового проекта без CLAUDE.md или настройки AI-assisted workflow. Не используй если CLAUDE.md уже настроен - редактируй вручную.
+description: Генерирует стартовый prompt pack для DevOps-проекта: COMMON.md, anchor-файлы и минимальный AI-контекст. Используй для нового проекта или миграции на облегчённый AI workflow. Не используй если core context уже настроен и требуется только точечная правка.
 allowed-tools: "Read Write Edit Glob Grep Bash(ls*)"
 context: fork
 ---
 
-# /init-project - Генератор CLAUDE.md для DevOps-проекта
+# /init-project - Генератор COMMON.md и anchor-файлов
 
-<purpose>
-Автоматическое создание CLAUDE.md (онбординг AI в проект) на основе анализа DevOps-репозитория.
-</purpose>
+Создаёт компактный prompt pack на основе структуры DevOps-репозитория.
 
 ## Когда использовать
 
-- Новый DevOps-проект без CLAUDE.md
-- Миграция существующего проекта на AI-assisted workflow
-- Стандартизация CLAUDE.md по команде
+- Новый DevOps-проект без `COMMON.md`
+- Миграция существующего проекта на облегчённый AI workflow
+- Стандартизация prompt pack по команде
 
 ## Verbosity Protocol
 
 **Tools first:** Сканируй молча. В чат - только финальный результат.
-
----
 
 ## Алгоритм выполнения
 
@@ -29,52 +25,40 @@ context: fork
 
 Найди и проанализируй:
 
-1. **Файлы контейнеризации:**
-   - `Dockerfile` / `Dockerfile.*` -> Docker-образы
-   - `docker-compose.yml` / `docker-compose.*.yml` -> Docker Compose стек
-   - `.dockerignore` -> настройка контекста сборки
+1. **Контейнеризацию и оркестрацию:**
+   - `Dockerfile` / `Dockerfile.*`
+   - `docker-compose.yml` / `docker-compose.*.yml`
+   - `k8s/`, `kubernetes/`, `manifests/`, `helm/`
+   - `Chart.yaml`, `kustomization.yaml`
 
-2. **IaC (Infrastructure as Code):**
-   - `*.tf` / `terraform/` -> Terraform
-   - `ansible/` / `playbooks/` / `*.yml` (с ansible-специфичным содержимым) -> Ansible
-   - `pulumi/` / `Pulumi.yaml` -> Pulumi
-   - `cloudformation/` / `*.template.json` -> CloudFormation
+2. **Infrastructure as Code:**
+   - `*.tf`, `terraform/`
+   - `ansible/`, `playbooks/`, `roles/`, `ansible.cfg`
+   - `Pulumi.yaml`, `pulumi/`
+   - `cloudformation/`, `*.template.json`
 
-3. **Kubernetes:**
-   - `k8s/` / `kubernetes/` / `manifests/` / `helm/` -> K8s-манифесты
-   - `Chart.yaml` -> Helm-чарты
-   - `kustomization.yaml` -> Kustomize
+3. **CI/CD и automation:**
+   - `.github/workflows/`, `.gitlab-ci.yml`, `Jenkinsfile`, `.circleci/`
+   - `argocd/`, `applicationset.yaml`, `tekton/`
+   - `Makefile`, `Taskfile.yml`, `scripts/`, `bin/`
 
-4. **CI/CD:**
-   - `.github/workflows/` -> GitHub Actions
-   - `.gitlab-ci.yml` -> GitLab CI
-   - `Jenkinsfile` -> Jenkins
-   - `.circleci/` -> CircleCI
-   - `argocd/` / `applicationset.yaml` -> ArgoCD
-
-5. **Скрипты и автоматизация:**
-   - `Makefile` -> Make
-   - `scripts/` / `bin/` -> Bash/Python скрипты
-   - `Taskfile.yml` -> Task runner
-
-6. **Мониторинг и логирование:**
-   - `prometheus/` / `prometheus.yml` -> Prometheus
-   - `grafana/` / `dashboards/` -> Grafana
-   - `alertmanager.yml` -> Alertmanager
-   - `filebeat.yml` / `fluentd/` -> Лог-коллекторы
+4. **Observability и security:**
+   - `prometheus/`, `prometheus.yml`, `grafana/`, `dashboards/`
+   - `alertmanager.yml`, `loki/`, `promtail/`, `filebeat.yml`
+   - `.sops.yaml`, `vault/`, `sealed-secrets/`, `cert-manager/`
 
 ### Обработка ошибок Шага 1
 
 **Инфраструктурные файлы не найдены** -> Спроси пользователя:
 
-```
+```text
 Не удалось определить структуру проекта автоматически. Уточни:
 - Тип проекта: (Контейнеры / IaC / Kubernetes / CI-CD / Mixed)
 - Облачный провайдер: (AWS / GCP / Azure / On-premise)
 - Оркестрация: (Kubernetes / Docker Compose / ECS / Nomad)
 ```
 
-**CI/CD-конфиги отсутствуют** -> Пропусти секцию CI в CLAUDE.md, отметь как TODO.
+**CI/CD-конфиги отсутствуют** -> Не выдумывай секцию CI. Оставь только подтверждённые данные.
 
 ### Шаг 2: Определение Tech Stack
 
@@ -85,53 +69,47 @@ context: fork
 | Container Runtime | Docker / Podman / containerd |
 | Orchestration | Kubernetes / Docker Compose / ECS / Nomad |
 | IaC | Terraform / Ansible / Pulumi / CloudFormation |
-| CI/CD | GitHub Actions / GitLab CI / Jenkins / ArgoCD |
-| Monitoring | Prometheus / Grafana / Datadog / ELK |
+| CI/CD | GitHub Actions / GitLab CI / Jenkins / ArgoCD / Tekton |
+| Monitoring | Prometheus / Grafana / Datadog / ELK / Loki |
 | Cloud | AWS / GCP / Azure / On-premise |
-| Config Mgmt | Ansible / Puppet / Chef / SaltStack |
+| Config Mgmt | Ansible / Helm / Kustomize / Puppet / Chef |
 | Secret Mgmt | Vault / SOPS / AWS Secrets Manager / sealed-secrets |
 
-### Шаг 3: Генерация CLAUDE.md
+### Шаг 3: Генерация core context
 
-Прочитай и используй шаблон из `references/claude-md-template.md`.
+Прочитай и используй шаблон из `references/common-md-template.md`.
 
-Заполни все placeholder-ы `[xxx]` данными из Шагов 1-2.
+Сгенерируй:
+
+- `COMMON.md` как SSOT
+- `CLAUDE.md` как Claude anchor
+- `AGENTS.md` как generic agent anchor
+- `GEMINI.md` как Gemini anchor
+
+Для `CLAUDE.md` используй `references/claude-md-template.md`.
+`AGENTS.md` и `GEMINI.md` делай в том же стиле: короткий read-order и ссылка на `COMMON.md`.
 
 ### Шаг 4: Валидация
 
 Перед сохранением проверь:
 
 - [ ] Tech Stack соответствует реальным файлам проекта
-- [ ] Commands работают (проверь наличие Dockerfile / terraform / и т.д.)
-- [ ] Structure отражает реальные папки
-- [ ] Нет placeholder-ов вида `[xxx]` или TODO в финальном файле
+- [ ] Verify-команды релевантны стеку проекта
+- [ ] `COMMON.md` остаётся компактным и не дублирует подробные инструкции скиллов
+- [ ] Anchor-файлы не копируют core rules и таблицы
+- [ ] Нет placeholder-ов вида `[xxx]` в финальных файлах
 
 ## Вывод
 
-Сохрани результат в `CLAUDE.md` в корне проекта.
+Сохрани результат в корень проекта:
 
-## Пример диалога
-
-```
-User: /init-project
-
-AI: Сканирую проект...
-
-Найдено:
-- Dockerfile (python:3.12-slim)
-- docker-compose.yml (3 сервиса)
-- terraform/ (AWS, 12 .tf файлов)
-- .github/workflows/ (CI + CD)
-- k8s/ (deployment, service, ingress)
-
-Генерирую CLAUDE.md...
-
-[Показывает сгенерированный файл]
-
-Сохранить в ./CLAUDE.md? (y/n)
-```
+- `COMMON.md`
+- `CLAUDE.md`
+- `AGENTS.md`
+- `GEMINI.md`
 
 ## Связанные файлы
 
-- Шаблон: `references/claude-md-template.md`
+- Шаблон SSOT: `references/common-md-template.md`
+- Шаблон Claude anchor: `references/claude-md-template.md`
 - Разведка: `/repo-scout` (может быть выполнен перед init-project)

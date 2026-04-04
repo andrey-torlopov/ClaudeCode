@@ -14,7 +14,7 @@
 - Resource limits для контейнеров и pods
 - Health checks (liveness, readiness probes)
 - Обработка ошибок в скриптах (set -euo pipefail, trap, exit codes)
-- Соответствие конвенциям из CLAUDE.md
+- Соответствие конвенциям из COMMON.md
 
 Формат ответа:
 - Ответ и рассуждения на русском языке
