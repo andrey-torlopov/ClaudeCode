@@ -25,7 +25,7 @@ context: fork
 
 ## Алгоритм (кратко)
 
-1. Определи scope (файл / директория `.swift` без тестов / `Sources/{module}`), прочитай `CLAUDE.md`, посчитай строки.
+1. Определи scope (файл / директория `.swift` без тестов / `Sources/{module}`), прочитай `COMMON.md`, посчитай строки.
 2. **Memory Safety:** используй `references/swift-checklist.md` (retain cycles, force unwrap, `Type!`, unowned).
 3. **Concurrency:** используй `references/concurrency-rules.md` (Sendable, `@MainActor`, data races, Task/actors).
 4. **Conventions & Errors:** let/var, guard, value types, naming, Any/AnyObject, throws/try?/empty catch/Result.

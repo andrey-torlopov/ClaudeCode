@@ -1,21 +1,19 @@
 ---
 name: init-project
-description: Генерирует CLAUDE.md для iOS/Swift проекта - сканирует репозиторий, анализирует tech stack, создает онбординг-документ. Используй для нового проекта без CLAUDE.md или настройки AI-assisted workflow. Не используй если CLAUDE.md уже настроен - редактируй вручную.
+description: Генерирует стартовый prompt pack для iOS/Swift проекта: COMMON.md, anchor-файлы и минимальный AI-контекст. Используй для нового проекта или миграции на облегчённый AI workflow. Не используй если core context уже настроен и требуется только точечная правка.
 allowed-tools: "Read Write Edit Glob Grep Bash(ls*)"
 context: fork
 ---
 
-# /init-project - Генератор CLAUDE.md для iOS/Swift
+# /init-project - Генератор COMMON.md и anchor-файлов
 
-<purpose>
-Автоматическое создание CLAUDE.md (онбординг AI в проект) на основе анализа iOS/Swift репозитория.
-</purpose>
+Создаёт компактный prompt pack на основе структуры iOS/Swift репозитория.
 
 ## Когда использовать
 
-- Новый iOS/Swift проект без CLAUDE.md
+- Новый iOS/Swift проект без `COMMON.md`
 - Миграция существующего проекта на AI-assisted workflow
-- Стандартизация CLAUDE.md по команде
+- Стандартизация prompt pack по команде
 
 ## Verbosity Protocol
 
@@ -61,7 +59,7 @@ context: fork
 - UI framework: (SwiftUI / UIKit / Hybrid)
 ```
 
-**CI/CD-конфиги отсутствуют** -> Пропусти секцию CI в CLAUDE.md, отметь как TODO.
+**CI/CD-конфиги отсутствуют** -> Не выдумывай секцию CI. Оставь только подтверждённые данные.
 
 ### Шаг 2: Определение Tech Stack
 
@@ -78,11 +76,19 @@ context: fork
 | Testing | XCTest / swift-testing / Quick+Nimble |
 | Linting | SwiftLint / SwiftFormat |
 
-### Шаг 3: Генерация CLAUDE.md
+### Шаг 3: Генерация core context
 
-Прочитай и используй шаблон из `references/claude-md-template.md`.
+Прочитай и используй шаблон из `references/common-md-template.md`.
 
-Заполни все placeholder-ы `[xxx]` данными из Шагов 1-2.
+Сгенерируй:
+
+- `COMMON.md` как SSOT
+- `CLAUDE.md` как Claude anchor
+- `AGENTS.md` как generic agent anchor
+- `GEMINI.md` как Gemini anchor
+
+Для `CLAUDE.md` используй `references/claude-md-template.md`.
+`AGENTS.md` и `GEMINI.md` делай в том же стиле: короткий read-order и ссылка на `COMMON.md`.
 
 ### Шаг 4: Валидация
 
@@ -90,35 +96,21 @@ context: fork
 
 - [ ] Tech Stack соответствует реальным зависимостям
 - [ ] Commands работают (проверь наличие Package.swift / xcodeproj)
-- [ ] Structure отражает реальные папки
-- [ ] Нет placeholder-ов вида `[xxx]` или TODO в финальном файле
+- [ ] `COMMON.md` остаётся компактным и без дублирующих таблиц
+- [ ] Anchor-файлы не копируют core rules
+- [ ] Нет placeholder-ов вида `[xxx]` в финальных файлах
 
 ## Вывод
 
-Сохрани результат в `CLAUDE.md` в корне проекта.
+Сохрани результат в корень проекта:
 
-## Пример диалога
-
-```
-User: /init-project
-
-AI: Сканирую проект...
-
-Найдено:
-- Package.swift -> swift-tools-version 5.9
-- Зависимости: Alamofire, SnapKit, Kingfisher
-- UI: SwiftUI + UIKit (hybrid)
-- Архитектура: MVVM (ViewModel + ObservableObject)
-- Тесты: XCTest, 15 тестовых файлов
-
-Генерирую CLAUDE.md...
-
-[Показывает сгенерированный файл]
-
-Сохранить в ./CLAUDE.md? (y/n)
-```
+- `COMMON.md`
+- `CLAUDE.md`
+- `AGENTS.md`
+- `GEMINI.md`
 
 ## Связанные файлы
 
-- Шаблон: `references/claude-md-template.md`
+- Шаблон SSOT: `references/common-md-template.md`
+- Шаблон Claude anchor: `references/claude-md-template.md`
 - Разведка: `/repo-scout` (может быть выполнен перед init-project)

@@ -62,7 +62,7 @@ context: fork
 ```yaml
 ---
 name: init-project
-description: Генерирует CLAUDE.md для iOS/Swift проекта на основе анализа репозитория. Используй для нового проекта без CLAUDE.md. Не используй если CLAUDE.md уже настроен.
+description: Генерирует COMMON.md и anchor-файлы для iOS/Swift проекта на основе анализа репозитория. Используй для нового проекта без prompt pack. Не используй если core context уже настроен.
 allowed-tools: "Read Write Edit Glob Grep Bash(ls*)"
 context: fork
 ---

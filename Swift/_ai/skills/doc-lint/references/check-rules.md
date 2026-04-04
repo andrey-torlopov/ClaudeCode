@@ -4,9 +4,10 @@
 
 | Тип файла | Рекомендовано | WARNING | CRITICAL | Обоснование |
 |-----------|:------------:|:-------:|:--------:|-------------|
-| SKILL.md | ≤500 | N/A | >500 | Правило из CLAUDE.md |
-| agents/*.md | ≤300 | >300 | >500 | System prompts — плотнее обычных docs |
-| CLAUDE.md | ≤200 | >200 | >300 | Всегда в контексте = расход токенов |
+| `COMMON.md` | ≤120 | >120 | >200 | Всегда в контексте, это SSOT |
+| `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` | ≤60 | >60 | >120 | Anchor-файлы должны быть короткими |
+| `SKILL.md` | ≤300 | >300 | >500 | Навык должен оставаться компактным |
+| `agents/*.md` | ≤120 | >120 | >220 | Role cards, а не большие system prompts |
 | docs/*.md | ≤400 | >500 | >700 | Microsoft Docs: 200-800 ideal range |
 | README.md | ≤300 | >500 | >700 | Entry point + workshop guide |
 | YAML config (.yaml, .yml) | ≤200 | >300 | >500 | Конфиг, не проза |
@@ -18,11 +19,12 @@
 
 1. Имя `SKILL.md` → SKILL.md
 2. Путь содержит `agents/` → agents/*.md
-3. Имя `CLAUDE.md` → CLAUDE.md
-4. Имя `README.md` → README.md
-5. Расширение `.yaml` или `.yml` → YAML config
-6. Путь содержит `docs/` → docs/*.md
-7. Расширение `.md` → Generic .md
+3. Имя `COMMON.md` → `COMMON.md`
+4. Имя `CLAUDE.md`, `AGENTS.md` или `GEMINI.md` → anchor-файл
+5. Имя `README.md` → README.md
+6. Расширение `.yaml` или `.yml` → YAML config
+7. Путь содержит `docs/` → docs/*.md
+8. Расширение `.md` → Generic .md
 
 ---
 
@@ -32,11 +34,11 @@ Pre-registered паттерны для быстрого поиска через 
 
 | ID | Паттерн | Grep-сигнатура | Min match |
 |----|---------|----------------|-----------|
-| KP-1 | Tech Stack (LOCKED) | `Компонент.*Технология.*BANNED` | 1 строка |
-| KP-2 | Progressive Disclosure | `Уровень 1.*YAML` или `Уровень 1.*Level 1` | 1 строка |
-| KP-3 | Core Principles | `Trust No One` + `Production Ready` + `Safety` | 3 строки в пределах 10 строк |
+| KP-1 | Core Rules block | `Trust No One` + `Minimal Diff` + `Production Ready` | 3 строки в пределах 12 строк |
+| KP-2 | COMMON as SSOT | `COMMON.md` + `SSOT` | 2 строки |
+| KP-3 | Anchor duplication | `Read Order` + `COMMON.md` + `core rules` | 3 строки |
 | KP-4 | Skill Size Limit | `500 строк` или `≤500` в контексте skill | 1 строка |
-| KP-5 | Safety Protocols | `FORBIDDEN` + `MANDATORY` + `OVERRIDE` в пределах 10 строк | 3 строки |
+| KP-5 | Legacy process | `gardener` или `Protocol Injection` или `Escalation Protocol` | 1 строка |
 
 ### Правило KP-match
 
@@ -49,9 +51,9 @@ Pre-registered паттерны для быстрого поиска через 
 
 | Категория контента | SSOT Owner | Обоснование |
 |--------------------|------------|-------------|
-| Tech Stack, Safety, Conventions | `CLAUDE.md` | Всегда в контексте, минимум дублирования |
-| Mindset, Anti-Patterns, Protocols | `CLAUDE.md` | Идентичность агента |
-| Правила авторинга скиллов | `CLAUDE.md` | Общее для всех скиллов |
+| Core rules, build/test, общие conventions | `COMMON.md` | Базовый контекст для всех рантаймов |
+| Runtime entry instructions | `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` | Anchor-слой для конкретного рантайма |
+| Правила авторинга скиллов | `COMMON.md` + skill-specific refs | Не дублировать в anchor-файлах |
 | Алгоритм конкретного скилла | `SKILL.md` | Scoped context |
 | Туториалы, гайды | `docs/*.md` | Документационный слой |
 | Обзор проекта | `README.md` | Точка входа |
@@ -77,34 +79,13 @@ Pre-registered паттерны для быстрого поиска через 
 
 Один файл содержит маркеры ≥2 типов → INFO "Mixed Diataxis types". Не критично, но рекомендуется разделять.
 
----
-
-## 5. Heuristic Match Thresholds
-
-| Уровень | Критерий | Severity |
-|---------|----------|----------|
-| **Exact** | 100% match после нормализации пробелов, ≥3 строки | CRITICAL (>5 строк), WARNING (3-5 строк) |
-| **Near-duplicate** | >70% совпадения элементов для таблиц/списков (одинаковые заголовки + >70% строк) | WARNING |
-| **Conceptual** | Одинаковые ключевые термины, разная формулировка | INFO (AI judgment) |
-
-### Нормализация перед сравнением
-
-1. Убрать leading/trailing whitespace
-2. Свернуть множественные пробелы в один
-3. Убрать markdown-разметку (`**`, `*`, `` ` ``)
-4. Привести к lowercase
-5. Таблицы: сравнивать по содержимому ячеек, игнорируя форматирование `|---|`
-
----
-
-## 6. Structure Rules
+## 5. Structure Rules
 
 | Правило | Критерий | Severity |
 |---------|----------|----------|
-| Пропуск уровня заголовка | H1→H3 (минуя H2) или H2→H4 | CRITICAL |
-| Глубина заголовков | >H4 используется | INFO |
-| Дисбаланс секций | Одна секция >40% от всего файла | WARNING |
-| Пустая секция | Заголовок → следующий заголовок без контента (только пустые строки) | WARNING |
-| Нет TOC | Файл >200 строк без оглавления / table of contents | INFO |
-| Wall-of-text | >20 строк подряд без заголовков/списков/пустых строк/code blocks | WARNING |
-| Длинные строки | Строка >200 символов | INFO |
+| Пропуск уровня заголовка | H1→H3 или H2→H4 | CRITICAL |
+| Anchor-file раздут | anchor-файл > warning threshold | WARNING |
+| Дисбаланс секций | Одна секция >40% от файла | WARNING |
+| Пустая секция | Заголовок без контента | WARNING |
+| Wall-of-text | >20 строк подряд без структуры | WARNING |
+| Длинные строки | >200 символов | INFO |
