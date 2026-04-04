@@ -26,7 +26,7 @@ context: fork
 ## Входные данные
 
 - Путь к репозиторию (или текущая директория)
-- Не требует CLAUDE.md или других AI-файлов
+- Не требует `COMMON.md` или anchor-файлов
 - Может быть **первым шагом** в новом репо
 
 ## Verbosity Protocol
@@ -228,11 +228,13 @@ context: fork
 
 4. **AI Setup:**
    ```
-   Glob: CLAUDE.md -> Claude Code
-   Glob: .ai/** -> Claude config
+   Glob: COMMON.md -> shared core context
+   Glob: CLAUDE.md -> Claude entry
+   Glob: AGENTS.md -> agent-runtime entry
+   Glob: GEMINI.md -> Gemini entry
+   Glob: .ai/** -> local AI config
    Glob: .cursor/rules/*.mdc -> Cursor IDE
    Glob: .github/copilot-instructions.md -> Copilot
-   Glob: AGENTS.md -> Agents
    ```
 
 5. **Containerization:**

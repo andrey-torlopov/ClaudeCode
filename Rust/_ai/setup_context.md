@@ -1,25 +1,24 @@
-# Project context
-- Язык: Rust, Markdown
+# Project Context
+
+- SSOT: `COMMON.md`
+- Entry points: `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`
+- Язык: Rust
 - Пакетный менеджер: Cargo
-- Комментарии и рассуждения пишем на русском языке
+- Комментарии и документация: на русском языке
 
-## AI-сетап
-- Базовый промт и оркестратор: `.ai/dev_agent.md`.
-- Роли агентов: `.ai/agents/`.
-- Скиллы и команды: `.ai/skills/`, `.ai/commands/`; пост-хуки: `.ai/hooks/`.
-- Паттерны и протоколы: `.ai/patterns/`, `.ai/protocols/`.
+## Verify
 
-# Build & Run
-- Сборка: `cargo build`
-- Тесты: `cargo test`
-- Проверка без сборки: `cargo check`
-- Форматирование: `cargo fmt`
-- Линтер: `cargo clippy`
+- Build: `cargo build`
+- Check: `cargo check`
+- Test: `cargo test`
+- Clippy: `cargo clippy`
+- Fmt: `cargo fmt`
 
-## Project Structure
-```
-.
-├── CLAUDE.md
-└── <Project>
-    ├── <Files>
-```
+## AI Layers
+
+- `_ai/dev_agent.md` — базовая роль и лёгкая маршрутизация.
+- `_ai/agents/` — компактные role cards.
+- `_ai/skills/` — специализированные сценарии.
+- `_ai/commands/` — короткие command-prompts.
+- `_ai/patterns/_index.md` — lazy-load каталог паттернов.
+- `_ai/hooks/skill-lint.sh` — быстрая валидация AI-файлов.

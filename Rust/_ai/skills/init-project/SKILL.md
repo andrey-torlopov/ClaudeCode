@@ -1,27 +1,23 @@
 ---
 name: init-project
-description: Генерирует CLAUDE.md для Rust проекта - сканирует репозиторий, анализирует tech stack, создает онбординг-документ. Используй для нового проекта без CLAUDE.md или настройки AI-assisted workflow. Не используй если CLAUDE.md уже настроен - редактируй вручную.
+description: Генерирует стартовый prompt pack для Rust проекта: COMMON.md, anchor-файлы и минимальный AI-контекст. Используй для нового проекта или миграции на облегчённый AI workflow. Не используй если core context уже настроен и требуется только точечная правка.
 allowed-tools: "Read Write Edit Glob Grep Bash(ls*)"
 context: fork
 ---
 
-# /init-project - Генератор CLAUDE.md для Rust
+# /init-project - Генератор COMMON.md и anchor-файлов
 
-<purpose>
-Автоматическое создание CLAUDE.md (онбординг AI в проект) на основе анализа Rust репозитория.
-</purpose>
+Создаёт компактный prompt pack на основе структуры Rust репозитория.
 
 ## Когда использовать
 
-- Новый Rust проект без CLAUDE.md
+- Новый Rust проект без `COMMON.md`
 - Миграция существующего проекта на AI-assisted workflow
-- Стандартизация CLAUDE.md по команде
+- Стандартизация prompt pack по команде
 
 ## Verbosity Protocol
 
 **Tools first:** Сканируй молча. В чат - только финальный результат.
-
----
 
 ## Алгоритм выполнения
 
@@ -37,16 +33,15 @@ context: fork
    - `rust-toolchain.toml` -> pinned Rust version
 
 2. **Структуру исходников:**
-   - `src/` -> основной код (lib.rs, main.rs, модули)
+   - `src/` -> основной код
    - `tests/` -> интеграционные тесты
    - `benches/` -> бенчмарки
-   - `examples/` -> примеры использования
-   - Workspace members (вложенные crate-ы)
+   - `examples/` -> примеры
+   - workspace members
 
 3. **Конфигурации:**
    - `rustfmt.toml` -> rustfmt
    - `clippy.toml` -> Clippy
-   - `.cargo/config.toml` -> Cargo aliases, target config
    - `deny.toml` -> cargo-deny
 
 4. **CI/CD:**
@@ -58,14 +53,14 @@ context: fork
 
 **Cargo.toml не найден** -> Спроси пользователя:
 
-```
+```text
 Не удалось определить структуру проекта автоматически. Уточни:
 - Тип проекта: (Library / Binary / Workspace)
 - Async runtime: (tokio / async-std / нет)
 - Основной фреймворк: (axum / actix-web / clap / нет)
 ```
 
-**CI/CD-конфиги отсутствуют** -> Пропусти секцию CI в CLAUDE.md, отметь как TODO.
+**CI/CD-конфиги отсутствуют** -> Не выдумывай секцию CI. Оставь только подтверждённые данные.
 
 ### Шаг 2: Определение Tech Stack
 
@@ -83,11 +78,19 @@ context: fork
 | Testing | std #[test] / criterion / proptest / rstest |
 | Linting | clippy / rustfmt |
 
-### Шаг 3: Генерация CLAUDE.md
+### Шаг 3: Генерация core context
 
-Прочитай и используй шаблон из `references/claude-md-template.md`.
+Прочитай и используй шаблон из `references/common-md-template.md`.
 
-Заполни все placeholder-ы `[xxx]` данными из Шагов 1-2.
+Сгенерируй:
+
+- `COMMON.md` как SSOT
+- `CLAUDE.md` как Claude anchor
+- `AGENTS.md` как generic agent anchor
+- `GEMINI.md` как Gemini anchor
+
+Для `CLAUDE.md` используй `references/claude-md-template.md`.
+`AGENTS.md` и `GEMINI.md` делай в том же стиле: короткий read-order и ссылка на `COMMON.md`.
 
 ### Шаг 4: Валидация
 
@@ -95,36 +98,21 @@ context: fork
 
 - [ ] Tech Stack соответствует реальным зависимостям
 - [ ] Commands работают (проверь наличие Cargo.toml)
-- [ ] Structure отражает реальные папки
-- [ ] Нет placeholder-ов вида `[xxx]` или TODO в финальном файле
+- [ ] `COMMON.md` остаётся компактным и без дублирующих таблиц
+- [ ] Anchor-файлы не копируют core rules
+- [ ] Нет placeholder-ов вида `[xxx]` в финальных файлах
 
 ## Вывод
 
-Сохрани результат в `CLAUDE.md` в корне проекта.
+Сохрани результат в корень проекта:
 
-## Пример диалога
-
-```
-User: /init-project
-
-AI: Сканирую проект...
-
-Найдено:
-- Cargo.toml -> edition 2021, MSRV 1.75
-- Зависимости: tokio, axum, sqlx, serde, tracing
-- Async Runtime: tokio
-- Web Framework: axum
-- Database: sqlx (PostgreSQL)
-- Тесты: #[test] + #[tokio::test], 12 тестовых модулей
-
-Генерирую CLAUDE.md...
-
-[Показывает сгенерированный файл]
-
-Сохранить в ./CLAUDE.md? (y/n)
-```
+- `COMMON.md`
+- `CLAUDE.md`
+- `AGENTS.md`
+- `GEMINI.md`
 
 ## Связанные файлы
 
-- Шаблон: `references/claude-md-template.md`
+- Шаблон SSOT: `references/common-md-template.md`
+- Шаблон Claude anchor: `references/claude-md-template.md`
 - Разведка: `/repo-scout` (может быть выполнен перед init-project)

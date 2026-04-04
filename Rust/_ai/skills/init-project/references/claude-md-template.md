@@ -1,85 +1,21 @@
-# CLAUDE.md - Шаблон для Rust проекта
+# CLAUDE.md - Anchor template
 
-> **Назначение:** Wiki проекта для AI. Первый день нового сотрудника - какой стек, где что лежит, как собирать.
-
----
-
-## Шаблон
+Используй этот шаблон только как короткий entry-файл. Все core rules должны жить в `COMMON.md`.
 
 ```markdown
 # [Project Name]
 
-## Context
-- **Project:** [Что разрабатываем - описание библиотеки/сервиса/утилиты]
-- **Language:** Rust
-- **Platform:** [Linux / macOS / cross-platform]
-- **MSRV:** [1.75 / 1.80 / nightly / не указан]
+Этот файл — входная точка для Claude-совместимых рантаймов.
 
-## Tech Stack
+## Read Order
 
-| Категория | Технология |
-|-----------|------------|
-| Async Runtime | [tokio / async-std / smol / нет] |
-| Serialization | [serde / manual / нет] |
-| Web Framework | [axum / actix-web / warp / rocket / нет] |
-| Database | [sqlx / diesel / sea-orm / rusqlite / нет] |
-| CLI | [clap / structopt / argh / нет] |
-| Error Handling | [thiserror+anyhow / eyre / custom] |
-| Logging | [tracing / log+env_logger / slog] |
-| Testing | [std #[test] / criterion / proptest / rstest] |
-| Package Manager | Cargo |
-| Linting | [clippy / rustfmt / cargo-deny] |
+1. Прочитай `COMMON.md` как SSOT.
+2. Прочитай `_ai/setup_context.md` для карты AI-слоя.
+3. Подключай роли, скиллы и паттерны только по необходимости.
 
-## Project Structure
+## Runtime Notes
 
-```text
-[Реальная структура проекта]
-```
-
-## Build & Run
-
-| Действие | Команда |
-|----------|---------|
-| Build | `cargo build` |
-| Test | `cargo test` |
-| Lint | `cargo clippy -- -D warnings` |
-| Format check | `cargo fmt --check` |
-| Run | `cargo run` |
-
-## Rust Conventions
-
-- Используй `let` вместо `let mut` где возможно
-- Предпочитай `&T` вместо `.clone()` где возможно
-- Используй `Result<T, E>` с `?` operator для обработки ошибок
-- Добавляй `#[derive(Debug, Clone, PartialEq)]` для публичных типов
-- `thiserror` для ошибок библиотеки, `anyhow` для ошибок приложения
-- Типы между потоками: `Send + Sync`
-- `unsafe` только с `// SAFETY:` комментарием
-- Clippy warnings как руководство к действию
-- Предпочитай итераторы вместо циклов с индексами
-- Используй `impl Trait` в аргументах для обобщенных функций
-- Предпочитай `&str` над `&String` в параметрах
-- Документируй публичный API с `///` doc-комментариями
-
-## Naming
-
-- Функции, переменные, модули: `snake_case`
-- Типы, трейты, enum-ы: `CamelCase`
-- Константы: `SCREAMING_SNAKE_CASE`
-- Lifetime-ы: короткие (`'a`, `'b`), описательные для сложных случаев (`'conn`)
-- Crate names: `kebab-case` в Cargo.toml, `snake_case` в use
-
-## Safety Protocols
-
-FORBIDDEN: `git reset --hard`, `git clean -fd`, удаление веток
-MANDATORY: Backup перед деструктивными операциями
-```
-
----
-
-## Расположение файла
-
-```
-project-root/
-└── CLAUDE.md    # В корне проекта
+- Не копируй сюда verify-команды, core rules и большие таблицы.
+- Для базовой роли используй `_ai/dev_agent.md`.
+- Для review используй `_ai/agents/auditor.md`.
 ```
