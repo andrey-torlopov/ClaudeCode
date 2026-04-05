@@ -5,14 +5,14 @@
 ## Read Order
 
 1. `COMMON.md` — SSOT для правил, verify-команд и общих ограничений.
-2. `_ai/setup_context.md` — карта рантайма и доступных слоёв.
-3. `_ai/dev_agent.md` — базовая роль и лёгкая маршрутизация.
+2. `.ai/setup_context.md` — карта рантайма и доступных слоёв.
+3. `.ai/dev_agent.md` — базовая роль и лёгкая маршрутизация.
 
 ## Available Layers
 
-- `_ai/agents/engineer.md` — компактная роль для реализации конфигов и скриптов.
-- `_ai/agents/auditor.md` — компактная роль для review и аудита.
-- `_ai/skills/*/SKILL.md` — специализированные сценарии.
-- `_ai/patterns/_index.md` — lazy-load каталог паттернов.
+- `.ai/agents/engineer.md` — компактная роль для реализации конфигов и скриптов.
+- `.ai/agents/auditor.md` — компактная роль для review и аудита.
+- `.ai/skills/*/SKILL.md` — специализированные сценарии.
+- `.ai/patterns/_index.md` — lazy-load каталог паттернов.
 
 Не дублируй правила из `COMMON.md` в этом файле.
