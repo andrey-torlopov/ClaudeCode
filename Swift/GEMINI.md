@@ -5,7 +5,7 @@
 ## Read Order
 
 1. Прочитай `COMMON.md` как SSOT.
-2. Затем `_ai/setup_context.md` для навигации по `_ai/` слою.
+2. Затем `.ai/setup_context.md` для навигации по `.ai/` слою.
 3. Дальше подключай только нужные роли, скиллы и паттерны.
 
 ## Runtime Notes

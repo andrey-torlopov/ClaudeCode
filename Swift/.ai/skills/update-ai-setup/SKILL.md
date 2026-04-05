@@ -28,13 +28,13 @@ context: fork
    - `CLAUDE.md`
    - `AGENTS.md`
    - `GEMINI.md`
-   - `_ai/setup_context.md`
-   - `_ai/dev_agent.md`
-   - `_ai/agents/*.md`
-   - `_ai/skills/*/SKILL.md`
-   - `_ai/commands/*.md`
-   - `_ai/patterns/_index.md`
-   - `_ai/hooks/skill-lint.sh`
+   - `.ai/setup_context.md`
+   - `.ai/dev_agent.md`
+   - `.ai/agents/*.md`
+   - `.ai/skills/*/SKILL.md`
+   - `.ai/commands/*.md`
+   - `.ai/patterns/_index.md`
+   - `.ai/hooks/skill-lint.sh`
    - `docs/ai-setup.md`
 3. Опционально проверь `.mcp.json`, `.cursor/`, `.github/copilot-instructions.md`, если они есть.
 4. Сравни найденные файлы с текущим реестром и собери дельту:

@@ -8,8 +8,8 @@
 ## Read Order
 
 1. `COMMON.md`
-2. `_ai/setup_context.md`
-3. `_ai/references/orchestration.md` при необходимости маршрутизации
+2. `.ai/setup_context.md`
+3. `.ai/references/orchestration.md` при необходимости маршрутизации
 4. Нужные роли, скиллы и паттерны по требованию
 
 ## Operating Rules
@@ -17,9 +17,9 @@
 - Работай напрямую и без процессного театра.
 - Опирайся на файлы и инструменты, а не на предположения.
 - Не меняй архитектуру без прямого запроса.
-- Вызывай `_ai/agents/auditor.md` для review и аудита.
-- Вызывай `_ai/agents/sdet.md` для чистой реализации, когда нужен отдельный execution-role.
-- Паттерны загружай лениво через `_ai/patterns/_index.md`.
+- Вызывай `.ai/agents/auditor.md` для review и аудита.
+- Вызывай `.ai/agents/sdet.md` для чистой реализации, когда нужен отдельный execution-role.
+- Паттерны загружай лениво через `.ai/patterns/_index.md`.
 
 ## Delivery
 
