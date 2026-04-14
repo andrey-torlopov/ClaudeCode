@@ -1,18 +1,18 @@
 # No Order-Dependent Tests
 
-**Applies to:** Unit-тесты, Integration-тесты
+**Applies to:** Unit tests, Integration tests
 
 ## Why this is bad
 
-Тесты, зависящие от порядка выполнения:
-- XCTest не гарантирует порядок по умолчанию (рандомизация в Xcode)
-- Параллельный запуск невозможен
-- Один упавший тест каскадно ломает все следующие
+Tests that depend on execution order:
+- XCTest does not guarantee default order (randomization in Xcode)
+- Parallel launch is not possible
+- One failed test cascades down all the following ones
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Тесты зависят от порядка - delete не работает без create
+// ❌ BAD: Tests are order dependent - delete doesn't work without create
 class UserTests: XCTestCase {
     static var userId: String = ""
 
@@ -36,7 +36,7 @@ class UserTests: XCTestCase {
 ## Good Example
 
 ```swift
-// ✅ GOOD: Каждый тест полностью автономен
+// ✅ GOOD: Each test is completely autonomous
 class UserTests: XCTestCase {
 
     func testGetUserById() async throws {
@@ -57,8 +57,8 @@ class UserTests: XCTestCase {
 
 ## What to look for in code review
 
-- Методы с нумерацией `test1_`, `test2_`, `test3_`
-- `static var` в XCTestCase, заполняемый в одном тесте
-- Тесты, которые падают при запуске поодиночке
-- Комментарии типа "run after test X"
-- Отключенная рандомизация тестов в схеме Xcode
+- Methods numbered `test1_`, `test2_`, `test3_`
+- `static var` in XCTestCase, filled in one test
+- Tests that crash when run individually
+- Comments like "run after test X"
+- Disabled test randomization in Xcode schema

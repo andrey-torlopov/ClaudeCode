@@ -1,19 +1,19 @@
 # No Shared Mutable State
 
-**Applies to:** Тесты, многопоточный код
+**Applies to:** Tests, multi-threaded code
 
 ## Why this is bad
 
-Разделяемое mutable состояние между тестами или потоками:
-- Тесты зависят от порядка выполнения
-- Параллельный запуск ломает всё
-- Data race при concurrent доступе
-- Падение одного теста каскадно ломает следующие
+Shared mutable state between tests or threads:
+- Tests depend on the order of execution
+- Parallel launch breaks everything
+- Data race with concurrent access
+- The failure of one test cascadingly breaks the next ones
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Static var в тестовом классе - тесты зависят друг от друга
+// ❌ BAD: Static var in the test class - tests depend on each other
 class UserTests: XCTestCase {
     static var createdUserId: String = ""
 
@@ -30,20 +30,20 @@ class UserTests: XCTestCase {
     func testDeleteUser() async throws {
         let response = try await apiClient.deleteUser(Self.createdUserId)
         XCTAssertEqual(response.statusCode, 204, "Delete should succeed")
-        // После delete - testUpdateUser сломается
+        // After delete - testUpdateUser will break
     }
 }
 
-// ❌ BAD: Shared mutable state в production коде без синхронизации
+// ❌ BAD: Shared mutable state in production code without synchronization
 class UserCache {
-    var users: [String: User] = [:]  // Data race при concurrent доступе
+    var users: [String: User] = [:] // Data race for concurrent access
 
     func getUser(_ id: String) -> User? {
-        users[id]  // Чтение без синхронизации
+        users[id] // Read without synchronization
     }
 
     func setUser(_ user: User) {
-        users[user.id] = user  // Запись без синхронизации
+        users[user.id] = user // Record without synchronization
     }
 }
 ```
@@ -51,7 +51,7 @@ class UserCache {
 ## Good Example
 
 ```swift
-// ✅ GOOD: Каждый тест создает свои данные
+// ✅ GOOD: Each test creates its own data
 class UserTests: XCTestCase {
     func testUpdateUser() async throws {
         let userId = try await UserHelper.createUser(TestData.validCreateBody())
@@ -68,7 +68,7 @@ class UserTests: XCTestCase {
     }
 }
 
-// ✅ GOOD: Actor для thread-safe shared state
+// ✅ GOOD: Actor for thread-safe shared state
 actor UserCache {
     private var users: [String: User] = [:]
 
@@ -81,7 +81,7 @@ actor UserCache {
     }
 }
 
-// ✅ GOOD: Sendable struct для immutable shared data
+// ✅ GOOD: Sendable struct for immutable shared data
 struct AppConfig: Sendable {
     let baseURL: URL
     let apiKey: String
@@ -91,9 +91,9 @@ struct AppConfig: Sendable {
 
 ## What to look for in code review
 
-- `static var` в XCTestCase (кроме lazy конфигурации)
-- Тест A создает данные, тест B использует их
-- `var` properties в классах без `actor` или синхронизации
-- Отсутствие `Sendable` conformance для типов, передаваемых между потоками
-- `@unchecked Sendable` без обоснования
-- `DispatchQueue` для синхронизации вместо `actor` (legacy)
+- `static var` in XCTestCase (except lazy configuration)
+- Test A creates data, test B uses it
+- `var` properties in classes without `actor` ​​or synchronization
+- Lack of `Sendable` conformance for types passed between threads
+- `@unchecked Sendable` without justification
+- `DispatchQueue` for synchronization instead of `actor` ​​(legacy)

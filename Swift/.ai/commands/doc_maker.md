@@ -1,18 +1,18 @@
-Проведи анализ в папке $ARGUMENTS и положи результат в $ARGUMENTS_2
+Perform the analysis in the $ARGUMENTS folder and put the result in $ARGUMENTS_2
 
-Шаги:
-1. Прочитай файлы целиком для полного контекста из $ARGUMENTS
-2. Проведи указанные работы и в указанном формате ответа запиши результат в markdown файл по пути: $ARGUMENTS_2
+Steps:
+1. Read entire files for full context from $ARGUMENTS
+2. Carry out the specified work and write the result in the specified response format in a markdown file along the path: $ARGUMENTS_2
 
-Работа
-- Провести анализ кода
-- Разобрать структуру, модули, классы
-- Установить взяимосвязи между модулями
-- Выявить текущую архитектуру
-- Составить рекомендации по улучшению
+Job
+- Conduct code analysis
+- Disassemble the structure, modules, classes
+- Establish connections between modules
+- Identify the current architecture
+- Make recommendations for improvement
 
-Формат ответа:
-- Подробное описание архитектуры и модулей, чтобы легко можно было онбордить новичков
-- Минимум вводных и дежурных фраз (поменьше воды)
-- Рекомендации по улучшению
-- Нужно чтобы на основе этого документа можно было построить диаграммы взаимодействия и легко разобраться в том коде который записан в папке
+Response format:
+- Detailed description of the architecture and modules to make it easy to onboard newcomers
+- A minimum of introductory and duty phrases (less water)
+- Recommendations for improvement
+- It is necessary that on the basis of this document it is possible to construct interaction diagrams and easily understand the code that is written in the folder

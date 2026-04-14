@@ -1,15 +1,15 @@
 # Swift Project
 
-Этот файл — входная точка для Claude-совместимых рантаймов.
+This file is the entry point for Claude-compatible runtimes.
 
 ## Read Order
 
-1. Прочитай `COMMON.md` — это SSOT для правил и базового контекста.
-2. Прочитай `.ai/setup_context.md` — там карта `.ai/` слоя.
-3. Подключай `.ai/dev_agent.md`, `.ai/agents/*.md`, `.ai/skills/*/SKILL.md` и `.ai/patterns/_index.md` только по необходимости.
+1. Read `COMMON.md` - this is the SSOT for rules and basic context.
+2. Read `.ai/setup_context.md` - there is a map of the `.ai/` ​​layer.
+3. Connect `.ai/dev_agent.md`, `.ai/agents/*.md`, `.ai/skills/*/SKILL.md` and `.ai/patterns/_index.md` only when necessary.
 
 ## Runtime Notes
 
-- Не копируй core rules в этот файл: они живут в `COMMON.md`.
-- Для повседневной разработки используй `.ai/dev_agent.md`.
-- Для review и аудита используй `.ai/agents/auditor.md`.
+- Do not copy core rules to this file: they live in `COMMON.md`.
+- For everyday development use `.ai/dev_agent.md`.
+- For review and audit, use `.ai/agents/auditor.md`.

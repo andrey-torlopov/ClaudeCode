@@ -1,29 +1,29 @@
 # Code Style
 
-**Applies to:** Весь Swift-код проекта
+**Applies to:** All Swift code of the project
 
-## Правила
+## Rules
 
-- Не используй "—" (длинное тире и дефисы) в комментариях - используй "-"
-- Не добавляй комментарии к очевидному коду
-- Не добавляй `// MARK:` без запроса
-- Не добавляй docstrings без запроса
-- Не оборачивай код в `#if DEBUG` без запроса
+- Do not use "—" (em dash and hyphens) in comments - use "-"
+- Don't add comments to obvious code
+- Do not add `// MARK:` without asking
+- Don't add docstrings without asking
+- Don't wrap code in `#if DEBUG` without prompting
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: лишние комментарии, MARK, docstrings, длинное тире
+// ❌ BAD: unnecessary comments, MARK, docstrings, em dash
 // MARK: - Properties
 
-/// Загружает данные из сети
+/// Loads data from the network
 func loadData() async throws -> Data {
-    // Создаём URL — формируем запрос
+    // Create a URL - form a request
     let url = URL(string: endpoint)!
     #if DEBUG
     print("loading...")
     #endif
-    // Возвращаем результат
+    // Return the result
     return try await URLSession.shared.data(from: url).0
 }
 ```
@@ -31,7 +31,7 @@ func loadData() async throws -> Data {
 ## Good Example
 
 ```swift
-// ✅ GOOD: только необходимые комментарии, без MARK/docstrings без запроса
+// ✅ GOOD: only necessary comments, no MARK/docstrings without request
 func loadData() async throws -> Data {
     let url = URL(string: endpoint)!
     return try await URLSession.shared.data(from: url).0
@@ -40,8 +40,8 @@ func loadData() async throws -> Data {
 
 ## What to look for in code review
 
-- "—" (длинное тире) в комментариях вместо "-"
-- Комментарии, дублирующие очевидный код
-- `// MARK:` добавленные без явного запроса
-- Docstrings добавленные без явного запроса
-- `#if DEBUG` обёртки добавленные без явного запроса
+- "—" (em dash) in comments instead of "-"
+- Comments duplicating obvious code
+- `// MARK:` added without an explicit request
+- Docstrings added without explicit request
+- `#if DEBUG` wrappers added without an explicit request

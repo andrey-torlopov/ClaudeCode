@@ -2,16 +2,16 @@
 
 ## Why this is bad
 
-Тесты без очистки данных:
-- Засоряют БД/UserDefaults/Keychain тестовыми записями
-- Создают flaky тесты (конфликты уникальности)
-- Делают невозможным параллельный запуск
-- Усложняют отладку на staging/dev окружениях
+Tests without data cleaning:
+- Clog the database/UserDefaults/Keychain with test records
+- Create flaky tests (uniqueness conflicts)
+- Make parallel running impossible
+- Makes debugging more difficult in staging/dev environments
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Данные остаются навсегда
+// ❌ BAD: Data remains forever
 func testUserCanRegister() async throws {
     let payload = RegisterRequest(
         email: "test_\(Int(Date().timeIntervalSince1970))@example.com"
@@ -19,27 +19,27 @@ func testUserCanRegister() async throws {
 
     let response = try await apiClient.register(payload)
     XCTAssertEqual(response.statusCode, 201, "Registration should succeed")
-    // Тест закончился, юзер остался в БД
+    // The test is over, the user remains in the database
 }
 ```
 
 ## Good Example
 
 ```swift
-// ✅ GOOD: defer гарантирует cleanup
+// ✅ GOOD: defer guarantees cleanup
 func testUserCanRegister() async throws {
     let response = try await apiClient.register(validPayload)
     XCTAssertEqual(response.statusCode, 201, "Registration should succeed")
 
     let userId = response.body.userId
 
-    // addTeardownBlock выполнится даже при падении теста
+    // addTeardownBlock will be executed even if the test fails
     addTeardownBlock { [weak self] in
         try? await self?.apiClient.deleteUser(userId)
     }
 }
 
-// ✅ GOOD: setUp cleanup перед каждым тестом
+// ✅ GOOD: setUp cleanup before each test
 override func setUp() async throws {
     try await super.setUp()
     try? await apiClient.deleteUserByEmail(testEmail)
@@ -51,25 +51,25 @@ func testUserCanRegister() async throws {
 }
 ```
 
-## Рекомендованная стратегия: Cleanup-First
+## Recommended strategy: Cleanup-First
 
-**Cleanup в `setUp()` (не `tearDown()`)** - рекомендованный подход для integration-тестов.
+**Cleanup in `setUp()` (not `tearDown()`)** is the recommended approach for integration tests.
 
-**Почему Cleanup-First лучше Cleanup-After:**
-- При падении теста данные сохраняются для отладки
-- Следующий запуск сам очистит перед собой (идемпотентно)
-- `tearDown()` может не выполниться при crash процесса
+**Why Cleanup-First is better than Cleanup-After:**
+- When a test fails, the data is saved for debugging
+- The next launch will clean up in front of itself (idempotently)
+- `tearDown()` may not be executed if the process crashes
 
-| Стратегия | Когда |
+| Strategy | When |
 |-----------|-------|
-| **Cleanup-First (`setUp`)** | Integration-тесты, shared DB, нужна отладка при падении |
-| **`addTeardownBlock`** | Тест создает уникальный ресурс, который нужно удалить сразу |
-| **Cleanup-After (`tearDown`)** | Только если Cleanup-First невозможен |
+| **Cleanup-First (`setUp`)** | Integration tests, shared DB, crash debugging needed |
+| **`addTeardownBlock`** | The test creates a unique resource that needs to be deleted immediately |
+| **Cleanup-After (`tearDown`)** | Only if Cleanup-First is not possible |
 
 ## What to look for in code review
 
-- Отсутствие `addTeardownBlock`, `setUp` cleanup или `tearDown`
-- "Уникальные префиксы" как единственная стратегия изоляции
-- Тесты, которые падают при повторном запуске
-- `tearDown` вместо `setUp` cleanup без обоснования
-- Cleanup-операции, которые не идемпотентны (падают если ресурс не существует)
+- Missing `addTeardownBlock`, `setUp` ​​cleanup or `tearDown`
+- "Unique prefixes" as the only isolation strategy
+- Tests that crash when run again
+- `tearDown` instead of `setUp` ​​cleanup without justification
+- Cleanup operations that are not idempotent (fail if the resource does not exist)

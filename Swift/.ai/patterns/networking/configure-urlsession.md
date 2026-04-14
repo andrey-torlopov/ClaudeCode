@@ -4,21 +4,21 @@
 
 ## Why this is bad
 
-Дефолтная конфигурация URLSession в коде:
-- Дефолтный timeout (60 секунд) вешает UI и тесты
-- Кеширование по умолчанию скрывает реальные проблемы
-- Отсутствие лимитов на concurrent connections приводит к resource exhaustion
-- `URLSession.shared` не позволяет настроить поведение для конкретных сценариев
+Default URLSession configuration in code:
+- Default timeout (60 seconds) hangs UI and tests
+- Default caching hides real problems
+- Lack of limits on concurrent connections leads to resource exhaustion
+- `URLSession.shared` does not allow customization of behavior for specific scenarios
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Дефолтная сессия без таймаутов
+// ❌ BAD: Default session without timeouts
 final class APIClient {
     let session = URLSession.shared
 }
 
-// ❌ BAD: Таймаут задается в каждом запросе по-разному
+// ❌ BAD: The timeout is set differently in each request
 func fetchSlowEndpoint() async throws -> Data {
     var request = URLRequest(url: slowURL)
     request.timeoutInterval = 30
@@ -30,7 +30,7 @@ func fetchSlowEndpoint() async throws -> Data {
 ## Good Example
 
 ```swift
-// ✅ GOOD: Централизованная конфигурация
+// ✅ GOOD: Centralized configuration
 final class APIClient: Sendable {
     let session: URLSession
 
@@ -66,8 +66,8 @@ struct APIConfiguration: Sendable {
 
 ## What to look for in code review
 
-- `URLSession.shared` в production-коде (не тестах)
-- `URLSessionConfiguration.default` без явных таймаутов
-- `timeoutInterval` в теле отдельных запросов (а не в конфигурации)
-- Разные таймауты в разных местах для одного сервиса
-- Отсутствие `requestCachePolicy` (кеш скрывает баги)
+- `URLSession.shared` in production code (not tests)
+- `URLSessionConfiguration.default` without explicit timeouts
+- `timeoutInterval` in the body of individual requests (not in the configuration)
+- Different timeouts in different places for the same service
+- Lack of `requestCachePolicy` (cache hides bugs)

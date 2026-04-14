@@ -1,22 +1,22 @@
-Проведи краткий code review текущих изменений в git-репозитории в папке $ARGUMENTS
+Conduct a short code review of current changes in the git repository in the $ARGUMENTS folder
 
-Шаги:
-1. Выполни `git status -s` чтобы увидеть список изменённых файлов
-2. Выполни `git diff` для просмотра unstaged изменений
-3. Выполни `git diff --cached` для просмотра staged изменений
-4. Прочитай каждый изменённый файл целиком для полного контекста
+Steps:
+1. Run `git status -s` to see a list of changed files
+2. Run `git diff` to view unstaged changes
+3. Run `git diff --cached` to view staged changes
+4. Read each modified file in its entirety for full context
 
-Проанализируй изменения и дай краткое review по только по критическим багам:
-- Корректность кода и логические ошибки
-- Retain cycles и утечки памяти
-- Потокобезопасность (Sendable, actors, @MainActor, @unchecked Sendable)
-- Соответствие Swift API Design Guidelines
-- Обработка ошибок
-- Логирование событий через Logger.app.info/debug/warning
-- Потенциальные креши
+Analyze the changes and give a brief review of only critical bugs:
+- Code correctness and logical errors
+- Retain cycles and memory leaks
+- Thread safety (Sendable, actors, @MainActor, @unchecked Sendable)
+- Compliance with Swift API Design Guidelines
+- Error handling
+- Event logging via Logger.app.info/debug/warning
+- Potential crashes
 
-Формат ответа:
-- Краткое перечисление что срочно нужно поправить и мержить нельзя
-- Список замечаний с указанием файла и строки
-- Предложения по улучшению
-- Если всё хорошо — напиши что замечаний нет
+Response format:
+- A brief list of things that urgently need to be corrected and cannot be changed
+- List of comments indicating file and line
+- Suggestions for improvement
+- If everything is fine, write that there are no comments

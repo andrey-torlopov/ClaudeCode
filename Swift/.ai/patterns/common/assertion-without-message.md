@@ -2,33 +2,33 @@
 
 ## Why this is bad
 
-XCTest assertions без сообщений:
-- При падении непонятно, что именно проверялось
-- В CI-логах только stack trace без контекста
-- Нужно открывать код чтобы понять причину
-- Xcode Test Report становятся бесполезными
+XCTest assertions without messages:
+- When falling, it is not clear what exactly was checked
+- CI logs contain only stack trace without context
+- You need to open the code to understand the reason
+- Xcode Test Reports become useless
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Что упало? Почему?
+// ❌ BAD: What fell? Why?
 func testUserRegistration() async throws {
     let response = try await apiClient.register(payload)
 
     XCTAssertEqual(response.statusCode, 201)        // XCTAssertEqual failed: ("400") is not equal to ("201")
-    XCTAssertNotNil(response.body.userId)            // Какой userId? Почему nil?
+    XCTAssertNotNil(response.body.userId) // Which userId? Why nil?
     XCTAssertEqual(response.body.status, "pending")
 }
 
-// В CI-логах:
+// In CI logs:
 // XCTAssertEqual failed: ("400") is not equal to ("201")
-// Что пошло не так?
+//What went wrong?
 ```
 
 ## Good Example
 
 ```swift
-// ✅ GOOD: XCTAssert с message
+// ✅ GOOD: XCTAssert with message
 func testUserRegistration() async throws {
     let response = try await apiClient.register(payload)
 
@@ -37,7 +37,7 @@ func testUserRegistration() async throws {
     XCTAssertEqual(response.body.status, "pending", "New user should have pending status until verification")
 }
 
-// ✅ GOOD: XCTContext.runActivity для группировки проверок
+// ✅ GOOD: XCTContext.runActivity for grouping checks
 func testUserRegistration() async throws {
     let response = try await apiClient.register(payload)
 
@@ -53,7 +53,7 @@ func testUserRegistration() async throws {
 
 ## What to look for in code review
 
-- `XCTAssertEqual`, `XCTAssertNotNil`, `XCTAssertTrue` без message параметра
-- Несколько assertions подряд без контекста
-- Отсутствие `XCTContext.runActivity` в integration тестах
-- Assertions на вложенные поля без пояснения структуры
+- `XCTAssertEqual`, `XCTAssertNotNil`, `XCTAssertTrue` without message parameter
+- Several assertions in a row without context
+- Lack of `XCTContext.runActivity` in integration tests
+- Assertions on nested fields without explaining the structure

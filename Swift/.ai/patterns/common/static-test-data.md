@@ -1,37 +1,37 @@
 # Static Test Data
 
-**Applies to:** Unit-тесты, Integration-тесты
+**Applies to:** Unit tests, Integration tests
 
 ## Why this is bad
 
-Статичные данные в TestData / Factory:
-- Конфликты при параллельном запуске (одинаковые email/phone)
-- Невозможно запустить тест дважды без cleanup
-- Flaky тесты из-за `UNIQUE constraint violation`
-- Скрывают проблемы изоляции между тестами
+Static data in TestData/Factory:
+- Conflicts when running in parallel (same email/phone)
+- Cannot run test twice without cleanup
+- Flaky tests due to `UNIQUE constraint violation`
+- Hide isolation problems between tests
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Статичные константы
+// ❌ BAD: Static constants
 enum RegistrationTestData {
-    static let validEmail = "test@example.com"       // Конфликт при втором запуске
+    static let validEmail = "test@example.com" // Conflict on second launch
     static let validPhone = "+79991234567"
     static let validPassword = "Password123!"
 
     static func validRequest() -> RegisterRequest {
         RegisterRequest(
-            email: validEmail,   // Всегда одинаковый
+            email: validEmail, // Always the same
             phone: validPhone,
             password: validPassword
         )
     }
 }
 
-// ❌ BAD: Хардкод без генерации
+// ❌ BAD: Hardcode without generation
 static func validRequest() -> RegisterRequest {
     RegisterRequest(
-        email: "fixed_test@example.com",  // Статика!
+        email: "fixed_test@example.com", // Statics!
         phone: "+70001112233",
         password: "Test123!"
     )
@@ -41,7 +41,7 @@ static func validRequest() -> RegisterRequest {
 ## Good Example
 
 ```swift
-// ✅ GOOD: Factory с генерацией уникальных данных
+// ✅ GOOD: Factory with unique data generation
 enum RegistrationTestData {
 
     static func validRequest() -> RegisterRequest {
@@ -54,7 +54,7 @@ enum RegistrationTestData {
         )
     }
 
-    // Модификации через copy-паттерн
+    // Modifications via copy-pattern
     static func withInvalidEmail() -> RegisterRequest {
         var request = validRequest()
         request.email = "invalid-email-no-at-sign"
@@ -72,7 +72,7 @@ enum RegistrationTestData {
 ## Pattern: Unique Suffix Generator
 
 ```swift
-// ✅ Переиспользуемый генератор
+// ✅ Reusable generator
 enum TestDataUtils {
     static func uniqueSuffix() -> String {
         "\(Int(Date().timeIntervalSince1970))_\(Int.random(in: 1000...9999))"
@@ -90,7 +90,7 @@ enum TestDataUtils {
 
 ## What to look for in code review
 
-- `static let` с фиксированными email/phone/id в тестовых данных
-- Factory функции без `Date()` или `UUID()` для уникальных полей
-- Отсутствие рандомизации в данных, которые должны быть уникальными
-- Тесты с `skip` / комментариями о "конфликтах данных"
+- `static let` with fixed email/phone/id in test data
+- Factory functions without `Date()` or `UUID()` ​​for unique fields
+- No randomization in data that should be unique
+- Tests with `skip` / comments about "data conflicts"

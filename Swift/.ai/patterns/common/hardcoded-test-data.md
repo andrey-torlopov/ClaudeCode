@@ -1,23 +1,23 @@
 # Hardcoded Test Data
 
-**Applies to:** Unit-тесты, UI-тесты, snapshot-тесты
+**Applies to:** Unit tests, UI tests, snapshot tests
 
 ## Why this is bad
 
-Захардкоженные данные в тестах:
-- Скрывают логику выбора тестовых данных (почему именно это значение?)
-- При изменении требований нужно искать все места с хардкодом
-- Невозможно переиспользовать тест для других окружений
-- Тестировщик копирует значения вместо понимания граничных условий
+Hardcoded data in tests:
+- Hides the logic for selecting test data (why this particular value?)
+- When requirements change, you need to look for all places with hardcode
+- It is impossible to reuse the test for other environments
+- Tester copies values ​​instead of understanding boundary conditions
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Конкретные значения без объяснения
+// ❌ BAD: Specific values ​​without explanation
 func testSuccessfulRegistration() async throws {
     let request = RegisterRequest(
-        email: "test@example.com",     // Почему именно этот?
-        password: "Password123!",       // Захардкожен конкретный пароль
+        email: "test@example.com", // Why this one?
+        password: "Password123!", // Specific password is hardcoded
         fullName: "Test User"
     )
 
@@ -29,7 +29,7 @@ func testSuccessfulRegistration() async throws {
 ## Good Example
 
 ```swift
-// ✅ GOOD: Factory с описанием класса данных
+// ✅ GOOD: Factory with a description of the data class
 enum TestData {
     static func validRegistration() -> RegisterRequest {
         RegisterRequest(
@@ -40,9 +40,9 @@ enum TestData {
     }
 }
 
-// ✅ GOOD: Для BVA - указать границу, не конкретное значение
+// ✅ GOOD: For BVA - specify the boundary, not a specific value
 func testMinimumPasswordLength() async throws {
-    // Минимальная граница: ровно 8 символов
+    // Minimum limit: exactly 8 characters
     let request = TestData.validRegistration()
         .with(password: String(repeating: "A", count: 8) + "1!")
 
@@ -53,7 +53,7 @@ func testMinimumPasswordLength() async throws {
 
 ## What to look for in review
 
-- Конкретные email/phone/password прямо в теле теста
-- Отсутствие пояснения "почему это значение" (граница? valid? invalid?)
-- Одинаковые literal значения в разных тестах
-- Отсутствие TestData factory / fixture builder
+- Specific email/phone/password directly in the body of the test
+- Lack of explanation "why this value" (boundary? valid? invalid?)
+- Same literal values ​​in different tests
+- Lack of TestData factory/fixture builder

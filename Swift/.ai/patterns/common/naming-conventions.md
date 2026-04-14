@@ -1,18 +1,18 @@
 # Naming Conventions
 
-**Applies to:** Весь Swift-код проекта
+**Applies to:** All Swift code of the project
 
-## Правила
+## Rules
 
-- Типы и протоколы: UpperCamelCase
-- Переменные, функции, параметры: lowerCamelCase
-- Протоколы-способности: суффикс -able/-ible (Sendable, Codable)
-- Булевые свойства: `isEnabled`, `hasContent`, `shouldReload`
+- Types and protocols: UpperCamelCase
+- Variables, functions, parameters: lowerCamelCase
+- Protocol abilities: suffix -able/-ible (Sendable, Codable)
+- Boolean properties: `isEnabled`, `hasContent`, `shouldReload`
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Неправильный нейминг
+// ❌ BAD: Incorrect naming
 protocol data_provider { }
 struct user_model { }
 
@@ -38,8 +38,8 @@ func fetchData() { }
 
 ## What to look for in code review
 
-- snake_case в именах типов или функций
-- Протоколы-способности без суффикса -able/-ible
-- Булевые свойства без префикса is/has/should
-- UpperCamelCase в именах переменных/функций
-- lowerCamelCase в именах типов/протоколов
+- snake_case in type or function names
+- Protocols-abilities without the suffix -able/-ible
+- Boolean properties without is/has/should prefix
+- UpperCamelCase in variable/function names
+- lowerCamelCase in type/protocol names

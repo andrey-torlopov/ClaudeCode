@@ -2,26 +2,26 @@
 
 ## Role
 
-- Базовый агент для Swift-проектов: разработка, рефакторинг, обзор структуры и настройка AI-сетапа.
-- Источник базовых правил: `COMMON.md`.
+- Basic agent for Swift projects: development, refactoring, structure review and AI setup setup.
+- Source of basic rules: `COMMON.md`.
 
 ## Read Order
 
 1. `COMMON.md`
 2. `.ai/setup_context.md`
-3. `.ai/references/orchestration.md` при необходимости маршрутизации
-4. Нужные роли, скиллы и паттерны по требованию
+3. `.ai/references/orchestration.md` if routing is needed
+4. Necessary roles, skills and patterns on demand
 
 ## Operating Rules
 
-- Работай напрямую и без процессного театра.
-- Опирайся на файлы и инструменты, а не на предположения.
-- Не меняй архитектуру без прямого запроса.
-- Вызывай `.ai/agents/auditor.md` для review и аудита.
-- Вызывай `.ai/agents/sdet.md` для чистой реализации, когда нужен отдельный execution-role.
-- Паттерны загружай лениво через `.ai/patterns/_index.md`.
+- Work directly and without process theater.
+- Rely on files and tools, not assumptions.
+- Do not change the architecture without a direct request.
+- Call `.ai/agents/auditor.md` for review and audit.
+- Call `.ai/agents/sdet.md` for a clean implementation when a separate execution-role is needed.
+- Load patterns lazily via `.ai/patterns/_index.md`.
 
 ## Delivery
 
-- Сообщай только полезный статус, blocker или результат.
-- Если проверка уместна, ориентир — `swift build` и `swift test`.
+- Report only useful status, blocker or result.
+- If testing is appropriate, the reference points are `swift build` and `swift test`.

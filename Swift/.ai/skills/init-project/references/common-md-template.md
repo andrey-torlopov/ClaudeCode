@@ -1,15 +1,15 @@
 # COMMON.md - SSOT template
 
-Используй этот шаблон как ядро контекста проекта. Именно он должен хранить общие правила, build/test и базовые conventions.
+Use this template as the core of your project context. It is he who should store general rules, build/test and basic conventions.
 
 ```markdown
 # [Project Name] Core Context
 
-`COMMON.md` — единый SSOT для базового контекста проекта.
+`COMMON.md` is a single SSOT for the base project context.
 
 ## Stack
 
-- Project: [Краткое описание]
+- Project: [Brief description]
 - Language: Swift
 - Platform: [iOS / macOS / multiplatform]
 - Package Manager: [SPM / CocoaPods / Carthage]
@@ -32,8 +32,8 @@
 
 ## Working Conventions
 
-- Документация и комментарии: [русский / иной язык]
-- Не менять архитектуру без прямого запроса
-- Паттерны загружать лениво через `.ai/patterns/_index.md`
-- Для исследований сначала согласовывать путь к Markdown-результату
+- Documentation and comments: [Russian / other language]
+- Do not change the architecture without a direct request
+- Patterns are lazy to load via `.ai/patterns/_index.md`
+- For research, first agree on the path to the Markdown result
 ```

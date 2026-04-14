@@ -2,30 +2,30 @@
 
 ## Problem
 
-Тяжелая инициализация в `init()` или property declaration XCTestCase приводит к падению
-всего тест-класса без диагностики. XCTest пропускает класс целиком.
+Heavy initialization in `init()` or property declaration XCTestCase causes a crash
+the entire test class without diagnostics. XCTest skips the entire class.
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Property initialization может упасть
+// ❌ BAD: Property initialization may fail
 class APITests: XCTestCase {
     let apiClient = APIClient(
         configuration: APIConfiguration(
             baseURL: URL(string: ProcessInfo.processInfo.environment["BASE_URL"]!)!
         )
     )
-    // Если BASE_URL не задан - force unwrap в init, весь класс пропускается
+    // If BASE_URL is not set - force unwrap in init, the entire class is skipped
 
     func testCreateUser() async throws { /* ... */ }
 }
 
-// ❌ BAD: Сложная логика в init
+// ❌ BAD: Complex logic in init
 class DatabaseTests: XCTestCase {
     let database: Database
 
     override init() {
-        database = try! Database.connect(to: "test.db")  // Может упасть
+        database = try! Database.connect(to: "test.db") // May crash
         super.init()
     }
 }
@@ -34,7 +34,7 @@ class DatabaseTests: XCTestCase {
 ## Good Example
 
 ```swift
-// ✅ GOOD: Инициализация в setUp
+// ✅ GOOD: Initialization in setUp
 class APITests: XCTestCase {
     var apiClient: APIClient!
 
@@ -63,17 +63,17 @@ class APITests: XCTestCase {
 
 ## Why
 
-- `setUp()` запускается после успешной инициализации класса
-- Ошибки setup изолированы от класса и дают чёткую диагностику
-- Cleanup гарантирован через `tearDown()`
-- Force unwrap в property declaration падает без понятного сообщения
+- `setUp()` runs after successful class initialization
+- Setup errors are isolated from the class and provide clear diagnostics
+- Cleanup guaranteed via `tearDown()`
+- Force unwrap in property declaration crashes without a clear message
 
 ## Detection
 
 ```bash
-# Property init с force unwrap в тестах
+# Property init with force unwrap in tests
 grep -rn "let .* = .*!" --include="*Tests.swift" Tests/ | grep -v "IBOutlet\|XCTUnwrap"
-# Force try в тестовых классах (не в тестовых методах)
+# Force try in test classes (not in test methods)
 grep -rn "try!" --include="*Tests.swift" Tests/
 ```
 

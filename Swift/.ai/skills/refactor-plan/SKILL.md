@@ -1,179 +1,179 @@
 ---
 name: refactor-plan
-description: Анализирует участок кода и создает пошаговый план рефакторинга с приоритетами и оценкой рисков. Используй когда нужно спланировать рефакторинг модуля или группы файлов. Не используй для code review - для этого /swift-review.
+description: Analyzes a section of code and creates a step-by-step refactoring plan with priorities and risk assessment. Use it when you need to plan refactoring of a module or group of files. Don't use for code review - that's what /swift-review is for.
 allowed-tools: "Read Write Edit Glob Grep Bash(wc*)"
 context: fork
 ---
 
-# /refactor-plan - Планирование рефакторинга
+# /refactor-plan - Refactoring planning
 
 <purpose>
-Анализ участка Swift-кода, определение code smells и технического долга, создание пошагового плана рефакторинга с приоритетами и оценкой рисков.
+Analysis of a section of Swift code, identification of code smells and technical debt, creation of a step-by-step refactoring plan with priorities and risk assessment.
 </purpose>
 
-## Когда использовать
+## When to use
 
-- Планирование рефакторинга модуля/фичи
-- Оценка технического долга
-- Подготовка к миграции (UIKit -> SwiftUI, GCD -> Swift Concurrency)
-- Декомпозиция God-объектов
+- Planning module/feature refactoring
+- Technical debt assessment
+- Preparing for migration (UIKit -> SwiftUI, GCD -> Swift Concurrency)
+- Decomposition of God objects
 
-## Когда НЕ использовать
+## When NOT to use
 
-- Поиск багов (используй `/swift-review`)
-- Разведка репо (используй `/repo-scout`)
-- Простое переименование
+- Search for bugs (use `/swift-review`)
+- Repo exploration (use `/repo-scout`)
+- Easy renaming
 
-## Входные данные
+## Input data
 
-| Параметр | Обязательность | Описание |
+| Parameter | Obligation | Description |
 |----------|:--------------:|----------|
-| Scope | Обязательно | Путь к файлу, модулю или директории |
-| Goal | Опционально | Конкретная цель рефакторинга |
+| Scope | Required | Path to file, module or directory |
+| Goal | Optional | Specific purpose of refactoring |
 
 ---
 
 ## Verbosity Protocol
 
-**Tools first:** Анализируй молча. В чат - только путь к отчету.
+**Tools first:** Analyze silently. Chat is the only way to the report.
 
 ---
 
-## Алгоритм
+## Algorithm
 
-### Шаг 1: Scope Analysis
+### Step 1: Scope Analysis
 
-1. Определи файлы для анализа
-2. Подсчитай метрики:
-   - Количество файлов и строк
-   - Количество типов (class/struct/enum/protocol)
-   - Зависимости между файлами (imports)
-3. Прочитай `COMMON.md` для ограничений и соглашений, а архитектуру выводи из реального кода
+1. Identify files to analyze
+2. Calculate metrics:
+   - Number of files and lines
+   - Number of types (class/struct/enum/protocol)
+   - Dependencies between files (imports)
+3. Read `COMMON.md` for restrictions and conventions, and derive the architecture from real code
 
-### Шаг 2: Code Smells Detection
+### Step 2: Code Smells Detection
 
-Проверь каждый файл на:
+Check each file for:
 
 **Structural smells:**
-- God Object: класс/структура > 300 строк или > 10 методов
-- Long Method: функция > 50 строк
-- Large File: файл > 500 строк
-- Deep Nesting: > 4 уровня вложенности
+- God Object: class/structure > 300 lines or > 10 methods
+- Long Method: function > 50 lines
+- Large File: file > 500 lines
+- Deep Nesting: > 4 levels of nesting
 
 **Design smells:**
 - Massive ViewController / ViewModel
-- Fat Model (бизнес-логика в модели данных)
-- Тесная связность (concrete types вместо protocols)
-- Нарушение Single Responsibility
+- Fat Model (business logic in the data model)
+- Close connectivity (concrete types instead of protocols)
+- Violation of Single Responsibility
 
 **Swift-specific smells:**
-- Completion handlers вместо async/await
-- DispatchQueue вместо actors/@MainActor
-- Mutable shared state без синхронизации
-- Force unwraps в production коде
-- Retain cycles (delegate без weak, closures без [weak self])
+- Completion handlers instead of async/await
+- DispatchQueue instead of actors/@MainActor
+- Mutable shared state without synchronization
+- Force unwraps in production code
+- Retain cycles (delegate without weak, closures without [weak self])
 
-### Шаг 3: Dependency Mapping
+### Step 3: Dependency Mapping
 
-1. Построй граф зависимостей между типами в scope
-2. Найди циклические зависимости
-3. Определи "узкие горлышки" (типы от которых зависит многое)
+1. Build a graph of dependencies between types in scope
+2. Find cyclic dependencies
+3. Identify “bottlenecks” (types on which a lot depends)
 
-### Шаг 4: Refactoring Plan
+### Step 4: Refactoring Plan
 
-Для каждого найденного smell создай шаг рефакторинга:
+For each smell found, create a refactoring step:
 
-| Поле | Описание |
+| Field | Description |
 |------|----------|
-| Приоритет | P0 (блокер) / P1 (высокий) / P2 (средний) / P3 (низкий) |
-| Что | Конкретное описание проблемы |
-| Действие | Конкретное описание решения |
-| Файлы | Список затрагиваемых файлов |
-| Риск | Низкий / Средний / Высокий |
-| Зависимости | От каких шагов зависит |
+| Priority | P0 (blocker) / P1 (high) / P2 (medium) / P3 (low) |
+| What | Specific description of the problem |
+| Action | Specific description of the solution |
+| Files | List of affected files |
+| Risk | Low / Medium / High |
+| Dependencies | What steps does it depend on |
 
-**Приоритизация:**
-- P0: Крэши, data races, memory leaks
-- P1: Архитектурные нарушения, блокирующие развитие
+**Prioritization:**
+- P0: Crashes, data races, memory leaks
+- P1: Architectural violations blocking development
 - P2: Code smells, tech debt
-- P3: Стилистика, мелкие улучшения
+- P3: Stylistics, minor improvements
 
-### Шаг 5: Report Generation
+### Step 5: Report Generation
 
-Сохрани план в путь указанный пользователем или `audit/refactor-plan.md`.
+Save the plan to the path specified by the user or `audit/refactor-plan.md`.
 
 ---
 
-## Формат отчета
+## Report format
 
 ```markdown
 # Refactoring Plan
 
 > Scope: {path}
-> Файлов: {N} | Строк: {M} | Типов: {K}
-> Дата: {YYYY-MM-DD}
+> Files: {N} | Strings: {M} | Types: {K}
+> Date: {YYYY-MM-DD}
 
 ## Summary
 
-| Метрика | Значение |
+| Metric | Meaning |
 |---------|----------|
 | Code smells | {N} |
-| P0 (блокер) | {N} |
-| P1 (высокий) | {N} |
-| P2 (средний) | {N} |
-| P3 (низкий) | {N} |
+| P0 (blocker) | {N} |
+| P1 (high) | {N} |
+| P2 (medium) | {N} |
+| P3 (low) | {N} |
 
 ## Code Smells
 
-| # | Файл | Тип smell | Описание | Severity |
+| # | File | Type smell | Description | Severity |
 |---|------|----------|----------|----------|
 
 ## Dependency Map
 
-{Текстовое описание графа зависимостей и проблемных связей}
+{Text description of the dependency graph and problematic connections}
 
 ## Refactoring Steps
 
-### P0: Блокеры
+### P0: Blockers
 
-| # | Что | Действие | Файлы | Риск | Зависит от |
+| # | What | Action | Files | Risk | Depends on |
 |---|-----|----------|-------|------|-----------|
 
-### P1: Высокий приоритет
+### P1: High priority
 
-| # | Что | Действие | Файлы | Риск | Зависит от |
+| # | What | Action | Files | Risk | Depends on |
 |---|-----|----------|-------|------|-----------|
 
-### P2: Средний приоритет
+### P2: Medium priority
 
-| # | Что | Действие | Файлы | Риск | Зависит от |
+| # | What | Action | Files | Risk | Depends on |
 |---|-----|----------|-------|------|-----------|
 
-### P3: Низкий приоритет
+### P3: Low priority
 
-| # | Что | Действие | Файлы | Риск | Зависит от |
+| # | What | Action | Files | Risk | Depends on |
 |---|-----|----------|-------|------|-----------|
 
-## Рекомендуемый порядок выполнения
+## Recommended execution order
 
-{Последовательность шагов с учетом зависимостей}
+{Sequence of steps taking into account dependencies}
 ```
 
 ---
 
 ## Quality Gates
 
-- [ ] Все файлы в scope прочитаны
-- [ ] Каждый smell имеет конкретный файл и описание
-- [ ] План шагов имеет зависимости между шагами
-- [ ] Порядок выполнения учитывает зависимости
-- [ ] Риски оценены для каждого шага
+- [ ] All files in scope have been read
+- [ ] Each smell has a specific file and description
+- [ ] Step plan has dependencies between steps
+- [ ] Execution order takes into account dependencies
+- [ ] Risks assessed for each step
 
-## Завершение
+## Completion
 
 ```
 SKILL COMPLETE: /refactor-plan
-|- Артефакты: {путь к отчету}
-|- Scope: {N} файлов, {M} строк
+|- Artifacts: {path to report}
+|- Scope: {N} files, {M} lines
 |- Smells: {N} total ({P0} P0, {P1} P1, {P2} P2, {P3} P3)
 ```

@@ -1,38 +1,38 @@
 # No Hardcoded Timeouts
 
-**Applies to:** Networking, тесты, polling
+**Applies to:** Networking, tests, polling
 
 ## Why this is bad
 
-Захардкоженные таймауты в коде:
-- Ломаются на медленном CI (timeout слишком маленький)
-- Тратят время на быстром окружении (timeout слишком большой)
-- Невозможно переопределить для разных окружений (debug/staging/prod)
-- Magic numbers разбросаны по всему проекту
+Hardcoded timeouts in the code:
+- Breaks on slow CI (timeout is too small)
+- Waste time on fast environments (timeout is too long)
+- Cannot be overridden for different environments (debug/staging/prod)
+- Magic numbers are scattered throughout the project
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Magic numbers в тестах
+// ❌ BAD: Magic numbers in tests
 func testAsyncOperation() async throws {
     let expectation = expectation(description: "Done")
     await fulfillment(of: [expectation], timeout: 5)
 }
 
-// ❌ BAD: Разные таймауты в разных местах
+// ❌ BAD: Different timeouts in different places
 try await waitUntil(timeout: .seconds(3)) { /* ... */ }
 try await waitUntil(timeout: .seconds(10)) { /* ... */ }
 try await waitUntil(timeout: .seconds(30)) { /* ... */ }
 
-// ❌ BAD: Хардкод таймаутов в networking
+// ❌ BAD: Hardcode of timeouts in networking
 var request = URLRequest(url: url)
-request.timeoutInterval = 15  // Почему 15? Для какого окружения?
+request.timeoutInterval = 15 // Why 15? For what environment?
 ```
 
 ## Good Example
 
 ```swift
-// ✅ GOOD: Таймауты в конфигурации, переиспользуются
+// ✅ GOOD: Timeouts in the configuration, reused
 enum TestConfig {
     static let defaultPollingTimeout: Duration = {
         let seconds = ProcessInfo.processInfo.environment["POLL_TIMEOUT_SEC"]
@@ -48,7 +48,7 @@ enum TestConfig {
     }()
 }
 
-// Использование
+// Usage
 try await waitUntil(
     timeout: TestConfig.defaultPollingTimeout,
     pollInterval: TestConfig.defaultPollingInterval
@@ -62,7 +62,7 @@ await fulfillment(of: [expectation], timeout: TestConfig.expectationTimeout)
 
 ## What to look for in code review
 
-- `timeout:` с literal числами в тестах и production коде
-- Разные таймауты для одинаковых операций в разных местах
-- Отсутствие централизованного конфига таймаутов
-- `.seconds(N)`, `.milliseconds(N)` без пояснения "почему это значение"
+- `timeout:` with literal numbers in tests and production code
+- Different timeouts for the same operations in different places
+- Lack of centralized timeout config
+- `.seconds(N)`, `.milliseconds(N)` ​​without explanation “why this value”

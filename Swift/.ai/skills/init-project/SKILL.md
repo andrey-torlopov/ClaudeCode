@@ -1,31 +1,31 @@
 ---
 name: init-project
-description: Генерирует стартовый prompt pack для iOS/Swift проекта: COMMON.md, anchor-файлы и минимальный AI-контекст. Используй для нового проекта или миграции на облегчённый AI workflow. Не используй если core context уже настроен и требуется только точечная правка.
+description: Generates a starting prompt pack for an iOS/Swift project: COMMON.md, anchor files and minimal AI context. Use for a new project or migration to a lightweight AI workflow. Do not use if the core context is already configured and only minor edits are required.
 allowed-tools: "Read Write Edit Glob Grep Bash(ls*)"
 context: fork
 ---
 
-# /init-project - Генератор COMMON.md и anchor-файлов
+# /init-project - Generator of COMMON.md and anchor files
 
-Создаёт компактный prompt pack на основе структуры iOS/Swift репозитория.
+Creates a compact prompt pack based on the iOS/Swift repository structure.
 
-## Когда использовать
+## When to use
 
-- Новый iOS/Swift проект без `COMMON.md`
-- Миграция существующего проекта на AI-assisted workflow
-- Стандартизация prompt pack по команде
+- New iOS/Swift project without `COMMON.md`
+- Migration of an existing project to AI-assisted workflow
+- Standardization of prompt pack by command
 
 ## Verbosity Protocol
 
-**Tools first:** Сканируй молча. В чат - только финальный результат.
+**Tools first:** Scan silently. In the chat - only the final result.
 
 ---
 
-## Алгоритм выполнения
+## Execution algorithm
 
-### Шаг 1: Сканирование проекта
+### Step 1: Scan the project
 
-Найди и проанализируй:
+Find and analyze:
 
 1. **Project files:**
    - `Package.swift` -> SPM, targets, dependencies
@@ -33,12 +33,12 @@ context: fork
    - `Podfile` -> CocoaPods
    - `Cartfile` -> Carthage
 
-2. **Структуру исходников:**
-   - `Sources/` или корневые .swift файлы
-   - `Tests/` или `*Tests/`
-   - Модули/фреймворки
+2. **Source structure:**
+   - `Sources/` or root .swift files
+   - `Tests/` or `*Tests/`
+   - Modules/frameworks
 
-3. **Конфигурации:**
+3. **Configurations:**
    - `.swiftlint.yml` -> SwiftLint
    - `.swiftformat` -> SwiftFormat
    - `fastlane/` -> Fastlane
@@ -48,24 +48,24 @@ context: fork
    - `.gitlab-ci.yml` -> GitLab CI
    - `fastlane/Fastfile` -> Fastlane lanes
 
-### Обработка ошибок Шага 1
+### Handling Step 1 errors
 
-**Project-файлы не найдены** -> Спроси пользователя:
+**Project files not found** -> Ask the user:
 
 ```
-Не удалось определить структуру проекта автоматически. Уточни:
-- Тип проекта: (App / Framework / SPM Package)
+The project structure could not be determined automatically. Specify:
+- Project type: (App/Framework/SPM Package)
 - Package manager: (SPM / CocoaPods / Carthage)
 - UI framework: (SwiftUI / UIKit / Hybrid)
 ```
 
-**CI/CD-конфиги отсутствуют** -> Не выдумывай секцию CI. Оставь только подтверждённые данные.
+**CI/CD configs missing** -> Don't make up the CI section. Leave only verified information.
 
-### Шаг 2: Определение Tech Stack
+### Step 2: Define Tech Stack
 
-На основе зависимостей и кода определи:
+Based on dependencies and code, determine:
 
-| Категория | Что искать |
+| Category | What to look for |
 |-----------|------------|
 | UI | SwiftUI / UIKit / Hybrid |
 | Architecture | MVVM / VIPER / TCA / MVC |
@@ -76,41 +76,41 @@ context: fork
 | Testing | XCTest / swift-testing / Quick+Nimble |
 | Linting | SwiftLint / SwiftFormat |
 
-### Шаг 3: Генерация core context
+### Step 3: Generating core context
 
-Прочитай и используй шаблон из `references/common-md-template.md`.
+Read and use the template from `references/common-md-template.md`.
 
-Сгенерируй:
+Generate:
 
-- `COMMON.md` как SSOT
-- `CLAUDE.md` как Claude anchor
-- `AGENTS.md` как generic agent anchor
-- `GEMINI.md` как Gemini anchor
+- `COMMON.md` as SSOT
+- `CLAUDE.md` as Claude anchor
+- `AGENTS.md` as generic agent anchor
+- `GEMINI.md` as Gemini anchor
 
-Для `CLAUDE.md` используй `references/claude-md-template.md`.
-`AGENTS.md` и `GEMINI.md` делай в том же стиле: короткий read-order и ссылка на `COMMON.md`.
+For `CLAUDE.md` use `references/claude-md-template.md`.
+Do `AGENTS.md` and `GEMINI.md` ​​in the same style: a short read-order and a link to `COMMON.md`.
 
-### Шаг 4: Валидация
+### Step 4: Validation
 
-Перед сохранением проверь:
+Before saving, check:
 
-- [ ] Tech Stack соответствует реальным зависимостям
-- [ ] Commands работают (проверь наличие Package.swift / xcodeproj)
-- [ ] `COMMON.md` остаётся компактным и без дублирующих таблиц
-- [ ] Anchor-файлы не копируют core rules
-- [ ] Нет placeholder-ов вида `[xxx]` в финальных файлах
+- [ ] Tech Stack matches real dependencies
+- [ ] Commands work (check for Package.swift / xcodeproj)
+- [ ] `COMMON.md` remains compact and without duplicate tables
+- [ ] Anchor files do not copy core rules
+- [ ] There are no placeholders like `[xxx]` in the final files
 
-## Вывод
+## Conclusion
 
-Сохрани результат в корень проекта:
+Save the result to the project root:
 
 - `COMMON.md`
 - `CLAUDE.md`
 - `AGENTS.md`
 - `GEMINI.md`
 
-## Связанные файлы
+## Related files
 
-- Шаблон SSOT: `references/common-md-template.md`
-- Шаблон Claude anchor: `references/claude-md-template.md`
-- Разведка: `/repo-scout` (может быть выполнен перед init-project)
+- SSOT Template: `references/common-md-template.md`
+- Claude anchor template: `references/claude-md-template.md`
+- Reconnaissance: `/repo-scout` (can be done before init-project)

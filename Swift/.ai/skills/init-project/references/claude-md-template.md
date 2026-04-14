@@ -1,21 +1,21 @@
 # CLAUDE.md - Anchor template
 
-Используй этот шаблон только как короткий entry-файл. Все core rules должны жить в `COMMON.md`.
+Use this template only as a short entry file. All core rules must live in `COMMON.md`.
 
 ```markdown
 # [Project Name]
 
-Этот файл — входная точка для Claude-совместимых рантаймов.
+This file is the entry point for Claude-compatible runtimes.
 
 ## Read Order
 
-1. Прочитай `COMMON.md` как SSOT.
-2. Прочитай `.ai/setup_context.md` для карты AI-слоя.
-3. Подключай роли, скиллы и паттерны только по необходимости.
+1. Read `COMMON.md` as SSOT.
+2. Read `.ai/setup_context.md` for the AI ​​layer map.
+3. Connect roles, skills and patterns only when necessary.
 
 ## Runtime Notes
 
-- Не копируй сюда build/test, core rules и большие таблицы.
-- Для базовой роли используй `.ai/dev_agent.md`.
-- Для review используй `.ai/agents/auditor.md`.
+- Do not copy build/test, core rules and large tables here.
+- For the basic role use `.ai/dev_agent.md`.
+- For review use `.ai/agents/auditor.md`.
 ```

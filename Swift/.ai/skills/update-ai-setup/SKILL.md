@@ -1,29 +1,29 @@
 ---
 name: update-ai-setup
-description: Сканирует AI-файлы проекта и обновляет реестр docs/ai-setup.md с актуальными данными. Используй после добавления или удаления core/anchor/skill файлов и при миграции AI-сетапа. Не используй для анализа кода или документации вне AI-слоя.
+description: Scans the AI ​​project files and updates the docs/ai-setup.md registry with the latest data. Use after adding or removing core/anchor/skill files and when migrating an AI setup. Do not use for code analysis or documentation outside the AI ​​layer.
 allowed-tools: "Read Write Edit Glob Grep Bash(wc*) Bash(ls*)"
 context: fork
 ---
 
-# /update-ai-setup — Обновление реестра AI-конфигурации
+# /update-ai-setup - Update the AI ​​configuration registry
 
-Синхронизирует `docs/ai-setup.md` с реальным состоянием AI-файлов проекта.
+Synchronizes `docs/ai-setup.md` with the real state of the project's AI files.
 
-## Когда использовать
+## When to use
 
-- После изменения `COMMON.md`, anchor-файлов, agents, skills, commands, hooks или pattern index
-- После добавления или удаления AI-файлов
-- Перед ручным аудитом AI-сетапа
+- After changing `COMMON.md`, anchor files, agents, skills, commands, hooks or pattern index
+- After adding or removing AI files
+- Before manual audit of an AI setup
 
 ## Verbosity
 
-- Детали инвентаризации и дельты — в документ.
-- В чат — только краткий итог и путь к файлу.
+- Inventory and delta details are included in the document.
+- In the chat - only a short summary and the path to the file.
 
-## Алгоритм
+## Algorithm
 
-1. Прочитай `docs/ai-setup.md`, а если файла нет — создай новый минимальный реестр.
-2. Просканируй и посчитай строки через `wc -l` для:
+1. Read `docs/ai-setup.md`, and if the file is not there, create a new minimal registry.
+2. Scan and count lines through `wc -l` for:
    - `COMMON.md`
    - `CLAUDE.md`
    - `AGENTS.md`
@@ -36,31 +36,31 @@ context: fork
    - `.ai/patterns/_index.md`
    - `.ai/hooks/skill-lint.sh`
    - `docs/ai-setup.md`
-3. Опционально проверь `.mcp.json`, `.cursor/`, `.github/copilot-instructions.md`, если они есть.
-4. Сравни найденные файлы с текущим реестром и собери дельту:
+3. Optionally check `.mcp.json`, `.cursor/`, `.github/copilot-instructions.md`, if they exist.
+4. Compare the found files with the current registry and collect the delta:
    - `ADD`
    - `REMOVE`
    - `UPDATE_LINES`
    - `RENAME_OWNER`
-5. Обнови `docs/ai-setup.md`:
-   - core layer с `COMMON.md`
-   - anchor layer с `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`
-   - runtime layer, skills, commands, patterns и hooks
-6. Добавь changelog entry с текущей датой.
+5. Update `docs/ai-setup.md`:
+   - core layer with `COMMON.md`
+   - anchor layer with `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`
+   - runtime layer, skills, commands, patterns and hooks
+6. Add a changelog entry with the current date.
 
 ## Quality Gates
 
-- Все пути из реестра существуют на диске.
-- Счётчики строк совпадают с `wc -l`.
-- `COMMON.md` отмечен как SSOT.
-- Anchor-файлы перечислены отдельно от SSOT.
-- Нет placeholder-ов в финальном документе.
+- All paths from the registry exist on disk.
+- Row counters are the same as `wc -l`.
+- `COMMON.md` is marked as SSOT.
+- Anchor files are listed separately from SSOT.
+- There are no placeholders in the final document.
 
-## Завершение
+## Completion
 
 ```text
 SKILL COMPLETE: /update-ai-setup
-|- Артефакты: docs/ai-setup.md
-|- Дельта: [+N / -N / ~N]
+|- Artifacts: docs/ai-setup.md
+|- Delta: [+N / -N / ~N]
 |- Quality Gates: PASS
 ```

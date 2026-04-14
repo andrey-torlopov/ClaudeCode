@@ -4,68 +4,68 @@
 
 ## Why this is bad
 
-Утечка внутренней информации через error handling:
-- Stack traces в логах раскрывают структуру кода и библиотеки
-- Internal paths раскрывают файловую систему (`/Users/developer/...`)
-- Debug info раскрывает SQL-запросы, имена таблиц, connection strings
-- `localizedDescription` может содержать internal details
-- Crash-логи с sensitive data попадают в Crashlytics/Sentry
+Leakage of internal information via error handling:
+- Stack traces in the logs reveal the structure of the code and libraries
+- Internal paths expose the file system (`/Users/developer/...`)
+- Debug info reveals SQL queries, table names, connection strings
+- `localizedDescription` may contain internal details
+- Crash logs with sensitive data go to Crashlytics/Sentry
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Полная ошибка попадает в UI
+// ❌ BAD: The complete error goes to the UI
 func handleError(_ error: Error) {
     showAlert(message: error.localizedDescription)
     // "The operation couldn't be completed. (NSURLError -1001: request timed out, URL: https://internal-api.company.com/v2/users)"
 }
 
-// ❌ BAD: Stack trace в логах без фильтрации
+// ❌ BAD: Stack trace in logs without filtering
 func logError(_ error: Error) {
     logger.error("Request failed: \(String(describing: error))")
-    // Логирует полный NSError с userInfo, включая URL, headers, etc.
+    // Logs the full NSError with userInfo, including URLs, headers, etc.
 }
 
-// ❌ BAD: Debug description попадает в production логи
+// ❌ BAD: Debug description gets into production logs
 func handleAPIError(_ response: HTTPURLResponse, data: Data) {
     let body = String(data: data, encoding: .utf8) ?? ""
     logger.error("API error \(response.statusCode): \(body)")
-    // Body может содержать: stack trace, SQL query, internal paths
+    // Body may contain: stack trace, SQL query, internal paths
 }
 ```
 
 ## Good Example
 
 ```swift
-// ✅ GOOD: Generic сообщение для пользователя
+// ✅ GOOD: Generic message for the user
 func handleError(_ error: Error) {
     switch error {
     case APIError.noConnection:
-        showAlert(message: "Нет подключения к интернету")
+        showAlert(message: "No internet connection")
     case APIError.timeout:
-        showAlert(message: "Сервер не отвечает. Попробуйте позже")
+        showAlert(message: "The server is not responding. Please try later")
     case let APIError.serverError(statusCode, _) where statusCode >= 500:
-        showAlert(message: "Ошибка сервера. Мы уже работаем над решением")
+        showAlert(message: "Server error. We are already working on a solution")
     default:
-        showAlert(message: "Произошла ошибка. Попробуйте позже")
+        showAlert(message: "An error has occurred. Please try later")
     }
 }
 
-// ✅ GOOD: Логирование без sensitive data
+// ✅ GOOD: Logging without sensitive data
 func logError(_ error: Error, context: String) {
     switch error {
     case let APIError.serverError(statusCode, body):
         logger.error("[\(context)] Server error: \(statusCode), code: \(body?.code ?? "unknown")")
-        // Не логируем body.message, body.details - могут содержать PII
+        // We do not log body.message, body.details - may contain PII
     case let urlError as URLError:
         logger.error("[\(context)] Network error: \(urlError.code.rawValue)")
-        // Не логируем URL, headers
+        // Don't log URLs, headers
     default:
         logger.error("[\(context)] Error type: \(type(of: error))")
     }
 }
 
-// ✅ GOOD: Тест проверяет отсутствие утечек
+// ✅ GOOD: Test checks for leaks
 func testErrorResponseDoesNotLeakInternals() async throws {
     let response = try await apiClient.sendCorruptedRequest()
     let body = response.rawBody
@@ -79,9 +79,9 @@ func testErrorResponseDoesNotLeakInternals() async throws {
 
 ## What to look for in code review
 
-- `error.localizedDescription` отображается пользователю напрямую
-- `String(describing: error)` или `\(error)` в production логах
-- Error body логируется целиком без фильтрации полей
-- Отсутствие маппинга internal errors -> user-facing messages
-- `debugDescription` в production коде
-- URL с query parameters в логах (могут содержать токены)
+- `error.localizedDescription` is displayed directly to the user
+- `String(describing: error)` or `\(error)` ​​in production logs
+- Error body is logged entirely without filtering fields
+- No mapping internal errors -> user-facing messages
+- `debugDescription` in production code
+- URL with query parameters in logs (may contain tokens)

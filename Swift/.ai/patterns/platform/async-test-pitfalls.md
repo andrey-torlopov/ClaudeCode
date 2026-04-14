@@ -2,22 +2,22 @@
 
 ## Problem
 
-Неправильное использование async/await в XCTest приводит к тестам, которые проходят,
-но не тестируют то, что ожидается - или зависают без диагностики.
+Incorrect use of async/await in XCTest results in tests that fail,
+but do not test what is expected - or freeze without diagnostics.
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Fire-and-forget Task в тесте - тест завершается раньше проверки
+// ❌ BAD: Fire-and-forget Task in the test - the test completes before the check
 func testUserCreation() {
     Task {
         let response = try await apiClient.createUser(request)
-        XCTAssertEqual(response.statusCode, 201)  // Может не выполниться
+        XCTAssertEqual(response.statusCode, 201) // May fail
     }
-    // Тест завершается сразу, не дожидаясь Task
+    // The test completes immediately, without waiting for the Task
 }
 
-// ❌ BAD: XCTestExpectation для async кода (legacy подход)
+// ❌ BAD: XCTestExpectation for async code (legacy approach)
 func testUserCreation() {
     let expectation = expectation(description: "User created")
 
@@ -30,7 +30,7 @@ func testUserCreation() {
     wait(for: [expectation], timeout: 5)
 }
 
-// ❌ BAD: DispatchSemaphore блокирует main thread
+// ❌ BAD: DispatchSemaphore blocks main thread
 func testUserCreation() {
     let semaphore = DispatchSemaphore(value: 0)
     Task {
@@ -51,7 +51,7 @@ func testUserCreation() async throws {
     XCTAssertEqual(response.statusCode, 201, "User creation should succeed")
 }
 
-// ✅ GOOD: Structured concurrency в тесте
+// ✅ GOOD: Structured concurrency in the test
 func testParallelRequests() async throws {
     async let userResponse = apiClient.createUser(userRequest)
     async let profileResponse = apiClient.createProfile(profileRequest)
@@ -64,10 +64,10 @@ func testParallelRequests() async throws {
 
 ## Why
 
-- `Task { }` в sync test создает unstructured concurrency - тест не ждет завершения
-- `XCTestExpectation` для async кода - legacy pattern, async test methods чище
-- `DispatchSemaphore` может заблокировать cooperative thread pool Swift concurrency
-- `async throws` test methods автоматически ждут завершения и пробрасывают ошибки
+- `Task { }` in sync test creates unstructured concurrency - the test does not wait for completion
+- `XCTestExpectation` for async code - legacy pattern, async test methods cleaner
+- `DispatchSemaphore` can block cooperative thread pool Swift concurrency
+- `async throws` test methods automatically wait for completion and throw errors
 
 ## Detection
 

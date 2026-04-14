@@ -2,16 +2,16 @@
 
 ## Why this is bad
 
-URLSession/URLRequest напрямую в тестах:
-- При смене URL нужно править десятки тестов
-- Дублирование кода настройки запросов
-- Сложно добавить логирование/retry/auth
-- Тесты знают слишком много о реализации API
+URLSession/URLRequest directly in tests:
+- When changing the URL, you need to edit dozens of tests
+- Duplication of request configuration code
+- Difficult to add logging/retry/auth
+- Tests know too much about the API implementation
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Raw URLSession напрямую в каждом тесте
+// ❌ BAD: Raw URLSession directly in each test
 func testUserCanRegister() async throws {
     var request = URLRequest(url: URL(string: "https://api.example.com/api/v1/users/register")!)
     request.httpMethod = "POST"
@@ -25,7 +25,7 @@ func testUserCanRegister() async throws {
 }
 
 func testRegistrationFailsWithInvalidEmail() async throws {
-    // Тот же boilerplate снова...
+    // Same boilerplate again...
     var request = URLRequest(url: URL(string: "https://api.example.com/api/v1/users/register")!)
     request.httpMethod = "POST"
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -37,7 +37,7 @@ func testRegistrationFailsWithInvalidEmail() async throws {
 ## Good Example
 
 ```swift
-// ✅ GOOD: APIClient инкапсулирует HTTP
+// ✅ GOOD: APIClient encapsulates HTTP
 struct APIClient {
     let baseURL: URL
     let session: URLSession
@@ -47,7 +47,7 @@ struct APIClient {
     }
 }
 
-// Тесты чистые и читаемые
+// Tests are clean and readable
 func testUserCanRegister() async throws {
     let response = try await apiClient.register(TestData.validRegistration())
     XCTAssertEqual(response.statusCode, 201, "Registration should succeed with valid payload")
@@ -56,8 +56,8 @@ func testUserCanRegister() async throws {
 
 ## What to look for in code review
 
-- `URLSession.shared.data(for:)` напрямую в тестовых методах
-- Дублирование URL, headers, httpMethod
-- Ручное создание `URLRequest` в каждом тесте
-- Хардкод URL в тестах (`"https://..."`)
-- `JSONEncoder().encode()` / `JSONDecoder().decode()` в каждом тесте вместо общего APIClient
+- `URLSession.shared.data(for:)` directly in test methods
+- Duplicate URLs, headers, httpMethod
+- Manual creation of `URLRequest` in each test
+- Hardcode URL in tests (`"https://..."`)
+- `JSONEncoder().encode()` / `JSONDecoder().decode()` ​​in each test instead of the common APIClient

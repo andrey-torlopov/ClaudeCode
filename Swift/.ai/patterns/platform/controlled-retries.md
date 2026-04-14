@@ -4,29 +4,29 @@
 
 ## Why this is bad
 
-Неконтролируемые retry-логики:
-- Бесконечные retry скрывают реальные баги
-- Retry без backoff перегружают сервер и батарею
-- Retry всех ошибок маскируют non-retriable failures (400, 403)
-- Пользователь ждет без обратной связи
+Uncontrolled retry logic:
+- Endless retry hides real bugs
+- Retry without backoff overloads the server and battery
+- Retry all errors mask non-retriable failures (400, 403)
+- User waits without feedback
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Retry всех ошибок, маскирует баги
+// ❌ BAD: Retry all errors, masks bugs
 func createUserWithRetry(_ request: CreateUserRequest) async throws -> UserResponse {
     for attempt in 0..<5 {
         do {
             return try await apiClient.createUser(request)
         } catch {
-            // Глотает все ошибки, включая 400 Bad Request
+            // Swallows all errors, including 400 Bad Request
             try? await Task.sleep(for: .seconds(1))
         }
     }
     throw APIError.maxRetriesExceeded
 }
 
-// ❌ BAD: Retry без различия типов ошибок
+// ❌ BAD: Retry without distinguishing error types
 func fetchData() async throws -> Data {
     var lastError: Error?
     for _ in 0..<3 {
@@ -43,7 +43,7 @@ func fetchData() async throws -> Data {
 ## Good Example
 
 ```swift
-// ✅ GOOD: Retry только для retriable ошибок с exponential backoff
+// ✅ GOOD: Retry only for retriable errors with exponential backoff
 func fetchWithRetry<T>(
     maxAttempts: Int = 3,
     initialDelay: Duration = .seconds(1),
@@ -59,7 +59,7 @@ func fetchWithRetry<T>(
             let delay = initialDelay * pow(2, Double(attempt))
             try await Task.sleep(for: delay)
         } catch {
-            throw error // Non-retriable - бросаем сразу
+            throw error // Non-retriable - throw immediately
         }
     }
 
@@ -77,7 +77,7 @@ extension URLError {
     }
 }
 
-// ✅ GOOD: Sync операции без retry - если падает, это баг
+// ✅ GOOD: Sync operations without retry - if it crashes, it's a bug
 func createUser(_ request: CreateUserRequest) async throws -> UserResponse {
     try await apiClient.createUser(request)
 }
@@ -85,8 +85,8 @@ func createUser(_ request: CreateUserRequest) async throws -> UserResponse {
 
 ## What to look for in code review
 
-- `for _ in 0..<N` вокруг async-вызовов
-- `catch { }` с пустым телом (проглатывание ошибок)
-- Retry без различия retriable (5xx, timeout) и non-retriable (4xx) ошибок
-- Отсутствие exponential backoff при retry
-- Retry на синхронные CRUD-операции (не async status polling)
+- `for _ in 0..<N` around async calls
+- `catch { }` with empty body (swallowing errors)
+- Retry without distinction between retriable (5xx, timeout) and non-retriable (4xx) errors
+- No exponential backoff during retry
+- Retry for synchronous CRUD operations (not async status polling)

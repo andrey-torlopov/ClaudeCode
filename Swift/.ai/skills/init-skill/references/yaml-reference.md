@@ -1,58 +1,58 @@
 # YAML Frontmatter Reference
 
-## Обязательные поля
+## Required fields
 
 ### name
-- **Формат:** kebab-case
-- **Ограничения:**
-  - Только строчные буквы, цифры, дефисы
-  - Должно совпадать с именем папки скилла
-  - Без префиксов "claude", "anthropic"
-  - Уникально в пределах проекта
-- **Примеры:**
+- **Format:** kebab-case
+- **Restrictions:**
+  - Only lowercase letters, numbers, hyphens
+  - Must match the name of the skill folder
+  - Without the prefixes "claude", "anthropic"
+  - Unique within the project
+- **Examples:**
   - ✅ `test-cases`, `api-tests`, `screenshot-analyze`
   - ❌ `TestPlan`, `api_tests`, `claude-helper`
 
 ### description
-- **Формат:** `[Что делает]. [Когда использовать]. [Когда НЕ использовать]`
-- **Ограничения:**
-  - Максимум 1024 символа
-  - Без XML тегов (<>, &lt;, &gt;)
-  - Без переносов строк (однострочный)
-  - Используй trigger-фразы из примеров использования
-- **Структура:**
-  1. Что делает (1-2 предложения)
-  2. Когда использовать (конкретные сценарии)
-  3. Когда НЕ использовать (anti-use-cases)
-- **Примеры:**
-  - ✅ `Генерирует тест-кейсы из спецификации API. Используй после /spec-audit для покрытия endpoints тестами. Не используй для UI тестирования.`
-  - ❌ `Полезный инструмент для тестирования` (слишком общее)
+- **Format:** `[What it does]. [When to use]. [When NOT to use]`
+- **Restrictions:**
+  - Maximum 1024 characters
+  - Without XML tags (<>, &lt;, &gt;)
+  - No line breaks (one-line)
+  - Use trigger phrases from examples of use
+- **Structure:**
+  1. What does it do (1-2 sentences)
+  2. When to use (specific scenarios)
+  3. When NOT to use (anti-use-cases)
+- **Examples:**
+  - ✅ `Generates test cases from an API specification. Use after /spec-audit to cover endpoints with tests. Do not use for UI testing.`
+  - ❌ `A useful tool for testing` (too general)
 
-## Опциональные поля
+## Optional fields
 
 ### allowed-tools
-- **Формат:** Строка с перечислением через пробел
-- **Примеры:**
+- **Format:** String with space separated list
+- **Examples:**
   - `"Read Write Edit Glob Grep"`
   - `"Read Write Bash(wc*) Bash(git*)"`
-- **Wildcards:** Bash команды можно ограничить паттерном: `Bash(ls*)` разрешает только `ls`
+- **Wildcards:** Bash commands can be limited to a pattern: `Bash(ls*)` only allows `ls`
 
 ### agent
-- **Формат:** Путь к файлу агента относительно `.ai/`
-- **Пример:** `agents/sdet.md`, `agents/auditor.md`
+- **Format:** Path to the agent file relative to `.ai/`
+- **Example:** `agents/sdet.md`, `agents/auditor.md`
 
 ### context
-- **Варианты:**
-  - `fork` — изолированный контекст (Process Isolation)
-  - `inherit` — унаследованный контекст (по умолчанию)
+- **Options:**
+  - `fork` - isolated context (Process Isolation)
+  - `inherit` — inherited context (default)
 
-## Примеры готовых YAML
+## Examples of ready-made YAML
 
 ### Analysis Skill
 ```yaml
 ---
 name: swift-review
-description: Глубокий code review Swift-кода с фокусом на memory safety, concurrency и Swift conventions. Используй для ревью модулей и PR. Не используй для анализа зависимостей.
+description: Deep code review of Swift code with a focus on memory safety, concurrency and Swift conventions. Use it for module reviews and PR. Do not use for dependency analysis.
 allowed-tools: "Read Write Edit Glob Grep"
 context: fork
 ---
@@ -62,7 +62,7 @@ context: fork
 ```yaml
 ---
 name: init-project
-description: Генерирует COMMON.md и anchor-файлы для iOS/Swift проекта на основе анализа репозитория. Используй для нового проекта без prompt pack. Не используй если core context уже настроен.
+description: Generates COMMON.md and anchor files for an iOS/Swift project based on repository analysis. Use for a new project without a prompt pack. Do not use if the core context is already configured.
 allowed-tools: "Read Write Edit Glob Grep Bash(ls*)"
 context: fork
 ---
@@ -72,17 +72,17 @@ context: fork
 ```yaml
 ---
 name: dependency-check
-description: Анализирует SPM-зависимости проекта на актуальность и конфликты. Используй перед обновлением зависимостей. Не используй для анализа кода.
+description: Analyzes project SPM dependencies for relevance and conflicts. Use before updating dependencies. Do not use for code analysis.
 allowed-tools: "Read Glob Grep Bash(swift*)"
 context: fork
 ---
 ```
 
-## Валидация
+## Validation
 
-После написания YAML проверь:
-- [ ] `name` = имя директории скилла
-- [ ] `description` содержит все 3 части (что/когда/не когда)
-- [ ] `description` < 1024 символов
-- [ ] Нет XML символов в `description`
-- [ ] YAML синтаксически корректен (triple-dash начало и конец)
+After writing YAML, check:
+- [ ] `name` = skill directory name
+- [ ] `description` contains all 3 parts (what/when/not when)
+- [ ] `description` < 1024 characters
+- [ ] No XML characters in `description`
+- [ ] YAML is syntactically correct (triple-dash start and end)

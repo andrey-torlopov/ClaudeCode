@@ -1,113 +1,113 @@
 # Swift/iOS Patterns Index
 
-> Каждый файл содержит Bad Example (как не надо) и Good Example (как надо).
-> Используется и при генерации нового кода, и при code review.
+> Each file contains a Bad Example (how not to) and a Good Example (how to).
+> Used both when generating new code and during code review.
 
-> **Lazy Load Protocol:** Читай файл ТОЛЬКО при обнаружении нарушения или при генерации кода в соответствующей области.
-> Превентивная загрузка всех файлов ЗАПРЕЩЕНА (Token Economy).
+> **Lazy Load Protocol:** Read the file ONLY when a violation is detected or when code is generated in the appropriate area.
+> Preventative downloading of all files is PROHIBITED (Token Economy).
 
 ## Naming Convention
 
-`{category}/{pattern-name}.md` - описание паттерна с Bad/Good Example.
+`{category}/{pattern-name}.md` - description of the pattern with Bad/Good Example.
 
 ## Available Patterns
 
-### common/ - Базовая гигиена кода
+### common/ - Basic code hygiene
 
-| Файл | Паттерн |
+| File | Pattern |
 |------|---------|
-| `common/architecture.md` | Не предлагай архитектуру без запроса, сохраняй существующую |
-| `common/assertion-without-message.md` | XCTAssert без message |
-| `common/hardcoded-test-data.md` | Hardcoded данные в тестах |
-| `common/no-abstraction-layer.md` | Прямые URLSession-вызовы в тестах |
-| `common/static-test-data.md` | Статичные тестовые данные без рандомизации |
-| `common/no-order-dependent-tests.md` | Тесты зависят друг от друга |
-| `common/no-cleanup-pattern.md` | Нет cleanup после тестов |
+| `common/architecture.md` | Don't propose an architecture without asking, keep the existing one |
+| `common/assertion-without-message.md` | XCTAssert without message |
+| `common/hardcoded-test-data.md` | Hardcoded data in tests |
+| `common/no-abstraction-layer.md` | Direct URLSession calls in tests |
+| `common/static-test-data.md` | Static test data without randomization |
+| `common/no-order-dependent-tests.md` | Tests depend on each other |
+| `common/no-cleanup-pattern.md` | No cleanup after tests |
 
-### networking/ - Специфика HTTP и URLSession
+### networking/ - HTTP and URLSession specifics
 
-| Файл | Паттерн |
+| File | Pattern |
 |------|---------|
-| `networking/dictionary-instead-of-model.md` | `[String: Any]` вместо Codable |
-| `networking/missing-content-type-validation.md` | Content-Type не валидируется |
-| `networking/configure-urlsession.md` | URLSession не настроен (дефолтные таймауты) |
-| `networking/wrap-infrastructure-errors.md` | URLError не отличим от бизнес-ошибки |
-| `networking/inline-urlsession-calls.md` | URLSession.shared inline в коде |
-| `networking/missing-security-headers.md` | Нет проверки security headers |
-| `networking/missing-error-body-check.md` | Проверка только HTTP-кода без бизнес-ошибки |
+| `networking/dictionary-instead-of-model.md` | `[String: Any]` ​​instead of Codable |
+| `networking/missing-content-type-validation.md` | Content-Type is not validated |
+| `networking/configure-urlsession.md` | URLSession not configured (default timeouts) |
+| `networking/wrap-infrastructure-errors.md` | URLError is indistinguishable from a business error |
+| `networking/inline-urlsession-calls.md` | URLSession.shared inline in code |
+| `networking/missing-security-headers.md` | No security headers check |
+| `networking/missing-error-body-check.md` | Testing HTTP Code Only Without Business Error |
 
 ### platform/ - Swift Concurrency + XCTest
 
-| Файл | Паттерн |
+| File | Pattern |
 |------|---------|
-| `platform/async-test-pitfalls.md` | `Task {}` в sync тестах, legacy XCTestExpectation для async |
-| `platform/xctest-setup-crashes.md` | Force unwrap / try! в property init XCTestCase |
-| `platform/flaky-sleep-tests.md` | `Thread.sleep()` / `Task.sleep()` вместо polling |
-| `platform/no-hardcoded-timeouts.md` | Magic numbers в таймаутах |
-| `platform/no-shared-mutable-state.md` | Shared mutable state, отсутствие actor/Sendable |
-| `platform/controlled-retries.md` | Неконтролируемая retry-логика |
+| `platform/async-test-pitfalls.md` | `Task {}` ​​in sync tests, legacy XCTestExpectation for async |
+| `platform/xctest-setup-crashes.md` | Force unwrap / try! in property init XCTestCase |
+| `platform/flaky-sleep-tests.md` | `Thread.sleep()` ​​/ `Task.sleep()` instead of polling |
+| `platform/no-hardcoded-timeouts.md` | Magic numbers in timeouts |
+| `platform/no-shared-mutable-state.md` | Shared mutable state, no actor/Sendable |
+| `platform/controlled-retries.md` | Uncontrolled retry logic |
 
-### performance/ - Производительность (источник: T-Bank perf research)
+### performance/ - Performance (source: T-Bank perf research)
 
-| Файл | Паттерн |
+| File | Pattern |
 |------|---------|
-| `performance/naive-disk-space-check.md` | Мемоизация disk space с TTL вместо повторных вызовов |
-| `performance/nsdictionary-file-attributes.md` | URL `resourceValues(forKeys:)` вместо `attributesOfItem(atPath:)` |
-| `performance/naive-directory-traversal.md` | `enumerator(at:includingPropertiesForKeys:)` вместо поштучного обхода |
-| `performance/string-ops-in-hot-path.md` | `[UInt8]`/`Data` вместо String в горячем пути |
-| `performance/string-search-in-collection.md` | `Set`/`Dictionary` вместо поиска подстроки в большой строке |
-| `performance/nsstring-swift-bridging.md` | Не чередовать NSString/String в tight loop |
-| `performance/protocol-cast-over-class-cast.md` | Каст к классу вместо каста к протоколу в горячем пути |
-| `performance/string-describing-reflection.md` | `_typeName`/`ObjectIdentifier` вместо `String(describing:)` |
-| `performance/expensive-generic-constants.md` | Замыкания вместо дженерик-констант в массовых регистрациях |
-| `performance/multiple-protocol-conformance.md` | Один протокол вместо множества мелких для UI-компонентов |
+| `performance/naive-disk-space-check.md` | Memoization of disk space with TTL instead of repeated calls |
+| `performance/nsdictionary-file-attributes.md` | URL `resourceValues(forKeys:)` ​​instead of `attributesOfItem(atPath:)` |
+| `performance/naive-directory-traversal.md` | `enumerator(at:includingPropertiesForKeys:)` ​​instead of piece bypass |
+| `performance/string-ops-in-hot-path.md` | `[UInt8]`/`Data` instead of String in the hot path |
+| `performance/string-search-in-collection.md` | `Set`/`Dictionary` instead of searching for a substring in a large string |
+| `performance/nsstring-swift-bridging.md` | Do not alternate NSString/String in tight loop |
+| `performance/protocol-cast-over-class-cast.md` | Cast to class instead of cast to protocol in hot way |
+| `performance/string-describing-reflection.md` | `_typeName`/`ObjectIdentifier` instead of `String(describing:)` |
+| `performance/expensive-generic-constants.md` | Closures instead of generic constants in mass registrations |
+| `performance/multiple-protocol-conformance.md` | One protocol instead of many small ones for UI components |
 
-### security/ - Данные и безопасность
+### security/ - Data and security
 
-| Файл | Паттерн |
+| File | Pattern |
 |------|---------|
-| `security/no-sensitive-data-logging.md` | PII в логах, print(), os_log |
-| `security/information-leakage-in-errors.md` | Утечка данных через error.localizedDescription |
-| `security/pii-in-code.md` | PII в тестах, Previews и Mock-данных |
+| `security/no-sensitive-data-logging.md` | PII in logs, print(), os_log |
+| `security/information-leakage-in-errors.md` | Data leak via error.localizedDescription |
+| `security/pii-in-code.md` | PII in Tests, Previews and Mock Data |
 
-### best-practices/ - Общие рекомендации Swift
+### best-practices/ - General Swift recommendations
 
-| Файл | Паттерн |
+| File | Pattern |
 |------|---------|
-| `best-practices/prefer-final-class.md` | Помечай классы `final` если наследование не планируется |
-| `best-practices/prefer-let-over-var.md` | `let` по умолчанию, `var` только при необходимости мутации |
-| `best-practices/prefer-value-types.md` | `struct` > `class`, value semantics по умолчанию |
+| `best-practices/prefer-final-class.md` | Mark classes `final` ​​if inheritance is not planned |
+| `best-practices/prefer-let-over-var.md` | `let` ​​by default, `var` only if mutation is necessary |
+| `best-practices/prefer-value-types.md` | `struct` ​​> `class`, default value semantics |
 
-## Маппинг QA (Kotlin) -> Swift
+## QA mapping (Kotlin) -> Swift
 
-| QA (Kotlin/JUnit) | Swift/iOS | Изменения |
+| QA (Kotlin/JUnit) | Swift/iOS | Changes |
 |---|---|---|
-| `HttpClient` / Ktor | `URLSession` / `URLRequest` | API полностью другой |
-| `@Test` / JUnit 5 | `func test*()` / XCTest | Lifecycle: `setUp()`/`tearDown()` вместо `@BeforeEach`/`@AfterEach` |
-| `runBlocking {}` | `async throws` test methods | Нативная поддержка в Xcode 13+ |
-| `Awaitility` | `XCTestExpectation` / custom polling | Нет прямого аналога, нужен helper |
-| `@Serializable` (Kotlin) | `Codable` (Swift) | `CodingKeys` вместо `@SerialName` |
-| `companion object` | `static` properties | `actor` для thread-safe state |
-| `lateinit var` | `var ... : T!` в XCTestCase | Опасен при init crash |
-| Allure steps | `XCTContext.runActivity` | Менее развит, но аналогичен |
-| `@BeforeAll` | `override class func setUp()` | Вызывается один раз для класса |
+| `HttpClient` / Ktor | `URLSession` ​​/ `URLRequest` | The API is completely different |
+| `@Test` / JUnit 5 | `func test*()`/XCTest | Lifecycle: `setUp()`/`tearDown()` instead of `@BeforeEach`/`@AfterEach` |
+| `runBlocking {}` | `async throws` ​​test methods | Native support in Xcode 13+ |
+| `Awaitility` | `XCTestExpectation` ​​/ custom polling | There is no direct analogue, you need a helper |
+| `@Serializable` (Kotlin) | `Codable` ​​(Swift) | `CodingKeys` instead of `@SerialName` |
+| `companion object` | `static` ​​properties | `actor` for thread-safe state |
+| `lateinit var` | `var ... : T!` ​​in XCTestCase | Dangerous during init crash |
+| Allure steps | `XCTContext.runActivity` | Less developed, but similar |
+| `@BeforeAll` | `override class func setUp()` ​​| Called once per class |
 
-## Usage (для разработчика)
+## Usage (for developer)
 
-При обнаружении проблемы или написании нового кода:
-1. Определи категорию: common / networking / platform / performance / security / best-practices
-2. Прочитай `.ai/patterns/{category}/{name}.md` - примени Good Example - процитируй `(ref: {category}/{name}.md)`
-3. Если reference не найден - BLOCKER, не угадывай fix
+When you find a problem or write new code:
+1. Define a category: common / networking / platform / performance / security / best-practices
+2. Read `.ai/patterns/{category}/{name}.md` - apply Good Example - quote `(ref: {category}/{name}.md)`
+3. If reference is not found - BLOCKER, do not guess fix
 
-## Usage (для code review)
+## Usage (for code review)
 
 ```bash
-# Сканируй по категории
+# Scan by category
 ls .ai/patterns/performance/
 
-# Grep в проекте
+# Grep in the project
 grep -rn "URLSession.shared\|[String: Any]\|Thread.sleep\|attributesOfItem" --include="*.swift" Sources/ Tests/
 
-# Прочитай файл при match
+# Read the file on match
 cat .ai/patterns/performance/naive-disk-space-check.md
 ```

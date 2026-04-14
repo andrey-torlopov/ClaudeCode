@@ -4,16 +4,16 @@
 
 ## Why this is bad
 
-Рекурсивный обход директорий без оптимизации:
-- Наивная реализация: ~3.3 секунды на типичном дереве файлов
-- Оптимизированная: ~160 мс (ускорение в 20x)
-- Каждый `attributesOfItem` - отдельный syscall
-- Без prefetch ключей каждый `resourceValues` повторно идет в FS
+Recursive directory traversal without optimization:
+- Naive implementation: ~3.3 seconds on a typical file tree
+- Optimized: ~160 ms (20x speedup)
+- Each `attributesOfItem` is a separate syscall
+- Without prefetch keys, each `resourceValues` goes to FS again
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Рекурсивный обход с attributesOfItem по каждому файлу
+// ❌ BAD: Recursive traversal with attributesOfItem for each file
 func calculateSize(at path: String) throws -> Int64 {
     let contents = try FileManager.default.subpathsOfDirectory(atPath: path)
     var total: Int64 = 0
@@ -32,7 +32,7 @@ func calculateSize(at path: String) throws -> Int64 {
 ## Good Example
 
 ```swift
-// ✅ GOOD: enumerator с includingPropertiesForKeys для prefetch
+// ✅ GOOD: enumerator with includingPropertiesForKeys for prefetch
 func calculateSize(at directory: URL) throws -> Int64 {
     let keys: Set<URLResourceKey> = [.fileSizeKey, .isRegularFileKey]
 
@@ -41,7 +41,7 @@ func calculateSize(at directory: URL) throws -> Int64 {
         includingPropertiesForKeys: Array(keys),
         options: [.skipsHiddenFiles],
         errorHandler: { url, error in
-            // Логируем, но продолжаем обход
+            // Log, but continue traversing
             false
         }
     ) else {
@@ -50,7 +50,7 @@ func calculateSize(at directory: URL) throws -> Int64 {
 
     var total: Int64 = 0
     for case let url as URL in enumerator {
-        // resourceValues берутся из кэша благодаря includingPropertiesForKeys
+        // resourceValues ​​are taken from the cache thanks to includingPropertiesForKeys
         let values = try url.resourceValues(forKeys: keys)
         if values.isRegularFile == true {
             total += Int64(values.fileSize ?? 0)
@@ -62,7 +62,7 @@ func calculateSize(at directory: URL) throws -> Int64 {
 
 ## What to look for in code review
 
-- `subpathsOfDirectory(atPath:)` + поштучный `attributesOfItem`
-- `enumerator` без `includingPropertiesForKeys` (упущенный prefetch)
-- `contentsOfDirectory` + рекурсия вручную вместо `enumerator`
-- Обход больших директорий в main thread
+- `subpathsOfDirectory(atPath:)` + piece `attributesOfItem`
+- `enumerator` without `includingPropertiesForKeys` ​​(missing prefetch)
+- `contentsOfDirectory` + manual recursion instead of `enumerator`
+- Traversing large directories in the main thread

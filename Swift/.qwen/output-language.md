@@ -1,1 +1,1 @@
-Комментарии, документация и рассуждения: на русском языке
+Comments, documentation and discussions: in Russian

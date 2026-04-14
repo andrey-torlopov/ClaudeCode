@@ -1,61 +1,61 @@
 ---
 name: doc-lint
-description: Аудит качества документации — размер, структура, дубликаты между файлами, нарушения SSOT. Используй для контроля качества human-readable файлов, поиска дублирования и проверки структуры. Не используй для code review или анализа исходного кода.
+description: Documentation quality audit - size, structure, duplicates between files, SSOT violations. Use it to control the quality of human-readable files, search for duplication and check the structure. Do not use for code review or source code analysis.
 allowed-tools: "Read Write Edit Glob Grep Bash(wc*)"
 context: fork
 ---
 
-# /doc-lint — Аудит качества документации
+# /doc-lint — Documentation quality audit
 
-Сканирует human-readable файлы проекта, ищет size issues, structural problems, duplicate blocks и нарушения SSOT.
+Scans human-readable project files, looking for size issues, structural problems, duplicate blocks and SSOT violations.
 
-## Когда использовать
+## When to use
 
-- После изменений в `COMMON.md`, anchor-файлах и документации
-- Перед разбиением больших `.md` файлов
-- При подозрении на stale links и дублирование между документами
+- After changes in `COMMON.md`, anchor files and documentation
+- Before splitting large `.md` files
+- If you suspect stale links and duplication between documents
 
 ## Verbosity
 
-- Таблицы и детальный анализ — только в артефакт.
-- В чат — короткая сводка и путь к отчёту.
+- Tables and detailed analysis - only in the artifact.
+- To chat - a short summary and the path to the report.
 
-## Алгоритм
+## Algorithm
 
-1. Собери inventory по `references/phases.md`.
-2. Примени size и structure rules из `references/check-rules.md`.
-3. Проверь дублирование и назначь SSOT owner для каждого кластера.
-4. Отдельно проверь `COMMON.md` и anchor-файлы:
-   - core rules живут в `COMMON.md`,
-   - `CLAUDE.md`, `AGENTS.md`, `GEMINI.md` должны оставаться короткими.
-5. Найди broken links, stale dates, TODO/FIXME и wall-of-text.
-6. Сохрани отчёт в `audit/doc-lint-report.md`.
-7. Если есть безопасные исправления, создай `audit/safe-fix.sh`.
+1. Collect inventory for `references/phases.md`.
+2. Apply size and structure rules from `references/check-rules.md`.
+3. Check duplication and assign an SSOT owner for each cluster.
+4. Check `COMMON.md` and anchor files separately:
+   - core rules live in `COMMON.md`,
+   - `CLAUDE.md`, `AGENTS.md`, `GEMINI.md` must remain short.
+5. Find broken links, stale dates, TODO/FIXME and wall-of-text.
+6. Save the report in `audit/doc-lint-report.md`.
+7. If there are safe patches, create `audit/safe-fix.sh`.
 
 ## Severity
 
-| Severity | Что означает |
+| Severity | What does |
 |----------|--------------|
-| `CRITICAL` | broken links, exact duplicates, сильное превышение лимитов |
-| `WARNING` | near-duplicates, wall-of-text, большие секции, anchor-файлы с копией SSOT |
+| `CRITICAL` | broken links, exact duplicates, severely exceeding limits |
+| `WARNING` | near-duplicates, wall-of-text, large sections, anchor files with SSOT copy |
 | `INFO` | TODO, stale dates, formatting noise |
 
 ## Quality Gates
 
-- Все файлы в scope найдены и посчитаны через `wc -l`.
-- Каждый finding содержит severity, файл и конкретную рекомендацию.
-- Для каждого кластера дубликатов назначен SSOT owner.
-- Формулы показаны с числителем и знаменателем, если считаются метрики.
+- All files in scope are found and counted through `wc -l`.
+- Each finding contains severity, file and specific recommendation.
+- An SSOT owner is assigned to each duplicate cluster.
+- Formulas are shown with a numerator and a denominator if metrics are considered.
 
-## Связанные файлы
+## Related files
 
 - `references/check-rules.md`
 - `references/phases.md`
 
-## Завершение
+## Completion
 
 ```text
 SKILL COMPLETE: /doc-lint
-|- Артефакты: audit/doc-lint-report.md, audit/safe-fix.sh
+|- Artifacts: audit/doc-lint-report.md, audit/safe-fix.sh
 |- Compilation: N/A
 ```

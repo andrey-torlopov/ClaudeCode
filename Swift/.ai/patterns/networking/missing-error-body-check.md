@@ -1,14 +1,14 @@
-# Anti-Pattern: Проверка только HTTP-кода без бизнес-ошибки
+# Anti-Pattern: Check only HTTP code without business error
 
 ## Problem
 
-Обработка ошибок проверяет только HTTP-статус (`400`, `422`), не проверяя `body.code` / `body.errorType`.
-Код считает запрос неуспешным, но реальная причина (неверный бизнес-код ошибки) не обнаружена.
+Error handling only checks the HTTP status (`400`, `422`), without checking `body.code` / `body.errorType`.
+The code considers the request to be unsuccessful, but the real reason (invalid business error code) is not detected.
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: проверяем только HTTP статус
+// ❌ BAD: check only HTTP status
 func register(_ request: RegisterRequest) async throws -> RegisterResponse {
     let (data, response) = try await session.data(for: buildRequest(request))
     guard let httpResponse = response as? HTTPURLResponse else {
@@ -17,7 +17,7 @@ func register(_ request: RegisterRequest) async throws -> RegisterResponse {
 
     guard httpResponse.statusCode == 201 else {
         throw APIError.serverError(statusCode: httpResponse.statusCode)
-        // Бизнес-код не проверен - любой non-201 обрабатывается одинаково
+        // Business code is not verified - any non-201 is treated the same
     }
 
     return try decoder.decode(RegisterResponse.self, from: data)
@@ -27,7 +27,7 @@ func register(_ request: RegisterRequest) async throws -> RegisterResponse {
 ## Good Example
 
 ```swift
-// ✅ GOOD: проверяем HTTP статус + бизнес-код ошибки
+// ✅ GOOD: checking HTTP status + business error code
 func register(_ request: RegisterRequest) async throws -> RegisterResponse {
     let (data, response) = try await session.data(for: buildRequest(request))
     guard let httpResponse = response as? HTTPURLResponse else {
@@ -47,7 +47,7 @@ func register(_ request: RegisterRequest) async throws -> RegisterResponse {
     return try decoder.decode(RegisterResponse.self, from: data)
 }
 
-// Вызывающий код может различать типы ошибок
+// Calling code can differentiate between error types
 do {
     let response = try await apiClient.register(request)
 } catch let APIError.businessError(statusCode, code, field, message) where code == "VALIDATION_ERROR" {
@@ -61,10 +61,10 @@ do {
 
 ## Why
 
-- HTTP `400` может приходить по многим причинам (auth, schema, rate limit)
-- Без `body.code` невозможно отличить `VALIDATION_ERROR` от `MISSING_FIELD` или `RATE_LIMITED`
-- UI не может показать правильное сообщение пользователю
-- Регрессия в бизнес-логике ошибок остается незамеченной
+- HTTP `400` can arrive for many reasons (auth, schema, rate limit)
+- Without `body.code` it is impossible to distinguish `VALIDATION_ERROR` ​​from `MISSING_FIELD` or `RATE_LIMITED`
+- UI cannot show the correct message to the user
+- Regression in business logic errors goes unnoticed
 
 ## Detection
 

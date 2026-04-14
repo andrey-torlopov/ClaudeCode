@@ -2,10 +2,10 @@
 
 ## Why this is bad
 
-`Thread.sleep()` / `Task.sleep()` с фиксированным временем создает нестабильные тесты:
-- На медленных машинах/CI тест падает (timeout слишком короткий)
-- На быстрых машинах тест тратит время впустую
-- Невозможно предсказать, сколько времени нужно async-операции
+`Thread.sleep()` / `Task.sleep()` ​​with fixed time creates unstable tests:
+- On slow machines/CI the test crashes (timeout is too short)
+- On fast machines the test wastes time
+- It is impossible to predict how long an async operation will take
 
 ## Bad Example
 
@@ -14,16 +14,16 @@
 func testUserStatusBecomesActive() async throws {
     let userId = try await userHelper.registerUser(TestData.validRequest())
 
-    try await Task.sleep(for: .seconds(2))  // Ждем "достаточно"
+    try await Task.sleep(for: .seconds(2)) // Wait for "enough"
 
     let response = try await apiClient.getUser(userId)
     XCTAssertEqual(response.body.status, "active", "User should become active")
 }
 
-// ❌ BAD: Thread.sleep блокирует поток
+// ❌ BAD: Thread.sleep blocks the thread
 func testNotificationReceived() {
     notificationService.send(notification)
-    Thread.sleep(forTimeInterval: 1.0)  // Блокирует cooperative thread pool
+    Thread.sleep(forTimeInterval: 1.0) // Blocks the cooperative thread pool
     XCTAssertTrue(handler.didReceive)
 }
 ```
@@ -31,7 +31,7 @@ func testNotificationReceived() {
 ## Good Example
 
 ```swift
-// ✅ GOOD: XCTestExpectation с polling для async статуса
+// ✅ GOOD: XCTestExpectation with polling for async status
 func testUserStatusBecomesActive() async throws {
     let userId = try await userHelper.registerUser(TestData.validRequest())
 
@@ -54,7 +54,7 @@ func testUserStatusBecomesActive() async throws {
     }
 }
 
-// Переиспользуемый polling helper
+// Reusable polling helper
 func waitUntil(
     timeout: Duration,
     pollInterval: Duration = .seconds(1),
@@ -71,8 +71,8 @@ func waitUntil(
 
 ## What to look for in code review
 
-- `Thread.sleep()`, `Task.sleep(for:)` с фиксированным значением в тестах
-- Магические числа в таймаутах без объяснения
-- Комментарии типа "wait for async operation"
-- Тесты, которые "иногда падают" (flaky)
-- `usleep()`, `sleep()` в тестовом коде
+- `Thread.sleep()`, `Task.sleep(for:)` ​​with a fixed value in tests
+- Magic numbers in timeouts without explanation
+- Comments like "wait for async operation"
+- Tests that “sometimes crash” (flaky)
+- `usleep()`, `sleep()` ​​in test code

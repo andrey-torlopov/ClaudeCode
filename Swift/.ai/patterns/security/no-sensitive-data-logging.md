@@ -4,32 +4,32 @@
 
 ## Why this is bad
 
-Логирование чувствительных данных:
-- Токены и пароли попадают в Console.app и CI-логи
-- Crashlytics/Sentry отчеты с секретами доступны всей команде
-- os_log с sensitive data сохраняется на устройстве
-- Нарушение compliance (GDPR, PCI DSS)
-- Аналитика с PII отправляется на сторонние серверы
+Logging sensitive data:
+- Tokens and passwords go to Console.app and CI logs
+- Crashlytics/Sentry reports with secrets are available to the entire team
+- os_log with sensitive data is saved on the device
+- Violation of compliance (GDPR, PCI DSS)
+- Analytics with PII is sent to third-party servers
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Токен в логах
+// ❌ BAD: Token in logs
 func authenticate(token: String) async throws -> AuthResponse {
     logger.info("Authenticating with token: \(token)")
     return try await apiClient.auth(token: token)
 }
 
-// ❌ BAD: Пароль в assertion message (тесты)
+// ❌ BAD: Password in assertion message (tests)
 XCTAssertEqual(response.statusCode, 200, "Auth failed for password=\(password)")
 
-// ❌ BAD: Полный response body с токенами
+// ❌ BAD: Full response body with tokens
 func logResponse(_ response: APIResponse<AuthResponse>) {
     print("Response: \(response.body)")
-    // body содержит accessToken, refreshToken
+    // body contains accessToken, refreshToken
 }
 
-// ❌ BAD: UserDefaults с sensitive data видны в device logs
+// ❌ BAD: UserDefaults with sensitive data are visible in device logs
 UserDefaults.standard.set(apiKey, forKey: "apiKey")
 logger.debug("Saved API key to UserDefaults")
 ```
@@ -37,38 +37,38 @@ logger.debug("Saved API key to UserDefaults")
 ## Good Example
 
 ```swift
-// ✅ GOOD: Маскированный токен в логах
+// ✅ GOOD: Masked token in logs
 func authenticate(token: String) async throws -> AuthResponse {
     let masked = String(token.prefix(4)) + "****"
     logger.info("Authenticating with token: \(masked)")
     return try await apiClient.auth(token: token)
 }
 
-// ✅ GOOD: os_log с privacy
+// ✅ GOOD: os_log with privacy
 import os
 
 let logger = Logger(subsystem: "com.app", category: "auth")
 
 func authenticate(token: String) async throws {
     logger.info("Authenticating with token: \(token, privacy: .private)")
-    // В release билде токен заменяется на <private>
+    // In the release build, the token is replaced with <private>
 }
 
-// ✅ GOOD: Логируем только структуру, не значения
+// ✅ GOOD: Log only the structure, not the values
 func logResponse<T>(_ response: APIResponse<T>) {
     logger.info("Response: status=\(response.statusCode), type=\(T.self)")
 }
 
-// ✅ GOOD: Keychain вместо UserDefaults для секретов
+// ✅ GOOD: Keychain instead of UserDefaults for secrets
 try KeychainHelper.save(apiKey, forKey: "apiKey")
 ```
 
 ## What to look for in code review
 
-- `print()`, `NSLog()`, `logger.info()` с interpolated секретами
-- `os_log` без `privacy: .private` для sensitive полей
-- Response body логируется целиком (может содержать токены)
-- `UserDefaults` для хранения токенов/паролей вместо Keychain
-- Crashlytics custom keys с PII
-- Analytics events с email, phone, name
-- `debugPrint()` оставленный в production коде
+- `print()`, `NSLog()`, `logger.info()` with interpolated secrets
+- `os_log` without `privacy: .private` ​​for sensitive fields
+- Response body is logged entirely (may contain tokens)
+- `UserDefaults` for storing tokens/passwords instead of Keychain
+- Crashlytics custom keys with PII
+- Analytics events with email, phone, name
+- `debugPrint()` left in production code

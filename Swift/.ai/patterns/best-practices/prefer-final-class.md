@@ -1,19 +1,19 @@
 # Prefer final class
 
-**Applies to:** Все классы в production и тестовом коде
+**Applies to:** All classes in production and test code
 
 ## Why this matters
 
-Пометка `final` для классов, которые не предназначены для наследования:
-- Компилятор применяет static dispatch вместо dynamic dispatch - быстрее вызов методов
-- Явно выражает намерение: "этот класс не для наследования"
-- Предотвращает случайное наследование и хрупкие иерархии
-- Совместимо с Sendable (final class проще сделать Sendable)
+Mark `final` for classes that are not intended to be inherited:
+- The compiler uses static dispatch instead of dynamic dispatch - calling methods is faster
+- Explicitly expresses the intent: "this class is not for inheritance"
+- Prevents accidental inheritance and fragile hierarchies
+- Compatible with Sendable (final class is easier to make Sendable)
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Класс без final - неясно, планируется ли наследование
+// ❌ BAD: Class without final - it is unclear whether inheritance is planned
 class NetworkService {
     let session: URLSession
 
@@ -27,7 +27,7 @@ class NetworkService {
     }
 }
 
-// ❌ BAD: ViewModel без final - dynamic dispatch на каждый вызов
+// ❌ BAD: ViewModel without final - dynamic dispatch for each call
 class ProfileViewModel: ObservableObject {
     @Published var name: String = ""
 
@@ -38,7 +38,7 @@ class ProfileViewModel: ObservableObject {
 ## Good Example
 
 ```swift
-// ✅ GOOD: final - явное намерение, static dispatch
+// ✅ GOOD: final - explicit intent, static dispatch
 final class NetworkService {
     let session: URLSession
 
@@ -59,16 +59,16 @@ final class ProfileViewModel: ObservableObject, Sendable {
     func load() async { /* ... */ }
 }
 
-// ✅ Исключение: класс НАМЕРЕННО создан для наследования
+// ✅ Exception: the class is INTENTIONALLY created for inheritance
 class BaseCoordinator {
     func start() {
-        // Override point для наследников
+        // Override point for heirs
     }
 }
 ```
 
 ## What to look for in code review
 
-- `class` без `final` - спросить: планируется ли наследование?
-- Если наследников нет и не планируется - добавить `final`
-- `open class` в модуле без внешних потребителей
+- `class` without `final` ​​- ask: is inheritance planned?
+- If there are no heirs and there are no plans, add `final`
+- `open class` in a module without external consumers

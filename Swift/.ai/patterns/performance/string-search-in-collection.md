@@ -4,16 +4,16 @@
 
 ## Why this is bad
 
-Поиск строки внутри большой склеенной строки вместо структур данных:
-- Линейный поиск подстроки: ~200 мс в реальном кейсе
-- Замена на Set: ~2 мс (ускорение в 100x)
-- "Собрал все в String и ищу contains" - почти всегда антипаттерн
-- O(n*m) вместо O(1) при использовании хэш-таблицы
+Finding a string inside a large concatenated string instead of data structures:
+- Linear substring search: ~200 ms in a real case
+- Replacement with Set: ~2 ms (100x speedup)
+- “I collected everything in a String and am looking for contains” - almost always an antipattern
+- O(n*m) instead of O(1) when using a hash table
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Поиск через contains в склеенной строке
+// ❌ BAD: Search via contains in a merged string
 final class FeatureRegistry {
     private var allFeatures: String = ""
 
@@ -26,7 +26,7 @@ final class FeatureRegistry {
     }
 }
 
-// ❌ BAD: Линейный поиск в массиве строк
+// ❌ BAD: Linear search in an array of strings
 func findUser(by email: String, in users: [String]) -> Bool {
     return users.contains(email) // O(n)
 }
@@ -35,7 +35,7 @@ func findUser(by email: String, in users: [String]) -> Bool {
 ## Good Example
 
 ```swift
-// ✅ GOOD: Set для O(1) поиска
+// ✅ GOOD: Set for O(1) search
 final class FeatureRegistry {
     private var features: Set<String> = []
 
@@ -48,7 +48,7 @@ final class FeatureRegistry {
     }
 }
 
-// ✅ GOOD: Dictionary для поиска с ассоциированными данными
+// ✅ GOOD: Dictionary for searching with associated data
 struct UserLookup {
     private var usersByEmail: [String: User] = [:]
 
@@ -61,7 +61,7 @@ struct UserLookup {
     }
 }
 
-// ✅ GOOD: Хэш-суффиксы для быстрого сопоставления
+// ✅ GOOD: Hash suffixes for quick matching
 struct SuffixMatcher {
     private var suffixMap: [String: [String]] = [:]
 
@@ -78,7 +78,7 @@ struct SuffixMatcher {
 
 ## What to look for in code review
 
-- `bigString.contains(substring)` для поиска в коллекции значений
-- Массив строк + `contains` / `first(where:)` для частых lookup-ов
-- Конкатенация строк как способ хранения коллекции
-- `joined(separator:)` + последующий `contains` / `range(of:)`
+- `bigString.contains(substring)` to search the collection of values
+- Array of strings + `contains` / `first(where:)` ​​for frequent lookups
+- String concatenation as a way to store a collection
+- `joined(separator:)` + subsequent `contains` ​​/ `range(of:)`

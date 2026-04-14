@@ -1,13 +1,13 @@
 # Architecture
 
-**Applies to:** Весь Swift-код проекта
+**Applies to:** All Swift code of the project
 
-## Правила
+## Rules
 
-- Не предлагай архитектурные паттерны (VIPER, MVC и т.д.) без запроса
-- При рефакторинге сохраняй существующую архитектуру проекта
+- Do not offer architectural patterns (VIPER, MVC, etc.) without asking
+- When refactoring, keep the existing project architecture
 
 ## What to look for in review
 
-- Предложения сменить архитектуру без явного запроса от пользователя
-- Рефакторинг, ломающий существующую архитектурную структуру
+- Proposals to change the architecture without an explicit request from the user
+- Refactoring that breaks the existing architectural structure

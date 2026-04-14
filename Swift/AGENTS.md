@@ -1,18 +1,18 @@
 # Swift Agents Entry
 
-Этот файл — входная точка для agent runtimes, которые автоматически ищут `AGENTS.md`.
+This file is the entry point for agent runtimes, which automatically look for `AGENTS.md`.
 
 ## Read Order
 
-1. `COMMON.md` — SSOT для правил и общих ограничений.
-2. `.ai/setup_context.md` — карта рантайма и доступных слоёв.
-3. `.ai/dev_agent.md` — базовая роль и лёгкая маршрутизация.
+1. `COMMON.md` - SSOT for rules and general restrictions.
+2. `.ai/setup_context.md` - map of runtime and available layers.
+3. `.ai/dev_agent.md` - basic role and easy routing.
 
 ## Available Layers
 
-- `.ai/agents/sdet.md` — компактная роль для реализации кода и тестов.
-- `.ai/agents/auditor.md` — компактная роль для review и аудита.
-- `.ai/skills/*/SKILL.md` — специализированные сценарии.
-- `.ai/patterns/_index.md` — lazy-load каталог паттернов.
+- `.ai/agents/sdet.md` is a compact role for implementing code and tests.
+- `.ai/agents/auditor.md` - compact role for review and audit.
+- `.ai/skills/*/SKILL.md` - specialized scripts.
+- `.ai/patterns/_index.md` — lazy-load pattern directory.
 
-Не дублируй правила из `COMMON.md` в этом файле.
+Do not duplicate the rules from `COMMON.md` in this file.

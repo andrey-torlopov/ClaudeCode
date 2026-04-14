@@ -1,25 +1,25 @@
 # Swift Core Context
 
-`COMMON.md` — единый SSOT для базового контекста. Все anchor-файлы, агенты и скиллы должны ссылаться на него, а не дублировать эти правила.
+`COMMON.md` is a single SSOT for the base context. All anchor files, agents and skills must refer to it, and not duplicate these rules.
 
 ## Stack
 
-- Язык: Swift
-- Пакетный менеджер: SPM
-- Комментарии, документация и рассуждения: на русском языке
+- Language: Swift
+- Package manager: SPM
+- Comments, documentation and discussions: in Russian
 
 ## Core Rules
 
-1. **Trust No One** — проверяй требования на противоречия и сверяйся с файлами на диске.
-2. **Minimal Diff** — меняй только то, что нужно задаче, не рефактори вокруг без запроса.
-3. **Production Ready** — результат должен быть пригоден к запуску без ручных догадок.
-4. **Read Freely** — читать файлы и контекст можно без отдельного подтверждения.
-5. **Delete Carefully** — удаление файлов и больших блоков делай только когда это явно требуется.
+1. **Trust No One** - check the requirements for contradictions and check with the files on the disk.
+2. **Minimal Diff** - change only what the task needs, don’t refactor around without asking.
+3. **Production Ready** - the result should be suitable for launch without manual guesswork.
+4. **Read Freely** - you can read files and context without separate confirmation.
+5. **Delete Carefully** - delete files and large blocks only when it is clearly required.
 
 ## Working Conventions
 
-- Не меняй архитектуру и проектные соглашения без прямого запроса.
-- Для анализа и исследований заранее запрашивай путь, куда сохранить Markdown-результат.
-- При математических расчётах показывай формулу с числителем и знаменателем перед итогом.
-- Паттерны загружай лениво через `.ai/patterns/_index.md` и открывай только нужный файл.
-- Anchor-файлы `CLAUDE.md`, `AGENTS.md`, `GEMINI.md` служат входными точками рантаймов и не должны копировать этот контекст целиком.
+- Do not change architecture and design agreements without direct request.
+- For analysis and research, request in advance the path where to save the Markdown result.
+- When doing mathematical calculations, show the formula with the numerator and denominator before the total.
+- Load patterns lazily via `.ai/patterns/_index.md` and open only the required file.
+- Anchor files `CLAUDE.md`, `AGENTS.md`, `GEMINI.md` serve as runtime entry points and should not copy this entire context.

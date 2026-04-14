@@ -1,26 +1,26 @@
 # Swift Conventions
 
-**Applies to:** Весь Swift-код проекта
+**Applies to:** All Swift code of the project
 
-## Правила
+## Rules
 
-- Следуй Swift API Design Guidelines
-- Используй `let` вместо `var` где возможно
-- Предпочитай value types (struct, enum) над reference types (class), если нет явной необходимости
-- enum используем только если планируется проверка перечислений. Иначе используем struct
-- Используй `async/await` вместо completion handlers
-- Используй Modern concurrency вместо NSLog, Semaphore прочих механизмов
-- Используй structured concurrency (TaskGroup, async let) вместо неструктурированных Task {}
-- Помечай типы как `Sendable` где возможно
-- Используй `@MainActor` для UI-кода, не `DispatchQueue.main`
-- Обрабатывай ошибки через `throws` / `Result`, не через опционалы для ошибочных состояний
-- Используй `guard` для раннего выхода
-- В Task если используем [weak self], то не усиливаем сразу self, а только перед первым его использованием
-- Предпочитай `[weak self]` в escaping closures для предотвращения retain cycles
-- Не используй force unwrap (`!`) кроме IBOutlet и тестов
-- Не используй `Any` / `AnyObject` без крайней необходимости - предпочитай протоколы и дженерики
-- Стараемся не использовать Task.detached()
-- Стараемся не использовать .init, а явное указание класса/структуры
+- Follow Swift API Design Guidelines
+- Use `let` instead of `var` ​​where possible
+- Prefer value types (struct, enum) over reference types (class) unless clearly necessary
+- we use enum only if we plan to check transfers. Otherwise we use struct
+- Use `async/await` instead of completion handlers
+- Use Modern concurrency instead of NSLog, Semaphore and other mechanisms
+- Use structured concurrency (TaskGroup, async let) instead of unstructured Task {}
+- Mark types as `Sendable` where possible
+- Use `@MainActor` for UI code, not `DispatchQueue.main`
+- Handle errors via `throws` / `Result`, not via optionals for error states
+- Use `guard` for early exit
+- In Task, if we use [weak self], then we do not strengthen self immediately, but only before using it for the first time
+- Prefer `[weak self]` in escaping closures to prevent retain cycles
+- Do not use force unwrap (`!`) except for IBOutlet and tests
+- Don't use `Any` / `AnyObject` ​​unless absolutely necessary - prefer protocols and generics
+- We try not to use Task.detached()
+- We try not to use .init, but an explicit indication of the class/structure
 
 ## Bad Example
 
@@ -68,13 +68,13 @@ final class DataManager: Sendable {
 
 ## What to look for in code review
 
-- `var` где можно использовать `let`
-- `class` где достаточно `struct`
-- completion handlers вместо async/await
-- `DispatchQueue.main` вместо `@MainActor`
-- `Task {}` вместо structured concurrency (TaskGroup, async let)
-- `Task.detached()` без явной необходимости
-- Force unwrap (`!`) вне IBOutlet/тестов
-- `Any` / `AnyObject` вместо протоколов/дженериков
-- `.init(...)` вместо явного `TypeName(...)`
-- Опционалы для ошибочных состояний вместо throws/Result
+- `var` where you can use `let`
+- `class` where `struct` ​​is sufficient
+- completion handlers instead of async/await
+- `DispatchQueue.main` instead of `@MainActor`
+- `Task {}` instead of structured concurrency (TaskGroup, async let)
+- `Task.detached()` without explicit need
+- Force unwrap (`!`) outside IBOutlet/tests
+- `Any` / `AnyObject` ​​instead of protocols/generics
+- `.init(...)` instead of explicit `TypeName(...)`
+- Options for error states instead of throws/Result

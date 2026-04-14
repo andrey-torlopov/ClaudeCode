@@ -4,16 +4,16 @@
 
 ## Why this is bad
 
-Swift создает метаданные для дженерик-типов в рантайме:
-- `swift_checkGenericRequirements` вызывает `swift_conform_protocol` для каждого протокольного ограничения
-- Дженерик-константы в переиспользуемых компонентах особенно дороги
-- Экономия размера метаданных в бинарнике приводит к дополнительным затратам CPU
-- В Т-Банке отказ от дженерик-констант ускорил старт на 11% (220 мс) и подготовку главной страницы на 10% (95 мс)
+Swift creates metadata for generic types at runtime:
+- `swift_checkGenericRequirements` calls `swift_conform_protocol` ​​for each protocol constraint
+- Generic constants in reused components are especially expensive
+- Saving the size of metadata in a binary leads to additional CPU costs
+- In T-Bank, eliminating generic constants speeded up the start by 11% (220 ms) and the preparation of the main page by 10% (95 ms)
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Дженерик-константа для декодирования
+// ❌ BAD: Generic constant for decoding
 struct Feature<T: Decodable> {
     let decoder: JSONDecoder
     let type: T.Type
@@ -23,16 +23,16 @@ struct Feature<T: Decodable> {
     }
 }
 
-// Каждое создание Feature<X> -> swift_checkGenericRequirements
+// Each creation Feature<X> -> swift_checkGenericRequirements
 let featureA = Feature<ConfigA>(decoder: decoder, type: ConfigA.self)
 let featureB = Feature<ConfigB>(decoder: decoder, type: ConfigB.self)
-// ... десятки таких регистраций на старте
+// ...dozens of such registrations at the start
 ```
 
 ## Good Example
 
 ```swift
-// ✅ GOOD: Инжекция decode/encode через замыкание вместо дженерика
+// ✅ GOOD: Decode/encode injection via closure instead of generic
 struct Feature {
     let decode: (Data) throws -> Any
 
@@ -43,14 +43,14 @@ struct Feature {
     }
 }
 
-// Дженерик используется только в init, не в хранимом типе
+// The generic is used only in init, not in the stored type
 let featureA = Feature(type: ConfigA.self)
 let featureB = Feature(type: ConfigB.self)
 ```
 
 ## What to look for in code review
 
-- Дженерик-структуры/классы с протокольными ограничениями, создаваемые массово
-- Массовая регистрация дженерик-компонентов на старте приложения
-- Дженерик-параметры, которые можно заменить на замыкания или type erasure
-- `where T: ProtocolA & ProtocolB & ProtocolC` - каждый протокол проверяется отдельно
+- Generic structures/classes with protocol restrictions, created in bulk
+- Mass registration of generic components at the start of the application
+- Generic parameters that can be replaced with closures or type erasure
+- `where T: ProtocolA & ProtocolB & ProtocolC` - each protocol is checked separately

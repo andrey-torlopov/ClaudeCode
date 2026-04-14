@@ -1,14 +1,14 @@
-# Anti-Pattern: URLSession создается inline в коде
+# Anti-Pattern: URLSession is created inline in the code
 
 ## Problem
 
-`URLSession` или `URLRequest` создаются прямо в месте использования.
-Каждый вызов управляет своей сессией - нет единой точки конфигурации.
+`URLSession` or `URLRequest` ​​are created directly at the point of use.
+Each call manages its own session - there is no single point of configuration.
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: inline URLSession в каждом методе
+// ❌ BAD: inline URLSession in each method
 func fetchUser(id: String) async throws -> User {
     let url = URL(string: "https://api.example.com/api/v1/users/\(id)")!
     var request = URLRequest(url: url)
@@ -27,7 +27,7 @@ func fetchUser(id: String) async throws -> User {
 ## Good Example
 
 ```swift
-// ✅ GOOD: Запросы через APIClient с единой конфигурацией
+// ✅ GOOD: Requests via APIClient with a single configuration
 func fetchUser(id: String) async throws -> User {
     try await apiClient.request(
         .get,
@@ -39,10 +39,10 @@ func fetchUser(id: String) async throws -> User {
 
 ## Why
 
-- Inline session не переиспользует connection pool - медленные запросы
-- Нет единой точки для Logging, Auth, Retry конфигурации
-- При смене baseURL нужно обновлять N мест, не один Config
-- Невозможно подменить сессию для тестов (mock/stub)
+- Inline session does not reuse the connection pool - slow requests
+- No single point for Logging, Auth, Retry configuration
+- When changing baseURL you need to update N places, not just one Config
+- It is impossible to replace the session for tests (mock/stub)
 
 ## Detection
 
@@ -53,4 +53,4 @@ grep -rn "URLSession.shared\|URLSession(" --include="*.swift" Sources/
 ## References
 
 - (ref: networking/inline-urlsession-calls.md)
-- Общий принцип: `common/no-abstraction-layer.md`
+- General principle: `common/no-abstraction-layer.md`

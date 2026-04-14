@@ -4,39 +4,39 @@
 
 ## Why this is bad
 
-Частые конвертации NSString <-> String в горячем пути:
-- Каждый bridging cast создает копию или увеличивает refcount
-- В tight loop это заметно бьет по производительности
-- Смешивание NSString и String API в одном блоке кода - двойные затраты
-- Особенно критично при работе с legacy Obj-C библиотеками
+Frequent NSString <-> String conversions in the hot way:
+- Each bridging cast creates a copy or increases the refcount
+- In a tight loop this noticeably impacts performance
+- Mixing NSString and String API in one code block - double costs
+- Especially critical when working with legacy Obj-C libraries
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Постоянные переходы NSString <-> String
+// ❌ BAD: Constant transitions NSString <-> String
 func processItems(_ items: [NSString]) -> [String] {
     return items.map { nsString in
         let swiftString = nsString as String         // bridging
         let modified = swiftString.lowercased()
-        let nsModified = modified as NSString         // bridging обратно
+        let nsModified = modified as NSString // bridging back
         let range = nsModified.range(of: "pattern")
         let result = nsModified.substring(from: range.location) // NSString API
-        return result as String                       // и снова bridging
+        return result as String // and bridging again
     }
 }
 
-// ❌ BAD: Использование NSString API на Swift String
+// ❌ BAD: Using NSString API on Swift String
 func extractComponent(_ path: String) -> String {
-    return (path as NSString).lastPathComponent      // bridging ради одного вызова
+    return (path as NSString).lastPathComponent // bridging for one call
 }
 ```
 
 ## Good Example
 
 ```swift
-// ✅ GOOD: Работа полностью в одном мире
+// ✅ GOOD: Work completely in one world
 func processItems(_ items: [NSString]) -> [String] {
-    // Один раз конвертируем, дальше работаем только со Swift
+    // Convert once, then we work only with Swift
     let swiftItems = items.map { $0 as String }
     return swiftItems.map { string in
         let modified = string.lowercased()
@@ -45,15 +45,15 @@ func processItems(_ items: [NSString]) -> [String] {
     }
 }
 
-// ✅ GOOD: URL API вместо NSString path manipulation
+// ✅ GOOD: URL API instead of NSString path manipulation
 func extractComponent(_ url: URL) -> String {
     return url.lastPathComponent
 }
 
-// ✅ GOOD: Если нужен Obj-C блок - держи его целиком в NSString
+// ✅ GOOD: If you need an Obj-C block, keep it entirely in NSString
 func processLegacy(_ items: [NSString]) -> [NSString] {
     return items.map { nsString in
-        // Весь блок на NSString, без переключений
+        // Entire block on NSString, no switches
         let range = nsString.range(of: "pattern")
         guard range.location != NSNotFound else { return nsString }
         return nsString.substring(from: range.location) as NSString
@@ -63,7 +63,7 @@ func processLegacy(_ items: [NSString]) -> [NSString] {
 
 ## What to look for in code review
 
-- `as NSString` / `as String` в цикле или map/filter/reduce
-- Чередование Swift String методов и NSString методов в одном блоке
-- `(path as NSString).lastPathComponent` - замени на URL
-- Legacy Obj-C API вызовы вперемешку со Swift string processing
+- `as NSString` / `as String` ​​in a loop or map/filter/reduce
+- Alternating Swift String methods and NSString methods in one block
+- `(path as NSString).lastPathComponent` - replace with URL
+- Legacy Obj-C API calls mixed with Swift string processing

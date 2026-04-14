@@ -1,103 +1,103 @@
 ---
 name: repo-scout
-description: Сканирует iOS/Swift репозиторий, каталогизирует структуру проекта, зависимости, архитектуру и тестовое покрытие. Используй при входе в новый репо для понимания кодовой базы. Не используй для code review - для этого /swift-review.
+description: Scans the iOS/Swift repository, cataloging project structure, dependencies, architecture and test coverage. Use when entering a new repo to understand the codebase. Don't use for code review - that's what /swift-review is for.
 allowed-tools: "Read Glob Grep Bash(ls*) Bash(wc*)"
 context: fork
 ---
 
-# /repo-scout - Разведка iOS-репозитория
+# /repo-scout - iOS repository scouting
 
 <purpose>
-Глубокое сканирование iOS/Swift репозитория -> структурированный отчет о проекте, зависимостях, архитектуре и текущем покрытии тестами. Дает полную картину проекта перед началом работы.
+Deep scan of the iOS/Swift repository -> structured report on the project, dependencies, architecture and current test coverage. Gives a complete picture of the project before starting work.
 </purpose>
 
-## Когда использовать
+## When to use
 
-- Первый вход в новый iOS-репозиторий
-- Перед `/init-project` - для понимания проекта
-- Периодический аудит: "что изменилось в проекте?"
-- Онбординг в существующий проект
+- First entry into the new iOS repository
+- Before `/init-project` - to understand the project
+- Periodic audit: “what has changed in the project?”
+- Onboarding to an existing project
 
-## Когда НЕ использовать
+## When NOT to use
 
-- Code review (используй `/swift-review`)
-- Анализ зависимостей (используй `/dependency-check`)
+- Code review (use `/swift-review`)
+- Dependency analysis (use `/dependency-check`)
 
-## Входные данные
+## Input data
 
-- Путь к репозиторию (или текущая директория)
-- Не требует `COMMON.md` или anchor-файлов
-- Может быть **первым шагом** в новом репо
+- Path to the repository (or current directory)
+- Does not require `COMMON.md` or anchor files
+- Could be the **first step** in a new repo
 
 ## Verbosity Protocol
 
-**Structured Output Priority:** Весь analysis идет в артефакт, не в чат.
+**Structured Output Priority:** All analysis goes to the artifact, not to the chat.
 
-**Chat output:** Только Summary table + "Отчет: audit/repo-scout-report.md".
+**Chat output:** Only Summary table + "Report: audit/repo-scout-report.md".
 
-**Tools first:** Grep -> table -> report, без "Now I will grep...". Read -> analyze -> report, без "The file shows...".
+**Tools first:** Grep -> table -> report, without "Now I will grep...". Read -> analyze -> report, without "The file shows...".
 
-**Фазы 1-5:** Silent execution. **Фаза 6:** Только Summary + путь к отчету.
+**Phases 1-5:** Silent execution. **Phase 6:** Summary only + path to report.
 
 ---
 
-## Алгоритм
+## Algorithm
 
-### Фаза 1: Project Structure Scan
+### Phase 1: Project Structure Scan
 
-**Цель:** Определить тип проекта, билд-систему, структуру директорий.
+**Goal:** Determine the type of project, build system, directory structure.
 
-1. Проверь наличие project-файлов:
+1. Check for the presence of project files:
    ```
    Package.swift, *.xcodeproj, *.xcworkspace, Podfile, Cartfile
    ```
-   Приоритет определения: Package.swift (SPM) > xcworkspace > xcodeproj > Podfile
+   Definition priority: Package.swift (SPM) > xcworkspace > xcodeproj > Podfile
 
-2. Извлеки из Package.swift (если есть):
-   - Название пакета
-   - Platforms и минимальные версии
+2. Extract from Package.swift (if available):
+   - Package name
+   - Platforms and minimum versions
    - Products (library/executable)
    - Dependencies (packages)
-   - Targets и test targets
+   - Targets and test targets
 
-3. Определи структуру:
+3. Define the structure:
    ```
-   Glob: Sources/*/ -> модули/фреймворки
-   Glob: Tests/*/ -> тестовые таргеты
-   Glob: **/Info.plist -> таргеты приложения
+   Glob: Sources/*/ -> modules/frameworks
+   Glob: Tests/*/ -> test targets
+   Glob: **/Info.plist -> application targets
    Glob: **/*.entitlements -> capabilities
    ```
 
-4. Подсчитай размер:
+4. Calculate the size:
    ```
-   Количество .swift файлов (без Tests/)
-   Количество тестовых .swift файлов
+   Number of .swift files (without Tests/)
+   Number of test .swift files
    ```
 
-### Фаза 2: Dependencies Analysis
+### Phase 2: Dependencies Analysis
 
-**Цель:** Каталогизировать все зависимости.
+**Goal:** Catalog all dependencies.
 
 #### 2.1 SPM Dependencies
 
-Если есть Package.swift и/или Package.resolved:
-- Список всех пакетов с версиями
-- Классификация: UI, Networking, Storage, Testing, Utilities
+If there is Package.swift and/or Package.resolved:
+- List of all packages with versions
+- Classification: UI, Networking, Storage, Testing, Utilities
 
 #### 2.2 CocoaPods
 
-Если есть Podfile:
-- Список подов с версиями
-- Наличие Podfile.lock
+If there is a Podfile:
+- List of pods with versions
+- Availability of Podfile.lock
 
 #### 2.3 Carthage
 
-Если есть Cartfile:
-- Список зависимостей
+If there is a Cartfile:
+- List of dependencies
 
-### Фаза 3: Architecture Discovery
+### Phase 3: Architecture Discovery
 
-**Цель:** Определить архитектурные паттерны проекта.
+**Goal:** Define architectural patterns for the project.
 
 1. **UI Framework:**
    ```
@@ -105,9 +105,9 @@ context: fork
    Grep: import UIKit -> UIKit
    Grep: import Combine -> Combine usage
    ```
-   Определить: SwiftUI / UIKit / Hybrid
+   Define: SwiftUI/UIKit/Hybrid
 
-2. **Архитектурный паттерн:**
+2. **Architectural pattern:**
    ```
    Grep: ViewModel, ObservableObject -> MVVM
    Grep: Presenter, Interactor, Router -> VIPER
@@ -138,22 +138,22 @@ context: fork
    Grep: import RxSwift -> RxSwift
    ```
 
-### Фаза 4: Test Coverage Analysis
+### Phase 4: Test Coverage Analysis
 
-**Цель:** Оценить текущее тестовое покрытие.
+**Goal:** Evaluate current test coverage.
 
-1. Найди тестовые файлы:
+1. Find test files:
    ```
    Glob: **/Tests/**/*.swift, **/*Tests*/**/*.swift
    ```
 
-2. Классифицируй:
-   - **Unit:** файлы с XCTestCase / @Test без сетевых/UI зависимостей
-   - **UI:** файлы с XCUIApplication, XCUIElement
-   - **Snapshot:** файлы с import SnapshotTesting
-   - **Integration:** файлы с сетевыми моками
+2. Classify:
+   - **Unit:** files with XCTestCase / @Test without network/UI dependencies
+   - **UI:** files with XCUIApplication, XCUIElement
+   - **Snapshot:** files with import SnapshotTesting
+   - **Integration:** files with network mocks
 
-3. Определи тестовые фреймворки:
+3. Define test frameworks:
    ```
    Grep: import XCTest -> XCTest
    Grep: import Testing -> swift-testing
@@ -162,9 +162,9 @@ context: fork
    Grep: import SnapshotTesting -> SnapshotTesting
    ```
 
-### Фаза 5: Infrastructure Scan
+### Phase 5: Infrastructure Scan
 
-**Цель:** Понять инфраструктурный контекст.
+**Goal:** Understand the infrastructure context.
 
 1. **CI/CD:**
    ```
@@ -199,14 +199,14 @@ context: fork
    Glob: **/SwiftGen/** -> SwiftGen
    ```
 
-### Фаза 6: Report Generation
+### Phase 6: Report Generation
 
-Собери отчет и сохрани в `audit/repo-scout-report.md`. Используй шаблон из `references/report-template.md`.
+Collect the report and save it in `audit/repo-scout-report.md`. Use the template from `references/report-template.md`.
 
-**Обязательные секции:**
+**Required sections:**
 1. Project Profile (name, platforms, type, dependencies count)
 2. Module Structure (targets, source/test files)
-3. Dependencies Catalog (SPM/Pods/Carthage с классификацией)
+3. Dependencies Catalog (SPM/Pods/Carthage with classification)
 4. Architecture Summary (UI framework, pattern, networking, storage, concurrency)
 5. Test Coverage (unit/UI/snapshot/integration)
 6. Infrastructure (CI/CD, linting, AI setup)
@@ -214,32 +214,32 @@ context: fork
 
 ## Quality Gates
 
-- [ ] Package.swift или xcodeproj найден и проанализирован
-- [ ] Все зависимости каталогизированы
-- [ ] Архитектурный паттерн определен
-- [ ] Тестовое покрытие оценено
-- [ ] Нет placeholder-ов `{xxx}` в финальном отчете
-- [ ] Readiness Assessment заполнен
+- [ ] Package.swift or xcodeproj found and analyzed
+- [ ] All dependencies are cataloged
+- [ ] Architectural pattern defined
+- [ ] Test coverage assessed
+- [ ] There are no `{xxx}` placeholders in the final report
+- [ ] Readiness Assessment is complete
 
 ## Self-Check
 
-- [ ] **Completeness:** Все 7 секций заполнены?
-- [ ] **Accuracy:** Количества файлов верифицированы?
-- [ ] **No Hallucinations:** Каждый найденный паттерн подтвержден Grep-ом?
-- [ ] **Readiness:** Оценка обоснована данными?
+- [ ] **Completeness:** Are all 7 sections complete?
+- [ ] **Accuracy:** Number of files verified?
+- [ ] **No Hallucinations:** Is each found pattern confirmed by Grep?
+- [ ] **Readiness:** Is the assessment supported by data?
 
-## Завершение
+## Completion
 
 ```
 SKILL COMPLETE: /repo-scout
-|- Артефакты: audit/repo-scout-report.md
+|- Artifacts: audit/repo-scout-report.md
 |- Compilation: N/A
-|- Upstream: нет
+|- Upstream: no
 |- Modules: {N} | Swift files: {M} | Tests: {K}
 ```
 
-## Связанные файлы
+## Related files
 
-- Паттерны iOS: `references/ios-patterns.md`
-- Шаблон отчета: `references/report-template.md`
-- Следующий шаг: `/init-project` (использует отчет как вход)
+- iOS Patterns: `references/ios-patterns.md`
+- Report template: `references/report-template.md`
+- Next step: `/init-project` (uses report as input)

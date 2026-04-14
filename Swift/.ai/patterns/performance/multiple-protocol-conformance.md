@@ -4,15 +4,15 @@
 
 ## Why this is bad
 
-Множество мелких протоколов = множество проверок конформансов в рантайме:
-- Каждый протокол проверяется через `swift_conform_protocol`
-- В ячейках/компонентах с большим reuse count затраты множатся
-- Замена множества протоколов на один дала ускорение в 2.5-3x в Т-Банке
+Many small protocols = many conformance checks at runtime:
+- Each protocol is verified via `swift_conform_protocol`
+- In cells/components with a large reuse count, costs multiply
+- Replacing multiple protocols with one gave a 2.5-3x speedup in T-Bank
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Много мелких протоколов для конфигурации ячейки
+// ❌ BAD: Many small protocols for cell configuration
 protocol TitleConfigurable {
     var title: String { get }
 }
@@ -29,7 +29,7 @@ protocol ActionConfigurable {
     var action: (() -> Void)? { get }
 }
 
-// Каждый каст к протоколу - отдельный swift_conform_protocol
+// Each protocol cast is a separate swift_conform_protocol
 func configure(cell: UITableViewCell, with model: Any) {
     if let titled = model as? TitleConfigurable {
         cell.textLabel?.text = titled.title
@@ -49,7 +49,7 @@ func configure(cell: UITableViewCell, with model: Any) {
 ## Good Example
 
 ```swift
-// ✅ GOOD: Один протокол с опциональными свойствами
+// ✅ GOOD: One protocol with optional properties
 protocol CellConfigurable {
     var title: String { get }
     var subtitle: String? { get }
@@ -57,7 +57,7 @@ protocol CellConfigurable {
     var action: (() -> Void)? { get }
 }
 
-// Один каст вместо четырех
+// One cast instead of four
 func configure(cell: UITableViewCell, with model: CellConfigurable) {
     cell.textLabel?.text = model.title
     cell.detailTextLabel?.text = model.subtitle
@@ -65,7 +65,7 @@ func configure(cell: UITableViewCell, with model: CellConfigurable) {
     cell.accessoryType = model.action != nil ? .disclosureIndicator : .none
 }
 
-// ✅ GOOD: Альтернатива - struct конфигурация без кастов
+// ✅ GOOD: Alternative - struct configuration without castes
 struct CellConfiguration {
     let title: String
     var subtitle: String?
@@ -83,7 +83,7 @@ func configure(cell: UITableViewCell, with config: CellConfiguration) {
 
 ## What to look for in code review
 
-- Множественные `as?` к разным протоколам для одного объекта
-- Декомпозиция на 3+ мелких протоколов для конфигурации UI-компонентов
-- Протокольные касты внутри `cellForRow` / `tableView(_:willDisplay:)` и аналогов
-- Паттерн "проверяем каждый протокол по очереди" в горячем пути
+- Multiple `as?` to different protocols for one object
+- Decomposition into 3+ small protocols for configuring UI components
+- Protocol castes within `cellForRow` / `tableView(_:willDisplay:)` ​​and analogues
+- “We check each protocol in turn” pattern in the hot path

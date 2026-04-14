@@ -1,42 +1,42 @@
-# iOS/Swift Patterns - Справочник для /repo-scout
+# iOS/Swift Patterns - Reference for /repo-scout
 
 ## Project Files
 
-| Файл | Назначение |
+| File | Destination |
 |------|-----------|
-| `Package.swift` | SPM - модули, зависимости, таргеты |
-| `Package.resolved` | SPM - зафиксированные версии зависимостей |
+| `Package.swift` | SPM - modules, dependencies, targets |
+| `Package.resolved` | SPM - Committed Dependency Versions |
 | `*.xcodeproj` | Xcode project (targets, schemes, build settings) |
 | `*.xcworkspace` | Xcode workspace (multi-project) |
-| `Podfile` / `Podfile.lock` | CocoaPods зависимости |
-| `Cartfile` / `Cartfile.resolved` | Carthage зависимости |
-| `.swiftlint.yml` | SwiftLint конфигурация |
-| `.swiftformat` | SwiftFormat конфигурация |
+| `Podfile` / `Podfile.lock` ​​| CocoaPods dependencies |
+| `Cartfile` / `Cartfile.resolved` ​​| Carthage dependencies |
+| `.swiftlint.yml` | SwiftLint configuration |
+| `.swiftformat` | SwiftFormat configuration |
 
 ## Architecture Detection Patterns
 
 ### UI Framework
 
-| Паттерн | Фреймворк |
+| Pattern | Framework |
 |---------|-----------|
 | `import SwiftUI` | SwiftUI |
 | `import UIKit` | UIKit |
 | `import AppKit` | macOS (AppKit) |
-| Оба SwiftUI и UIKit | Hybrid |
+| Both SwiftUI and UIKit | Hybrid |
 
 ### Architecture Patterns
 
-| Паттерн (Grep) | Архитектура |
+| Pattern (Grep) | Architecture |
 |----------------|-------------|
 | `ViewModel`, `ObservableObject`, `@Published` | MVVM |
 | `Presenter`, `Interactor`, `Router`, `Assembly` | VIPER |
 | `Store`, `Reducer`, `Effect`, `import ComposableArchitecture` | TCA |
 | `Coordinator`, `CoordinatorProtocol` | Coordinator pattern |
-| `Controller` (без ViewModel) | MVC |
+| `Controller` (without ViewModel) | MVC |
 
 ### Networking
 
-| Паттерн | Библиотека |
+| Pattern | Library |
 |---------|-----------|
 | `URLSession` | Native URLSession |
 | `import Alamofire` | Alamofire |
@@ -45,7 +45,7 @@
 
 ### Storage
 
-| Паттерн | Технология |
+| Pattern | Technology |
 |---------|-----------|
 | `import CoreData`, `NSManagedObject` | CoreData |
 | `import SwiftData`, `@Model` | SwiftData |
@@ -55,7 +55,7 @@
 
 ### Concurrency
 
-| Паттерн | Подход |
+| Pattern | Approach |
 |---------|-------|
 | `actor `, `@MainActor`, `async/await` | Swift Concurrency |
 | `DispatchQueue`, `DispatchGroup` | GCD |
@@ -65,25 +65,25 @@
 
 ### DI
 
-| Паттерн | Фреймворк |
+| Pattern | Framework |
 |---------|-----------|
 | `import Swinject` | Swinject |
 | `import Factory` | Factory |
 | `import Needle` | Needle |
-| Manual init injection | Ручной DI |
+| Manual init injection | Manual DI |
 
 ## Test Patterns
 
-| Тип | Признаки |
+| Type | Signs |
 |-----|----------|
-| **Unit** | `XCTestCase`, `@Test`, без UI/Network imports |
+| **Unit** | `XCTestCase`, `@Test`, without UI/Network imports |
 | **UI** | `XCUIApplication`, `XCUIElement`, `launch()` |
 | **Snapshot** | `import SnapshotTesting`, `assertSnapshot` |
 | **Performance** | `measure {}`, `XCTMetric` |
 
 ### Test Frameworks
 
-| Библиотека | Назначение |
+| Library | Destination |
 |-----------|-----------|
 | `XCTest` | Apple native testing |
 | `Testing` (swift-testing) | Modern Swift testing (Swift 5.9+) |
@@ -95,19 +95,19 @@
 
 ## Infrastructure Markers
 
-| Glob | Что это |
+| Globe | What is this |
 |------|---------|
 | `.github/workflows/*.yml` | GitHub Actions CI/CD |
 | `.gitlab-ci.yml` | GitLab CI |
 | `fastlane/Fastfile` | Fastlane automation |
 | `.bitrise.yml` | Bitrise CI |
 | `Jenkinsfile` | Jenkins pipeline |
-| `Gemfile` | Ruby deps (обычно для Fastlane/CocoaPods) |
+| `Gemfile` | Ruby deps (usually for Fastlane/CocoaPods) |
 | `.ruby-version` | Ruby version manager |
 
 ## Code Generation
 
-| Glob | Инструмент |
+| Globe | Tool |
 |------|-----------|
 | `**/*.generated.swift` | Sourcery / SwiftGen output |
 | `**/Sourcery/**`, `*.sourcery.yml` | Sourcery templates |
@@ -117,7 +117,7 @@
 
 ## AI Setup Files
 
-| Файл | Инструмент |
+| File | Tool |
 |------|-----------|
 | `COMMON.md` | Shared AI core context |
 | `CLAUDE.md` | Claude Code entry |

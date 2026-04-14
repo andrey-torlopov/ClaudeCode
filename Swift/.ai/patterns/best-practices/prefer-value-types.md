@@ -1,20 +1,20 @@
 # Prefer Value Types (struct > class)
 
-**Applies to:** Модели данных, сервисы без identity, вспомогательные типы
+**Applies to:** Data models, services without identity, auxiliary types
 
 ## Why this matters
 
-Предпочтение struct перед class:
-- Value semantics - копирование при присваивании, нет shared mutable state
-- Нет ARC overhead (retain/release) - быстрее аллокация и деаллокация
-- Потокобезопасность из коробки - каждый поток работает со своей копией
-- Автоматический Sendable для struct с Sendable полями
-- Stack allocation для небольших struct - быстрее heap
+Prefer struct over class:
+- Value semantics - copying on assignment, no shared mutable state
+- No ARC overhead (retain/release) - faster allocation and deallocation
+- Thread safety out of the box - each thread works with its own copy
+- Automatic Sendable for struct with Sendable fields
+- Stack allocation for small structs - faster than heap
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: class для простой модели данных
+// ❌ BAD: class for a simple data model
 class UserProfile {
     var name: String
     var email: String
@@ -27,12 +27,12 @@ class UserProfile {
     }
 }
 
-// Проблема: shared reference
+// Problem: shared reference
 let profile = UserProfile(name: "Alice", email: "a@b.com", age: 30)
 let copy = profile
-copy.name = "Bob"       // profile.name тоже стал "Bob"!
+copy.name = "Bob" // profile.name also became "Bob"!
 
-// ❌ BAD: class для конфигурации
+// ❌ BAD: class for configuration
 class APIConfig {
     var baseURL: URL
     var timeout: TimeInterval
@@ -43,28 +43,28 @@ class APIConfig {
 ## Good Example
 
 ```swift
-// ✅ GOOD: struct для модели данных
+// ✅ GOOD: struct for the data model
 struct UserProfile: Sendable {
     let name: String
     let email: String
     let age: Int
 }
 
-// Безопасно: value semantics
+// Safe: value semantics
 let profile = UserProfile(name: "Alice", email: "a@b.com", age: 30)
 var copy = profile
 copy = UserProfile(name: "Bob", email: copy.email, age: copy.age)
-// profile.name все еще "Alice"
+// profile.name is still "Alice"
 
-// ✅ GOOD: struct для конфигурации
+// ✅ GOOD: struct for configuration
 struct APIConfig: Sendable {
     let baseURL: URL
     let timeout: TimeInterval
 }
 
-// ✅ Исключение: class нужен для identity, наследования или reference semantics
+// ✅ Exception: class is needed for identity, inheritance or reference semantics
 final class DatabaseConnection {
-    // Управляет ресурсом - identity важна
+    // Manages the resource - identity is important
     private let handle: OpaquePointer
 
     deinit {
@@ -75,6 +75,6 @@ final class DatabaseConnection {
 
 ## What to look for in code review
 
-- `class` для моделей данных (DTO, response, config) - заменить на `struct`
-- `class` без `deinit`, наследования или reference identity - кандидат на struct
-- Shared mutable state через class reference - потенциальный data race
+- `class` for data models (DTO, response, config) - replace with `struct`
+- `class` without `deinit`, inheritance or reference identity - a candidate for struct
+- Shared mutable state via class reference - potential data race

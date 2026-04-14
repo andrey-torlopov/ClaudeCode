@@ -1,39 +1,39 @@
-# Чеклист валидации нового Skill
+# New Skill validation checklist
 
-## Структура
+## Structure
 
-- [ ] Файл называется точно `SKILL.md` (case-sensitive)
-- [ ] Папка в kebab-case, совпадает с полем `name`
-- [ ] Нет README.md внутри skill папки
-- [ ] **SKILL.md ≤ 500 строк** (если больше — разбей на references/)
+- [ ] The file name is exactly `SKILL.md` (case-sensitive)
+- [ ] Folder in kebab-case, matches the `name` field
+- [ ] No README.md inside skill folder
+- [ ] **SKILL.md ≤ 500 lines** (if more, split into references/)
 
 ## YAML Frontmatter
 
-- [ ] Поле `name` присутствует и в kebab-case
-- [ ] Поле `name` НЕ содержит "claude" или "anthropic"
-- [ ] YAML description < 1024 символов
-- [ ] Description содержит **What** + **When**
-- [ ] Description без XML тегов (`<`, `>`)
+- [ ] The `name` field is also present in kebab-case
+- [ ] Field `name` does NOT contain "claude" or "anthropic"
+- [ ] YAML description < 1024 characters
+- [ ] Description contains **What** + **When**
+- [ ] Description without XML tags (`<`, `>`)
 
-## Контент
+## Content
 
-- [ ] Есть секция "Когда использовать"
-- [ ] Шаги пронумерованы и конкретны
-- [ ] Стиль — императивный (без "вы должны", "следует")
-- [ ] Ссылки на resources указывают на реальные файлы
-- [ ] Есть пример вывода
-- [ ] Есть Quality Gates
-- [ ] Большие файлы вынесены в references/
+- [ ] There is a section "When to use"
+- [ ] Steps are numbered and specific
+- [ ] Style is imperative (without “you should”, “should”)
+- [ ] Links to resources point to real files
+- [ ] There is an example output
+- [ ] There are Quality Gates
+- [ ] Large files are moved to references/
 
-## Если SKILL.md > 500 строк
+## If SKILL.md > 500 lines
 
 ```
-Skill слишком большой ([N] строк > 500).
+Skill is too large ([N] lines > 500).
 
-Предлагаю вынести:
-1. Примеры кода → references/examples.md
-2. Чек-листы → references/checklist.md
-3. Таблицы → references/tables.md
+I propose to take out:
+1. Code examples → references/examples.md
+2. Checklists → references/checklist.md
+3. Tables → references/tables.md
 
-Разбить? (да / оставить как есть)
+Break it? (yes / leave as is)
 ```

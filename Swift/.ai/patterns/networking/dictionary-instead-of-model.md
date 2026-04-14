@@ -2,22 +2,22 @@
 
 ## Why this is bad
 
-Использование `[String: Any]` вместо типизированных Codable-моделей:
-- Компилятор не ловит опечатки в названиях полей
-- Нет автодополнения в IDE
-- При рефакторинге API нужно искать строки по всему проекту
-- Невозможно понять структуру данных без документации
-- Теряется type safety - одно из главных преимуществ Swift
+Using `[String: Any]` instead of typed Codable models:
+- The compiler does not catch typos in field names
+- No autocompletion in IDE
+- When refactoring an API, you need to search for strings throughout the project
+- It is impossible to understand the data structure without documentation
+- Type safety is lost - one of the main advantages of Swift
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Dictionary - компилятор не поможет
+// ❌ BAD: Dictionary - the compiler will not help
 func register() async throws {
     let payload: [String: Any] = [
         "email": "test@example.com",
         "phone": "+79991234567",
-        "pasword": "Test123!",   // Опечатка! Компилятор молчит
+        "password": "Test123!", // Typo! The compiler is silent
         "full_name": "Test User"
     ]
 
@@ -31,11 +31,11 @@ func register() async throws {
 ## Good Example
 
 ```swift
-// ✅ GOOD: Codable struct с CodingKeys
+// ✅ GOOD: Codable struct with CodingKeys
 struct RegisterRequest: Codable, Sendable {
     let email: String
     let phone: String
-    let password: String   // Опечатка = ошибка компиляции
+    let password: String // Typo = compilation error
     let fullName: String
 
     enum CodingKeys: String, CodingKey {
@@ -48,7 +48,7 @@ func register() async throws {
     let payload = RegisterRequest(
         email: "test@example.com",
         phone: "+79991234567",
-        password: "Test123!",    // IDE подсказывает
+        password: "Test123!", // IDE prompts
         fullName: "Test User"
     )
 
@@ -58,8 +58,8 @@ func register() async throws {
 
 ## What to look for in code review
 
-- `[String: Any]`, `[String: String]` для request/response body
-- `JSONSerialization.data(withJSONObject:)` вместо `JSONEncoder().encode()`
-- JSON-строки собранные через string interpolation
-- Отсутствие Codable-моделей в папке `Models/` или `DTOs/`
-- Приведение типов через `as? String`, `as? Int` при парсинге ответа
+- `[String: Any]`, `[String: String]` ​​for request/response body
+- `JSONSerialization.data(withJSONObject:)` instead of `JSONEncoder().encode()`
+- JSON strings collected via string interpolation
+- Lack of Codable models in the `Models/` or `DTOs/` ​​folder
+- Type casting via `as? String`, `as? Int` ​​when parsing a response

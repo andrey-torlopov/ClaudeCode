@@ -4,22 +4,22 @@
 
 ## Why this is bad
 
-Использование старого NSDictionary API для атрибутов файлов:
-- `attributesOfItem(atPath:)` возвращает словарь со ВСЕМИ атрибутами
-- Избыточная работа CPU и памяти когда нужны 1-2 значения
-- String-based пути дороже URL-based при массовых операциях
-- Нет кэширования атрибутов, каждый вызов идет в FS
+Using the old NSDictionary API for file attributes:
+- `attributesOfItem(atPath:)` returns a dictionary with ALL attributes
+- Excessive CPU and memory work when 1-2 values ​​are needed
+- String-based paths are more expensive than URL-based ones for bulk operations
+- No attribute caching, every call goes to FS
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Полный словарь атрибутов через старое API
+// ❌ BAD: Full attribute dictionary via old API
 func fileSize(at path: String) throws -> Int64 {
     let attrs = try FileManager.default.attributesOfItem(atPath: path)
     return attrs[.size] as? Int64 ?? 0
 }
 
-// ❌ BAD: String paths в массовых операциях
+// ❌ BAD: String paths in bulk operations
 func totalSize(of directory: String) throws -> Int64 {
     let contents = try FileManager.default.contentsOfDirectory(atPath: directory)
     return try contents.reduce(0) { total, name in
@@ -33,13 +33,13 @@ func totalSize(of directory: String) throws -> Int64 {
 ## Good Example
 
 ```swift
-// ✅ GOOD: URL + resourceValues - запрашиваем только нужные ключи
+// ✅ GOOD: URL + resourceValues ​​- request only the necessary keys
 func fileSize(at url: URL) throws -> Int64 {
     let values = try url.resourceValues(forKeys: [.fileSizeKey])
     return Int64(values.fileSize ?? 0)
 }
 
-// ✅ GOOD: enumerator с prefetch нужных ключей
+// ✅ GOOD: enumerator with prefetch of the necessary keys
 func totalSize(of directory: URL) throws -> Int64 {
     guard let enumerator = FileManager.default.enumerator(
         at: directory,
@@ -62,8 +62,8 @@ func totalSize(of directory: URL) throws -> Int64 {
 
 ## What to look for in code review
 
-- `attributesOfItem(atPath:)` - замени на `url.resourceValues(forKeys:)`
-- `NSString.appendingPathComponent` - замени на `URL.appending(path:)`
-- `contentsOfDirectory(atPath:)` - замени на `enumerator(at:includingPropertiesForKeys:)`
-- `FileManager` вызовы без `includingPropertiesForKeys`
-- Работа с путями через `String` вместо `URL`
+- `attributesOfItem(atPath:)` - replace with `url.resourceValues(forKeys:)`
+- `NSString.appendingPathComponent` - replace with `URL.appending(path:)`
+- `contentsOfDirectory(atPath:)` - replace with `enumerator(at:includingPropertiesForKeys:)`
+- `FileManager` calls without `includingPropertiesForKeys`
+- Work with paths through `String` instead of `URL`

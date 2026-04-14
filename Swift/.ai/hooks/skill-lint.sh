@@ -1,6 +1,6 @@
 #!/bin/bash
-# Post-edit hook: быстрая валидация core AI файлов.
-# Полный аудит: /skill-audit
+# Post-edit hook: fast validation of core AI files.
+# Full audit: /skill-audit
 
 set -e
 
@@ -26,63 +26,63 @@ LINE_COUNT=$(wc -l < "$FILE_PATH" | tr -d ' ')
 case "$FILENAME" in
   SKILL.md)
     if [ "$LINE_COUNT" -gt 500 ]; then
-      FINDINGS="${FINDINGS}\n  CRITICAL: ${LINE_COUNT} строк (лимит для SKILL.md: 500)"
+      FINDINGS="${FINDINGS}\n CRITICAL: ${LINE_COUNT} lines (limit for SKILL.md: 500)"
     elif [ "$LINE_COUNT" -gt 300 ]; then
-      FINDINGS="${FINDINGS}\n  WARNING: ${LINE_COUNT} строк (рекомендация для SKILL.md: <=300)"
+      FINDINGS="${FINDINGS}\n WARNING: ${LINE_COUNT} lines (recommendation for SKILL.md: <=300)"
     fi
     ;;
   COMMON.md)
     if [ "$LINE_COUNT" -gt 200 ]; then
-      FINDINGS="${FINDINGS}\n  CRITICAL: ${LINE_COUNT} строк (лимит для COMMON.md: 200)"
+      FINDINGS="${FINDINGS}\n CRITICAL: ${LINE_COUNT} lines (limit for COMMON.md: 200)"
     elif [ "$LINE_COUNT" -gt 120 ]; then
-      FINDINGS="${FINDINGS}\n  WARNING: ${LINE_COUNT} строк (рекомендация для COMMON.md: <=120)"
+      FINDINGS="${FINDINGS}\n WARNING: ${LINE_COUNT} lines (recommendation for COMMON.md: <=120)"
     fi
     ;;
   CLAUDE.md|AGENTS.md|GEMINI.md)
     if [ "$LINE_COUNT" -gt 120 ]; then
-      FINDINGS="${FINDINGS}\n  CRITICAL: ${LINE_COUNT} строк (anchor-файл должен оставаться компактным)"
+      FINDINGS="${FINDINGS}\n CRITICAL: ${LINE_COUNT} lines (anchor file must remain compact)"
     elif [ "$LINE_COUNT" -gt 60 ]; then
-      FINDINGS="${FINDINGS}\n  WARNING: ${LINE_COUNT} строк (anchor-файл начинает дублировать SSOT)"
+      FINDINGS="${FINDINGS}\n WARNING: ${LINE_COUNT} lines (the anchor file is starting to duplicate SSOT)"
     fi
     ;;
   *)
     if [ "$LINE_COUNT" -gt 220 ]; then
-      FINDINGS="${FINDINGS}\n  WARNING: ${LINE_COUNT} строк (агентский файл выглядит раздутым)"
+      FINDINGS="${FINDINGS}\n WARNING: ${LINE_COUNT} lines (agent file looks bloated)"
     fi
     ;;
 esac
 
 # Check 2: Self-Review Protocol (anti-pattern)
-if grep -q 'Формат отчёта Self-Review\|Алгоритм Self-Review\|Scorecard Self-Review' "$FILE_PATH" 2>/dev/null; then
-  FINDINGS="${FINDINGS}\n  CRITICAL: Self-Review Protocol - заменить на Post-Check inline"
+if grep -q 'Self-Review report format\|Self-Review algorithm\|Scorecard Self-Review' "$FILE_PATH" 2>/dev/null; then
+  FINDINGS="${FINDINGS}\n CRITICAL: Self-Review Protocol - replace with Post-Check inline"
 fi
 
 # Check 3: stale references
 if grep -q 'qa_agent\.md\|qa-antipatterns/' "$FILE_PATH" 2>/dev/null; then
-  FINDINGS="${FINDINGS}\n  WARNING: Найдены ссылки на несуществующие QA-артефакты"
+  FINDINGS="${FINDINGS}\n WARNING: Found references to non-existent QA artifacts"
 fi
 
 if grep -q 'gardener\.md\|Protocol Injection\|Escalation Protocol' "$FILE_PATH" 2>/dev/null; then
-  FINDINGS="${FINDINGS}\n  CRITICAL: Найдены ссылки на удалённые или устаревшие process-протоколы"
+  FINDINGS="${FINDINGS}\n CRITICAL: Found links to deleted or outdated process protocols"
 fi
 
-# Check 4: YAML frontmatter в SKILL.md
+# Check 4: YAML frontmatter in SKILL.md
 if [[ "$FILENAME" == "SKILL.md" ]]; then
   if ! head -1 "$FILE_PATH" | grep -q '^---$'; then
-    FINDINGS="${FINDINGS}\n  CRITICAL: Отсутствует YAML frontmatter (---)"
+    FINDINGS="${FINDINGS}\n CRITICAL: Missing YAML frontmatter (---)"
   fi
 fi
 
 # Check 5: anchor files should not duplicate COMMON.md
 if [[ "$FILENAME" == "CLAUDE.md" || "$FILENAME" == "AGENTS.md" || "$FILENAME" == "GEMINI.md" ]]; then
   if grep -q 'Trust No One\|Production Ready\|Minimal Diff' "$FILE_PATH" 2>/dev/null; then
-    FINDINGS="${FINDINGS}\n  WARNING: Anchor-файл дублирует core rules из COMMON.md"
+    FINDINGS="${FINDINGS}\n WARNING: The Anchor file duplicates the core rules from COMMON.md"
   fi
 fi
 
 if [ -n "$FINDINGS" ]; then
   echo -e "skill-lint: ${LABEL}${FINDINGS}" >&2
-  echo -e "  Исправь найденные проблемы. Для полного аудита: /skill-audit" >&2
+  echo -e " Fix any problems found. For a full audit: /skill-audit" >&2
   exit 2
 fi
 

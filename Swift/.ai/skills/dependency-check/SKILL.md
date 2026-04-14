@@ -1,60 +1,60 @@
 ---
 name: dependency-check
-description: Анализирует SPM-зависимости iOS/Swift проекта на актуальность, конфликты и здоровье. Используй перед обновлением зависимостей или для аудита текущего состояния. Не используй для анализа кода - для этого /swift-review.
+description: Analyzes iOS/Swift project SPM dependencies for relevance, conflicts and health. Use before updating dependencies or to audit the current state. Don't use it for code analysis - that's what /swift-review is for.
 allowed-tools: "Read Write Glob Grep Bash(swift*) Bash(curl*) Bash(wc*)"
 context: fork
 ---
 
-# /dependency-check - Анализ SPM-зависимостей
+# /dependency-check - SPM dependency analysis
 
 <purpose>
-Анализ зависимостей iOS/Swift проекта: версии, конфликты, актуальность. Помогает принять решение об обновлении зависимостей.
+Analysis of iOS/Swift project dependencies: versions, conflicts, relevance. Helps make decisions about updating dependencies.
 </purpose>
 
-## Когда использовать
+## When to use
 
-- Перед обновлением зависимостей
-- Периодический аудит "здоровья" зависимостей
-- При добавлении новой зависимости (проверка совместимости)
-- Оценка tech debt в зависимостях
+- Before updating dependencies
+- Periodic audit of the “health” of dependencies
+- When adding a new dependency (compatibility check)
+- Estimation of tech debt depending on
 
-## Когда НЕ использовать
+## When NOT to use
 
-- Анализ кода проекта (используй `/swift-review`)
-- Разведка репо (используй `/repo-scout`)
+- Project code analysis (use `/swift-review`)
+- Repo exploration (use `/repo-scout`)
 
-## Входные данные
+## Input data
 
-- Путь к проекту с Package.swift (или текущая директория)
+- Path to the project with Package.swift (or current directory)
 
 ---
 
 ## Verbosity Protocol
 
-**Tools first:** Анализируй молча. В чат - только сводка + путь к отчету.
+**Tools first:** Analyze silently. In chat - only summary + path to the report.
 
 ---
 
-## Алгоритм
+## Algorithm
 
-### Шаг 1: Discovery
+### Step 1: Discovery
 
-1. Найди и прочитай `Package.swift`
-2. Найди и прочитай `Package.resolved` (если есть)
-3. Найди `Podfile` / `Cartfile` (если есть)
+1. Find and read `Package.swift`
+2. Find and read `Package.resolved` (if available)
+3. Find `Podfile` / `Cartfile` ​​(if available)
 
-Если Package.swift не найден -> сообщи пользователю и заверши.
+If Package.swift is not found -> notify the user and complete.
 
-### Шаг 2: Dependency Inventory
+### Step 2: Dependency Inventory
 
-Для каждой зависимости извлеки:
-- Название пакета
-- URL репозитория
-- Указанная версия / branch / revision
-- Resolved версия (из Package.resolved)
-- Какие targets используют зависимость
+For each dependency extract:
+- Package name
+- Repository URL
+- Specified version/branch/revision
+- Resolved version (from Package.resolved)
+- Which targets use the dependency
 
-Классифицируй по категориям:
+Classify by category:
 - **UI:** SnapKit, Kingfisher, Lottie, SDWebImage, etc.
 - **Networking:** Alamofire, Moya, Apollo, etc.
 - **Storage:** Realm, GRDB, etc.
@@ -62,111 +62,111 @@ context: fork
 - **Utilities:** SwiftyJSON, KeychainAccess, etc.
 - **Architecture:** TCA, RxSwift, Combine extensions, etc.
 
-### Шаг 3: Version Analysis
+### Step 3: Version Analysis
 
-Для каждой зависимости:
-1. Определи тип version constraint:
-   - Exact (`.exact("1.0.0")`) -> жесткая привязка, риск
-   - Range (`.upToNextMajor`, `.upToNextMinor`) -> стандарт
-   - Branch (`branch: "main"`) -> нестабильно
-   - Revision (`revision: "abc123"`) -> заморожено
+For each dependency:
+1. Define the version constraint type:
+   - Exact (`.exact("1.0.0")`) -> hard binding, risk
+   - Range (`.upToNextMajor`, `.upToNextMinor`) -> standard
+   - Branch (`branch: "main"`) -> unstable
+   - Revision (`revision: "abc123"`) -> frozen
 
-2. Отметь потенциальные проблемы:
-   - Branch-based зависимости -> WARNING
+2. Note potential problems:
+   - Branch-based dependencies -> WARNING
    - Exact version -> INFO
    - Revision-based -> WARNING
 
-### Шаг 4: Health Assessment
+### Step 4: Health Assessment
 
-Для каждой зависимости оцени "здоровье" (без обращения к сети, только на основе данных Package.swift/resolved):
+For each dependency, evaluate the “health” (without accessing the network, only based on Package.swift/resolved data):
 
-| Индикатор | Оценка |
+| Indicator | Evaluation |
 |-----------|--------|
 | Version constraint type | Strict/Flexible/Unstable |
-| Используется ли в основных targets | Core/Testing/Optional |
-| Количество transitive dependencies | Low/Medium/High |
+| Is it used in main targets | Core/Testing/Optional |
+| Number of transitive dependencies | Low/Medium/High |
 
-### Шаг 5: Conflict Detection
+### Step 5: Conflict Detection
 
-1. Проверь нет ли дублирования зависимостей (одна библиотека через SPM и Pods)
-2. Найди потенциальные конфликты версий (transitive dependencies)
-3. Проверь совместимость platforms (если Package.swift указывает platforms)
+1. Check if there are any duplication of dependencies (one library through SPM and Pods)
+2. Find potential version conflicts (transitive dependencies)
+3. Check platforms compatibility (if Package.swift specifies platforms)
 
-### Шаг 6: Report Generation
+### Step 6: Report Generation
 
-Сохрани отчет в путь указанный пользователем или `audit/dependency-check-report.md`.
+Save the report to the path specified by the user or `audit/dependency-check-report.md`.
 
 ---
 
-## Формат отчета
+## Report format
 
 ```markdown
 # Dependency Check Report
 
 > Project: {name}
 > Package Manager: {SPM / CocoaPods / Mixed}
-> Зависимостей: {N}
-> Дата: {YYYY-MM-DD}
+> Dependencies: {N}
+> Date: {YYYY-MM-DD}
 
 ## Summary
 
-| Метрика | Значение |
+| Metric | Meaning |
 |---------|----------|
-| Всего зависимостей | {N} |
+| Total dependencies | {N} |
 | SPM | {N} |
 | CocoaPods | {N} |
-| Branch-based (нестабильные) | {N} |
-| Exact version (жесткие) | {N} |
+| Branch-based (unstable) | {N} |
+| Exact version (hard) | {N} |
 | Warnings | {N} |
 
 ## Dependencies Inventory
 
-| # | Пакет | Версия | Constraint | Категория | Статус |
+| # | Package | Version | Constraint | Category | Status |
 |---|-------|--------|-----------|-----------|--------|
 | 1 | {name} | {version} | {range/exact/branch} | {UI/Net/...} | {OK/WARNING} |
 
 ## Warnings
 
-| # | Пакет | Проблема | Рекомендация |
+| # | Package | Problem | Recommendation |
 |---|-------|---------|--------------|
 
-## Категории
+## Categories
 
 ### UI ({N})
-{список}
+{list}
 
 ### Networking ({N})
-{список}
+{list}
 
 ### Storage ({N})
-{список}
+{list}
 
 ### Testing ({N})
-{список}
+{list}
 
 ### Utilities ({N})
-{список}
+{list}
 
-## Рекомендации
+## Recommendations
 
-{Конкретные рекомендации по обновлению/замене зависимостей}
+{Specific recommendations for updating/replacing dependencies}
 ```
 
 ---
 
 ## Quality Gates
 
-- [ ] Package.swift прочитан и распарсен
-- [ ] Все зависимости каталогизированы
-- [ ] Каждая зависимость классифицирована по категории
-- [ ] Warnings имеют конкретную рекомендацию
-- [ ] Нет placeholder-ов в отчете
+- [ ] Package.swift read and parsed
+- [ ] All dependencies are cataloged
+- [ ] Each dependency is classified by category
+- [ ] Warnings have a specific recommendation
+- [ ] No placeholders in the report
 
-## Завершение
+## Completion
 
 ```
 SKILL COMPLETE: /dependency-check
-|- Артефакты: {путь к отчету}
-|- Зависимостей: {N} ({X} SPM, {Y} Pods)
+|- Artifacts: {path to report}
+|- Dependencies: {N} ({X} SPM, {Y} Pods)
 |- Warnings: {N}
 ```

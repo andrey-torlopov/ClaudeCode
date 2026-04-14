@@ -4,16 +4,16 @@
 
 ## Why this is bad
 
-Повторное вычисление свободного места без кэширования:
-- `attributesOfFileSystem` занимает 400-850 мс за вызов
-- На запуске может вызываться 3-4 раза разными компонентами
-- Суммарно это 1-3 секунды потерянного времени старта
-- Значение не меняется за секунды - нет смысла пересчитывать
+Recalculating free space without caching:
+- `attributesOfFileSystem` takes 400-850 ms per call
+- At startup can be called 3-4 times by different components
+- In total this is 1-3 seconds of lost start time
+- The value does not change in seconds - there is no point in recalculating
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Каждый вызов идет в файловую систему
+// ❌ BAD: Each call goes to the file system
 final class StorageManager {
     func freeSpace() throws -> Int64 {
         let attrs = try FileManager.default.attributesOfFileSystem(
@@ -23,18 +23,18 @@ final class StorageManager {
     }
 }
 
-// Вызывается на каждом экране
-let free = try storageManager.freeSpace() // 400-850 мс
+// Called on every screen
+let free = try storageManager.freeSpace() // 400-850 ms
 ```
 
 ## Good Example
 
 ```swift
-// ✅ GOOD: Кэширование с TTL через actor
+// ✅ GOOD: Caching with TTL via actor
 actor DiskSpaceService {
     private var cachedFreeSpace: Int64?
     private var lastCheck: Date = .distantPast
-    private let ttl: TimeInterval = 300 // 5 минут
+    private let ttl: TimeInterval = 300 // 5 minutes
 
     func freeSpace() throws -> Int64 {
         if let cached = cachedFreeSpace,
@@ -59,7 +59,7 @@ actor DiskSpaceService {
 
 ## What to look for in code review
 
-- `attributesOfFileSystem(forPath:)` без кэширования результата
-- Множественные вызовы проверки свободного места на запуске
-- `NSHomeDirectory()` + `attributesOfItem(atPath:)` для получения размера
-- Отсутствие TTL/мемоизации для дисковых метрик
+- `attributesOfFileSystem(forPath:)` without caching the result
+- Multiple calls to check free space at startup
+- `NSHomeDirectory()` + `attributesOfItem(atPath:)` ​​to get the size
+- No TTL/memoization for disk metrics

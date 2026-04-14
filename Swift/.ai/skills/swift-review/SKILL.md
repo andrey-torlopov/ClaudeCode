@@ -1,41 +1,41 @@
 ---
 name: swift-review
-description: Глубокий code review Swift-кода с фокусом на memory safety, concurrency, Swift conventions и архитектуру. Используй для ревью модулей, PR или отдельных файлов. Не используй для анализа зависимостей - для этого /dependency-check.
+description: Deep code review of Swift code with a focus on memory safety, concurrency, Swift conventions and architecture. Use it to review modules, PRs or individual files. Don't use /dependency-check for dependency analysis.
 allowed-tools: "Read Write Edit Glob Grep Bash(wc*)"
 context: fork
 ---
 
 # /swift-review — Swift Code Review (light)
 
-## Назначение
+## Purpose
 
-- Глубокий review Swift-кода: memory safety, concurrency, conventions, error handling, архитектура.
-- Результат — отчёт с BLOCKER / CRITICAL / WARNING / INFO.
+- Deep review of Swift code: memory safety, concurrency, conventions, error handling, architecture.
+- The result is a report with BLOCKER / CRITICAL / WARNING / INFO.
 
-## Вход
+## Entrance
 
-- **Scope (обязательно):** файл / директория / модуль.
-- **Focus (опционально):** `memory` / `concurrency` / `architecture` / `all` (по умолчанию).
+- **Scope (required):** file / directory / module.
+- **Focus (optional):** `memory` / `concurrency` ​​/ `architecture` / `all` (default).
 
 ## Verbosity & Loop Safety
 
-- SILENT MODE: анализ идёт в отчёт, в чат — только короткая сводка + путь к файлу.
-- Tools first: Read/Grep → анализ → отчёт, без описания шагов.
-- Не перезапускай `/swift-review` из отчёта и не предлагай автоповтор; один запуск = один отчёт.
+- SILENT MODE: the analysis goes to the report, to the chat - only a short summary + path to the file.
+- Tools first: Read/Grep → analysis → report, without description of steps.
+- Do not restart `/swift-review` from the report and do not offer auto-repeat; one run = one report.
 
-## Алгоритм (кратко)
+## Algorithm (briefly)
 
-1. Определи scope (файл / директория `.swift` без тестов / `Sources/{module}`), прочитай `COMMON.md`, посчитай строки.
-2. **Memory Safety:** используй `references/swift-checklist.md` (retain cycles, force unwrap, `Type!`, unowned).
-3. **Concurrency:** используй `references/concurrency-rules.md` (Sendable, `@MainActor`, data races, Task/actors).
+1. Define scope (file / directory `.swift` without tests / `Sources/{module}`), read `COMMON.md`, count lines.
+2. **Memory Safety:** use `references/swift-checklist.md` (retain cycles, force unwrap, `Type!`, unowned).
+3. **Concurrency:** use `references/concurrency-rules.md` (Sendable, `@MainActor`, data races, Task/actors).
 4. **Conventions & Errors:** let/var, guard, value types, naming, Any/AnyObject, throws/try?/empty catch/Result.
-5. **Architecture:** размер и ответственность файлов, слойность, SwiftUI-поля состояния.
+5. **Architecture:** file size and responsibility, layers, SwiftUI status fields.
 
-## Severity & Отчёт
+## Severity & Report
 
-- BLOCKER / CRITICAL / WARNING / INFO — по критериям из чек-листов.
-- Отчёт сохраняй в `audit/swift-review-report.md` (или путь пользователя) в табличном виде с файлами, строками и рекомендациями.
+- BLOCKER / CRITICAL / WARNING / INFO - according to the criteria from the checklists.
+- Save the report in `audit/swift-review-report.md` (or user path) in tabular form with files, lines and recommendations.
 
-## Завершение
+## Completion
 
-- Выведи финальный блок: `SKILL COMPLETE: /swift-review` + scope, количество findings и путь к отчёту.
+- Print the final block: `SKILL COMPLETE: /swift-review` + scope, number of findings and path to the report.

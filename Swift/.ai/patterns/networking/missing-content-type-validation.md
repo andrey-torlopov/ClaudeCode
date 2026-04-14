@@ -4,16 +4,16 @@
 
 ## Why this is bad
 
-Код не проверяет Content-Type ответа:
-- Сервер может вернуть HTML вместо JSON (ошибка reverse proxy, CloudFlare challenge)
-- `JSONDecoder` бросит `DecodingError` вместо понятной ошибки
-- Баг обнаруживается только в production при интеграции
-- Непонятные crash-логи вместо чёткого "сервер вернул не JSON"
+The code does not check the Content-Type of the response:
+- The server may return HTML instead of JSON (reverse proxy error, CloudFlare challenge)
+- `JSONDecoder` will throw `DecodingError` ​​instead of an understandable error
+- The bug is detected only in production during integration
+- Incomprehensible crash logs instead of the clear “the server did not return JSON”
 
 ## Bad Example
 
 ```swift
-// ❌ BAD: Проверяем только status code, Content-Type игнорируется
+// ❌ BAD: We check only the status code, Content-Type is ignored
 func fetchUser(id: String) async throws -> User {
     let (data, response) = try await session.data(for: request)
     guard let httpResponse = response as? HTTPURLResponse,
@@ -22,14 +22,14 @@ func fetchUser(id: String) async throws -> User {
     }
 
     return try decoder.decode(User.self, from: data)
-    // Если сервер вернул HTML (502 от nginx) - получим DecodingError
+    // If the server returned HTML (502 from nginx) - we get a DecodingError
 }
 ```
 
 ## Good Example
 
 ```swift
-// ✅ GOOD: Проверяем Content-Type перед декодированием
+// ✅ GOOD: Check Content-Type before decoding
 func fetchUser(id: String) async throws -> User {
     let (data, response) = try await session.data(for: request)
     guard let httpResponse = response as? HTTPURLResponse else {
@@ -52,7 +52,7 @@ func fetchUser(id: String) async throws -> User {
     return try decoder.decode(User.self, from: data)
 }
 
-// ✅ GOOD: Централизованная валидация в базовом методе
+// ✅ GOOD: Centralized validation in the base method
 func request<T: Decodable>(
     _ method: HTTPMethod,
     path: String,
@@ -81,7 +81,7 @@ private func validateResponse(_ response: URLResponse, data: Data) throws {
 
 ## What to look for in code review
 
-- `JSONDecoder().decode()` без предварительной проверки Content-Type
-- Отсутствие проверки Content-Type в базовом networking layer
-- Error responses (4xx/5xx) не проверяются на Content-Type перед парсингом
-- `DecodingError` в crash-логах (может быть следствием HTML вместо JSON)
+- `JSONDecoder().decode()` without preliminary Content-Type check
+- Lack of Content-Type check in the base networking layer
+- Error responses (4xx/5xx) are not checked for Content-Type before parsing
+- `DecodingError` in crash logs (may be a consequence of HTML instead of JSON)

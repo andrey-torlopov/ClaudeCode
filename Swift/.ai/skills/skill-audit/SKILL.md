@@ -1,70 +1,70 @@
 ---
 name: skill-audit
-description: Аудитирует AI-файлы проекта на раздутость, дублирование и stale references. Используй после изменений COMMON.md, anchor-файлов, agents и skills. Не используй для общего аудита документации — для этого /doc-lint.
+description: Audits project AI files for bloat, duplication, and stale references. Use after changes to COMMON.md, anchor files, agents and skills. Don't use /doc-lint for general documentation auditing.
 allowed-tools: "Read Write Edit Glob Grep Bash(wc*)"
 context: fork
 ---
 
 # /skill-audit
 
-Аудитирует AI-инструкции на токен-стоимость, stale references и нарушения новой модели `COMMON.md -> anchor-files`.
+Audits AI instructions for token value, stale references and violations of the new `COMMON.md -> anchor-files` model.
 
-## Когда использовать
+## When to use
 
-- После изменения `COMMON.md`, `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`
-- После редактирования `agents/*.md`, `skills/*/SKILL.md`, `commands/*.md`
-- При подозрении на дублирование core rules или process-theater
+- After changing `COMMON.md`, `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`
+- After editing `agents/*.md`, `skills/*/SKILL.md`, `commands/*.md`
+- If you suspect duplication of core rules or process-theater
 
 ## Verbosity
 
-- Анализ и таблицы — в отчёт.
-- В чат — только краткая сводка и путь к артефакту.
+- Analysis and tables - in the report.
+- In the chat - only a brief summary and the path to the artifact.
 
-## Проверки
+## Checks
 
 1. **Inventory**
-   - Собери scope через Glob.
-   - Для каждого файла посчитай строки через `wc -l`.
+   - Collect scope via Glob.
+   - For each file, count the lines through `wc -l`.
 2. **Size**
-   - Сверь размеры с `doc-lint/references/check-rules.md`.
-   - Отдельно проверь, что `COMMON.md` и anchor-файлы остаются короткими.
+   - Check the dimensions with `doc-lint/references/check-rules.md`.
+   - Separately, check that `COMMON.md` and anchor files remain short.
 3. **SSOT model**
-   - `COMMON.md` хранит core rules, build/test и общие conventions.
-   - `CLAUDE.md`, `AGENTS.md`, `GEMINI.md` содержат только entry instructions и ссылки.
+   - `COMMON.md` stores core rules, build/test and general conventions.
+   - `CLAUDE.md`, `AGENTS.md`, `GEMINI.md` contain only entry instructions and links.
 4. **Stale references**
-   - Найди ссылки на `CLAUDE.md` как на SSOT.
-   - Найди `gardener`, `Protocol Injection`, `Escalation Protocol` и другие удалённые process-блоки.
-   - Проверь битые относительные ссылки.
+   - Find references to `CLAUDE.md` as SSOT.
+   - Find `gardener`, `Protocol Injection`, `Escalation Protocol` and other remote process blocks.
+   - Check for broken relative links.
 5. **Duplication**
-   - Найди exact или near-duplicate блоки, копирующие `COMMON.md` в anchor-файлы, agents или skills.
-   - Найди раздутые шаблоны, длинные decorative blocks и редко используемые inline-секции.
+   - Find exact or near-duplicate blocks that copy `COMMON.md` into anchor files, agents or skills.
+   - Find bloated templates, long decorative blocks and rarely used inline sections.
 6. **Actions**
-   - Для каждого finding дай конкретное действие: `MOVE`, `DELETE`, `SHRINK`, `RELINK`, `KEEP`.
+   - For each finding, give a specific action: `MOVE`, `DELETE`, `SHRINK`, `RELINK`, `KEEP`.
 
 ## Severity
 
-| Severity | Что означает |
+| Severity | What does |
 |----------|--------------|
-| `CRITICAL` | broken SSOT, битые ссылки, deleted-protocol references, exact duplicates >5 строк |
-| `WARNING` | раздутые файлы, near-duplicates, anchor-файлы с дублированием core rules |
-| `INFO` | декоративная многословность и кандидаты на вынос в `references/` |
+| `CRITICAL` | broken SSOT, broken links, deleted-protocol references, exact duplicates >5 lines |
+| `WARNING` | bloated files, near-duplicates, duplicated anchor files core rules |
+| `INFO` | decorative verbosity and takeaway candidates in `references/` ​​|
 
-## Отчёт
+## Report
 
-Сохрани результат в `audit/skill-audit-report.md`.
+Save the result in `audit/skill-audit-report.md`.
 
-Минимальные секции отчёта:
+Minimum report sections:
 
 - Inventory
 - Findings by severity
 - SSOT violations
 - Recommended actions
 
-## Завершение
+## Completion
 
 ```text
 SKILL COMPLETE: /skill-audit
-|- Артефакты: audit/skill-audit-report.md
+|- Artifacts: audit/skill-audit-report.md
 |- Compilation: N/A
 |- Findings: {N} CRITICAL, {N} WARNING, {N} INFO
 ```

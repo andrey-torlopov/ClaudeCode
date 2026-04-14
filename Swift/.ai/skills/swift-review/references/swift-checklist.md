@@ -2,87 +2,87 @@
 
 ## Memory Safety
 
-| # | Проверка | Severity | Grep-паттерн |
+| # | Check | Severity | Grep pattern |
 |---|---------|----------|-------------|
-| M-1 | Escaping closure без [weak self] | BLOCKER | `@escaping.*\{[^w]*self\.` |
-| M-2 | Delegate property без weak | BLOCKER | `var delegate:` (без weak) |
-| M-3 | Force unwrap (!) вне тестов и IBOutlet | CRITICAL | `[^?]!` в не-тестовых файлах |
-| M-4 | Implicitly unwrapped optional без обоснования | WARNING | `var.*:.*!` |
+| M-1 | Escaping closure without [weak self] | BLOCKER | `@escaping.*\{[^w]*self\.` |
+| M-2 | Delegate property without weak | BLOCKER | `var delegate:` (without weak) |
+| M-3 | Force unwrap (!) outside tests and IBOutlet | CRITICAL | `[^?]!` in non-test files |
+| M-4 | Implicitly unwrapped optional without justification | WARNING | `var.*:.*!` |
 | M-5 | Unowned reference | WARNING | `unowned` |
-| M-6 | Closure capture list отсутствует в escaping | WARNING | escaping closure без `[` |
-| M-7 | Strong self в Task без необходимости | INFO | `Task.*\{.*self\.` без weak |
+| M-6 | Closure capture list is missing from escaping | WARNING | escaping closure without `[` |
+| M-7 | Strong self in Task without necessity | INFO | `Task.*\{.*self\.` without weak |
 
-### Правила
+### Rules
 
-- В Task: если используем [weak self], не усиливаем сразу self, а только перед первым использованием
-- Delegate, dataSource - всегда weak
-- Timer, NotificationCenter callbacks - всегда weak self
-- DispatchQueue closures - weak self если long-running
+- In Task: if we use [weak self], we do not strengthen self immediately, but only before the first use
+- Delegate, dataSource - always weak
+- Timer, NotificationCenter callbacks - always weak self
+- DispatchQueue closures - weak self if long-running
 
 ## Concurrency
 
-Полные правила: `concurrency-rules.md`
+Full rules: `concurrency-rules.md`
 
-| # | Проверка | Severity |
+| # | Check | Severity |
 |---|---------|----------|
-| C-1 | Мутабельное shared state без синхронизации | BLOCKER |
-| C-2 | DispatchQueue.main вместо @MainActor | CRITICAL |
-| C-3 | Тип передается между actors без Sendable | CRITICAL |
-| C-4 | Task {} вместо structured concurrency | WARNING |
-| C-5 | Task.detached() без явной необходимости | WARNING |
-| C-6 | @unchecked Sendable без комментария-обоснования | WARNING |
-| C-7 | Completion handler вместо async/await | INFO |
-| C-8 | NSLock/Semaphore вместо actor | INFO |
+| C-1 | Mutable shared state without synchronization | BLOCKER |
+| C-2 | DispatchQueue.main instead of @MainActor | CRITICAL |
+| C-3 | The type is passed between actors without Sendable | CRITICAL |
+| C-4 | Task {} instead of structured concurrency | WARNING |
+| C-5 | Task.detached() without explicit need | WARNING |
+| C-6 | @unchecked Sendable without justification comment | WARNING |
+| C-7 | Completion handler instead of async/await | INFO |
+| C-8 | NSLock/Semaphore instead of actor | INFO |
 
 ## Swift Conventions
 
-| # | Проверка | Severity |
+| # | Check | Severity |
 |---|---------|----------|
-| S-1 | var где достаточно let | WARNING |
-| S-2 | class где достаточно struct | WARNING |
-| S-3 | Вложенный if let вместо guard | WARNING |
-| S-4 | Any/AnyObject без необходимости | WARNING |
-| S-5 | .init вместо явного имени типа | INFO |
-| S-6 | Naming не по Swift API Design Guidelines | INFO |
-| S-7 | Булевые без is/has/should префикса | INFO |
-| S-8 | enum для одиночных значений (лучше struct) | INFO |
+| S-1 | var where let | WARNING |
+| S-2 | class where struct is sufficient | WARNING |
+| S-3 | Nested if let instead of guard | WARNING |
+| S-4 | Any/AnyObject without need | WARNING |
+| S-5 | .init instead of an explicit type name | INFO |
+| S-6 | Naming not according to Swift API Design Guidelines | INFO |
+| S-7 | Boolean without is/has/should prefix | INFO |
+| S-8 | enum for single values ​​(preferably struct) | INFO |
 
 ## Error Handling
 
-| # | Проверка | Severity |
+| # | Check | Severity |
 |---|---------|----------|
-| E-1 | Пустой catch {} | CRITICAL |
-| E-2 | try? с потерей ошибки без логирования | WARNING |
-| E-3 | Optional для ошибочных состояний вместо throws | WARNING |
-| E-4 | fatalError() в production коде | BLOCKER |
-| E-5 | Необработанный Result.failure | WARNING |
+| E-1 | Empty catch {} | CRITICAL |
+| E-2 | try? with error loss without logging | WARNING |
+| E-3 | Optional for error states instead of throws | WARNING |
+| E-4 | fatalError() in production code | BLOCKER |
+| E-5 | Raw Result.failure | WARNING |
 
 ## Performance
 
-| # | Проверка | Severity |
+| # | Check | Severity |
 |---|---------|----------|
-| P-1 | Вычисления в body SwiftUI View | WARNING |
-| P-2 | Лишние аллокации в hot path | INFO |
-| P-3 | Отсутствие lazy для тяжелых свойств | INFO |
-| P-4 | Array вместо Set для поиска/contains | INFO |
+| P-1 | Calculations in body SwiftUI View | WARNING |
+| P-2 | Extra allocations in the hot path | INFO |
+| P-3 | No lazy for heavy properties | INFO |
+| P-4 | Array instead of Set for search/contains | INFO |
 
 ## Architecture
 
-| # | Проверка | Severity |
+| # | Check | Severity |
 |---|---------|----------|
-| A-1 | Файл > 500 строк | WARNING |
-| A-2 | Класс/структура > 300 строк | WARNING |
-| A-3 | Функция > 50 строк | INFO |
-| A-4 | UI-логика в ViewModel/бизнес-слое | CRITICAL |
-| A-5 | Бизнес-логика в View | WARNING |
-| A-6 | Жесткая зависимость вместо протокола | INFO |
+| A-1 | File > 500 lines | WARNING |
+| A-2 | Class/Structure > 300 lines | WARNING |
+| A-3 | Function > 50 lines | INFO |
+| A-4 | UI logic in ViewModel/business layer | CRITICAL |
+| A-5 | Business logic in View | WARNING |
+| A-6 | Hard dependency instead of protocol | INFO |
 
 ## SwiftUI Specific
 
-| # | Проверка | Severity |
+| # | Check | Severity |
 |---|---------|----------|
-| U-1 | @ObservedObject где нужен @StateObject | CRITICAL |
-| U-2 | @State для reference type | CRITICAL |
-| U-3 | Тяжелые вычисления в body | WARNING |
-| U-4 | Глубокая вложенность View (>5 уровней) | INFO |
-| U-5 | Отсутствие @ViewBuilder для условных View | INFO |
+| U-1 | @ObservedObject where @StateObject is needed | CRITICAL |
+| U-2 | @State for reference type | CRITICAL |
+| U-3 | Heavy calculations in body | WARNING |
+| U-4 | Deep nesting View (>5 levels) | INFO |
+| U-5 | Lack of @ViewBuilder for conditional Views | INFO |

@@ -1,95 +1,95 @@
-# Гайд по интерактивному взаимодействию
+# Interaction Guide
 
-## Фаза 2: Структурные предложения по категориям
+## Phase 2: Structural sentences by category
 
 ### Analysis Skills
 
 ```
-Предлагаю добавить:
+I suggest adding:
 - [ ] Severity levels (Critical/Major/Minor)?
-- [ ] Export в JSON/Markdown?
-- [ ] Чек-лист проверок в references/?
+- [ ] Export to JSON/Markdown?
+- [ ] Checklist of checks in references/?
 ```
 
 ### Generation Skills
 
 ```
-Предлагаю уточнить:
-- [ ] Язык вывода (Swift)?
-- [ ] Нужен dry-run режим (показать без сохранения)?
-- [ ] Шаблоны в references/?
+I suggest you clarify:
+- [ ] Output language (Swift)?
+- [ ] Do you need dry-run mode (show without saving)?
+- [ ] Templates in references/?
 ```
 
 ### Validation Skills
 
 ```
-Предлагаю добавить:
-- [ ] Формат вывода (Pass/Fail, список нарушений)?
-- [ ] Auto-fix для простых случаев?
-- [ ] Правила в references/?
+I suggest adding:
+- [ ] Output format (Pass/Fail, list of violations)?
+- [ ] Auto-fix for simple cases?
+- [ ] Rules in references/?
 ```
 
 ### Transformation Skills
 
 ```
-Предлагаю уточнить:
-- [ ] Входной формат?
-- [ ] Выходной формат?
-- [ ] Нужна валидация входных данных?
+I suggest you clarify:
+- [ ] Input format?
+- [ ] Output format?
+- [ ] Need input validation?
 ```
 
-## Фаза 5: Опции редактирования
+## Phase 5: Editing Options
 
 ```
-Что дальше?
-1. ✅ Всё отлично, сохраняем
-2. ✏️ Изменить description
-3. ➕ Добавить шаг в алгоритм
-4. ➖ Убрать шаг из алгоритма
-5. 📝 Изменить формат вывода
-6. ✓ Изменить Quality Gates
+What's next?
+1. ✅ Everything is fine, save
+2. ✏️ Change description
+3. ➕ Add a step to the algorithm
+4. ➖ Remove a step from the algorithm
+5. 📝 Change output format
+6. ✓ Change Quality Gates
 ```
 
-## Цикл доработки
+## Revision cycle
 
 ```
-REPEAT until пользователь выберет "Сохранить":
+REPEAT until the user selects "Save":
 
-  User выбирает действие →
+  User selects action →
 
-  IF "Изменить description":
-    Покажи текущий → Спроси новый → Обнови → Покажи результат
+  IF "Change description":
+    Show current → Ask new → Update → Show result
 
-  IF "Добавить шаг":
-    Спроси: Какой шаг? После какого шага?
-    Добавь → Перенумеруй → Покажи результат
+  IF "Add step":
+    Ask: What step? After what step?
+    Add → Renumber → Show result
 
-  IF "Убрать шаг":
-    Покажи список шагов с номерами
-    Спроси: Какой убрать?
-    Удали → Перенумеруй → Покажи результат
+  IF "Remove step":
+    Show a list of steps with numbers
+    Ask: Which one should I remove?
+    Delete → Renumber → Show result
 
-  IF "Изменить формат вывода":
-    Покажи текущий → Спроси новый → Обнови → Покажи результат
+  IF "Change output format":
+    Show current → Ask new → Update → Show result
 
-  IF "Изменить Quality Gates":
-    Покажи текущие → Спроси изменения → Обнови → Покажи результат
+  IF "Change Quality Gates":
+    Show current → Ask for changes → Update → Show result
 
-  → Вернись к CHECKPOINT 5
+  → Return to CHECKPOINT 5
 ```
 
-## Шаг 7.4: Цикл улучшений после первого использования
+## Step 7.4: Improvement cycle after first use
 
 ```
-Рекомендуемый цикл доработки:
-1. Вызови /[skill-name] на реальной задаче
-2. Обрати внимание: где Claude "буксует" или отклоняется от ожиданий?
-3. Вернись сюда с фидбеком — обновим SKILL.md
-4. Повтори до стабильного результата
+Recommended revision cycle:
+1. Call /[skill-name] on a real task
+2. Pay attention: where does Claude “slip” or deviate from expectations?
+3. Come back here with feedback - we’ll update SKILL.md
+4. Repeat until stable result
 
-Типичные проблемы при первом запуске:
-- Слишком абстрактные инструкции → добавь конкретные примеры
-- Пропущен важный шаг → добавь в алгоритм
-- Лишние шаги → упрости workflow
-- Неточный description → Claude не активирует skill на нужные фразы
+Typical problems when starting for the first time:
+- Too abstract instructions → add specific examples
+- Missed an important step → add to the algorithm
+- Extra steps → simplify workflow
+- Inaccurate description → Claude does not activate the skill for the necessary phrases
 ```
